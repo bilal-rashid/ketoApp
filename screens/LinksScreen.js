@@ -9,9 +9,10 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import {MonoText} from "../components/StyledText";
 // import * as Progress from 'react-native-progress';
 import * as Progress from 'react-native-progress';
+import MealComponent from "../components/MealComponent";
 
 
-export default function LinksScreen() {
+export default function LinksScreen(props) {
   useEffect(() => {
 
   }, [])
@@ -36,6 +37,9 @@ export default function LinksScreen() {
 
   const showTimepicker = () => {
     showMode('time');
+  };
+  const gotoIngredients = (num) => {
+    props.navigation.navigate('Ingredients')
   };
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
@@ -76,6 +80,18 @@ export default function LinksScreen() {
         </View>
       </View>
       <View style={{height:1, backgroundColor:'#5f5f5f', marginTop:10}}/>
+      <MealComponent
+          callBackAdd = {gotoIngredients}
+          mealText={'Frühstück'}
+          imageSrc={require('../assets/images/mug.png')}/>
+      <MealComponent
+          callBackAdd = {gotoIngredients}
+          mealText={'Mittagessen'}
+          imageSrc={require('../assets/images/meat.png')}/>
+      <MealComponent
+          callBackAdd = {gotoIngredients}
+          mealText={'Abendessen'}
+          imageSrc={require('../assets/images/dinner.png')}/>
       {/*<Progress.Bar progress={0.3} width={200}  color={['12', '12', '12']} />*/}
       {show && (
           <DateTimePicker
