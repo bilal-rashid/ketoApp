@@ -39,7 +39,7 @@ export default function LinksScreen(props) {
     showMode('time');
   };
   const gotoIngredients = (num) => {
-    props.navigation.navigate('Ingredients')
+    props.navigation.navigate('Ingredients', {id:num});
   };
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>

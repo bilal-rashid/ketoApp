@@ -26,7 +26,7 @@ export default function HomeScreen() {
           <Text style={styles.getStartedText}>Open up the code for this screen:</Text>
 
           <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-            <MonoText>screens/HomeScreen.js</MonoText>
+            <MonoText>screens/HomeScen.js</MonoText>
           </View>
 
           <Text style={styles.getStartedText}>
