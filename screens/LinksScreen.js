@@ -1,16 +1,20 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
-import {useState} from 'react';
+import {useState,useEffect} from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Button, Platform} from 'react-native';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {MonoText} from "../components/StyledText";
 // import * as Progress from 'react-native-progress';
+import * as Progress from 'react-native-progress';
 
 
 export default function LinksScreen() {
+  useEffect(() => {
+
+  }, [])
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
@@ -42,13 +46,42 @@ export default function LinksScreen() {
           <Text style={styles.dateStyle}>{date.toLocaleDateString()}</Text>
         </TouchableOpacity>
       </View>
+      <View style={styles.progressContainer}>
+        <View style={styles.progressBarContainer} >
+          <View style={{marginBottom:5}}>
+            <Progress.Bar progress={0.4} width={null} height={10} color={'#f37f4a'} />
+          </View>
+          <View style={styles.progressTextContainer}>
+            <Text style={styles.progressTextLeft}>Einweis</Text>
+            <Text style={styles.progressTextRight}>0.0/1g</Text>
+          </View>
+        </View>
+        <View style={styles.progressBarContainer} >
+          <View style={{marginBottom:5}}>
+            <Progress.Bar progress={0.7} width={null} height={10} color={'#933dde'} />
+          </View>
+          <View style={styles.progressTextContainer}>
+            <Text style={styles.progressTextLeft}>Fett</Text>
+            <Text style={styles.progressTextRight}>0.0/1g</Text>
+          </View>
+        </View>
+        <View style={styles.progressBarContainer} >
+          <View style={{marginBottom:5}}>
+            <Progress.Bar progress={0.5} width={null} height={10} color={'#3b3a39'} />
+          </View>
+          <View style={styles.progressTextContainer}>
+            <Text style={styles.progressTextLeft}>Kohlenhydrate</Text>
+            <Text style={styles.progressTextRight}>0.0/1g</Text>
+          </View>
+        </View>
+      </View>
+      <View style={{height:1, backgroundColor:'#5f5f5f', marginTop:10}}/>
       {/*<Progress.Bar progress={0.3} width={200}  color={['12', '12', '12']} />*/}
       {show && (
           <DateTimePicker
               testID="dateTimePicker"
               value={date}
               mode={mode}
-              is24Hour={true}
               display="default"
               onChange={onChange}
           />
@@ -99,6 +132,33 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     textAlign: 'center',
   },
+  progressContainer: {
+    paddingTop: 10,
+    marginTop:20,
+    marginStart:10,
+    marginEnd: 10,
+    borderRadius: 4,
+    flexDirection: 'column',
+    borderColor: '#a09c9c',
+    borderWidth: 1,
+  },
+  progressBarContainer: {
+    padding:10,
+    flexDirection: 'column'
+  },
+  progressTextLeft: {
+    fontSize:15,
+    fontWeight:'bold'
+  },
+  progressTextRight: {
+    fontSize:12,
+    color:'#656363'
+  },
+  progressTextContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
 
   welcomeContainer: {
     alignItems: 'center',
@@ -135,7 +195,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   dateStyle: {
-    fontSize: 19,
+    fontSize: 23,
     color: 'rgb(18,19,19)',
     lineHeight: 24,
     marginLeft: 100,
