@@ -8,6 +8,9 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import * as Progress from 'react-native-progress';
 import MealComponent from "../components/MealComponent";
 
+import * as SQLite from 'expo-sqlite';
+
+const db = SQLite.openDatabase("db.db");
 export default class LinksScreen extends React.Component {
   constructor () {
     super();
@@ -34,6 +37,12 @@ export default class LinksScreen extends React.Component {
 
   showDatepicker = () => {
     this.showMode('date');
+    db.transaction(
+        tx => {
+          tx.executeSql("insert into meals (protein, fat,carb,name) values (12.4,21,5.5, 'channay')", null);
+          // tx.executeSql("insert into meals (protein, fat,carb,name) values (12,11,5, 'channay2')", null);
+        }
+    );
   };
 
   gotoIngredients = (num) => {
@@ -58,6 +67,7 @@ export default class LinksScreen extends React.Component {
                 <Text style={styles.progressTextLeft}>Einweis</Text>
                 <Text style={styles.progressTextRight}>0.0/1g</Text>
               </View>
+
             </View>
             <View style={styles.progressBarContainer} >
               <View style={{marginBottom:5}}>
@@ -73,7 +83,7 @@ export default class LinksScreen extends React.Component {
                 <Progress.Bar progress={0.5} width={null} height={10} color={'#3b3a39'} />
               </View>
               <View style={styles.progressTextContainer}>
-                <Text style={styles.progressTextLeft}>Kohlenhydrate</Text>
+                <Text style={styles.progressTextLeft}>Kohlenhydrate jjjj</Text>
                 <Text style={styles.progressTextRight}>0.0/1g</Text>
               </View>
             </View>

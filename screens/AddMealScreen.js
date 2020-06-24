@@ -1,30 +1,21 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
 import { FlatList,Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import {RectButton, ScrollView} from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 
-import { MonoText } from '../components/StyledText';
 import * as SQLite from 'expo-sqlite';
-import {Ionicons} from "@expo/vector-icons";
-
+import { TextInput,Button,Alert } from 'react-native';
 const db = SQLite.openDatabase("db.db");
-export default class Ingredients extends React.Component {
+export default class AddMealScreen extends React.Component {
     constructor () {
         super();
         this.state = {
-            items: []
+            name: '',
+            protein: 0.0,
+            fat: 0.0,
+            carb: 0.0
         };
     }
-    componentDidMount() {
-        db.transaction(tx => {
-            tx.executeSql(
-                `select * from meals;`,
-                null,
-                (_, { rows: { _array } }) => this.setState({items: _array})
-            );
-        });
-    }
-
     backPress = () => {
         db.transaction(tx => {
             tx.executeSql(
@@ -36,31 +27,84 @@ export default class Ingredients extends React.Component {
         this.props.navigation.goBack();
 
     };
-    addMeal = () => {
-        this.props.navigation.navigate('Add Meals');
-    };
+    onChangeProtein = (value) => {
+        this.setState({
+            protein:+value
+        })
+    }
+    onChangeFat = (value) => {
+        this.setState({
+            fat:+value
+        })
+    }
+    onChangeCarb = (value) => {
+        this.setState({
+            carb:+value
+        })
+    }
+    onChangeName = (value) => {
+        this.setState({
+            name:value
+        })
+    }
+    onSave = () => {
+        db.transaction(
+            tx => {
+                tx.executeSql("insert into meals (protein, fat,carb,name) values " +
+                    "("+this.state.protein+","+this.state.fat+","+this.state.carb+", '"+this.state.name+"')", null);
+            },
+            null,
+                ()=>{
+                    this.backPress();
+                }
+        );
+    }
     render () {
-        // console.warn("Payload is called .....................");
         return (
             <View style={styles.container}>
-                <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-                    <Ionicons name="md-add-circle" size={32} color="green" />
-                    <MonoText style={{color:'blue',marginLeft: 10, alignSelf:'center'}} onPress={this.addMeal}>Add Meal</MonoText>
-                </View>
-                    <FlatList
-                        keyExtractor={(item) => item.id.toString() }
-                        data={this.state.items}
-                        renderItem={({ item }) => <Text key={item.id+''} style={styles.item}>{item.name}</Text>}
-                    />
-                <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-                    <MonoText onPress={this.backPress}>{this.props.route.params.id}</MonoText>
-                </View>
+                <TextInput
+                    style={styles.textInputStyle}
+                    placeholder={'Name'}
+                    value={this.state.name}
+                    onChangeText={this.onChangeName}
+                    keyboardType={'default'}
 
-                    {/*<View style={styles.helpContainer}>*/}
-                    {/*  <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>*/}
-                    {/*    <Text style={styles.helpLinkText}>Help, it didn’t automatically reload!</Text>*/}
-                    {/*  </TouchableOpacity>*/}
-                    {/*</View>*/}
+                />
+                <TextInput
+                    style={styles.textInputStyle}
+                    placeholder={'Eiweiß in Gram pro 100g'}
+                    value={this.state.protein}
+                    onChangeText={this.onChangeProtein}
+                    keyboardType={'decimal-pad'}
+
+                />
+                <TextInput
+                    style={styles.textInputStyle}
+                    placeholder={'Fett in Gram pro 100g'}
+                    value={this.state.fat}
+                    onChangeText={this.onChangeFat}
+                    keyboardType={'decimal-pad'}
+
+                />
+                <TextInput
+                    style={styles.textInputStyle}
+                    placeholder={'Kohlenhydrate in Gram pro 100g'}
+                    value={this.state.carb}
+                    onChangeText={this.onChangeCarb}
+                    keyboardType={'decimal-pad'}
+
+                />
+
+                <View style={{marginLeft:100, marginRight:100,marginTop:20,marginBottom:20}}>
+                    <Button title="Add" onPress={this.onSave} />
+                </View>
+                <Separator />
+
+                {/*<View style={styles.helpContainer}>*/}
+                {/*  <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>*/}
+                {/*    <Text style={styles.helpLinkText}>Help, it didn’t automatically reload!</Text>*/}
+                {/*  </TouchableOpacity>*/}
+                {/*</View>*/}
 
                 {/*<View style={styles.tabBarInfoContainer}>*/}
                 {/*  <Text style={styles.tabBarInfoText}>This is a tab bar. You can edit it in:</Text>*/}
@@ -72,20 +116,6 @@ export default class Ingredients extends React.Component {
             </View>
         );
     }
-}
-function OptionButton({ icon, label, onPress, isLastOption }) {
-    return (
-        <RectButton style={[styles.option, isLastOption && styles.lastOption]} onPress={onPress}>
-            <View style={{ flexDirection: 'row' }}>
-                <View style={styles.optionIconContainer}>
-                    <Ionicons name={icon} size={22} color="rgba(0,0,0,0.35)" />
-                </View>
-                <View style={styles.optionTextContainer}>
-                    <Text style={styles.optionText}>{label}</Text>
-                </View>
-            </View>
-        </RectButton>
-    );
 }
 
 function DevelopmentModeNotice() {
@@ -119,6 +149,9 @@ function handleHelpPress() {
     WebBrowser.openBrowserAsync(
         'https://docs.expo.io/versions/latest/get-started/create-a-new-app/#making-your-first-change'
     );
+}
+function Separator() {
+    return <View style={styles.separator} />;
 }
 
 const styles = StyleSheet.create({
@@ -214,4 +247,10 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#2e78b7',
     },
+    separator: {
+        marginVertical: 8,
+        borderBottomColor: '#737373',
+        borderBottomWidth: StyleSheet.hairlineWidth,
+    },
+    textInputStyle: { height: 40, borderColor: 'gray', borderWidth: 1, borderRadius: 4, margin: 5, padding: 4 }
 });

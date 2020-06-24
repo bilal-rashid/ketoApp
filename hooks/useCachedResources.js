@@ -16,7 +16,7 @@ export default function useCachedResources() {
 
         db.transaction(tx => {
           tx.executeSql(
-              "create table if not exists meals (id integer primary key autoincrement, protein int,fat int,carb int, name text);"
+              "create table if not exists meals (id integer primary key autoincrement, protein real,fat real,carb real, name text);"
           );
         });
         // Load fonts

@@ -7,6 +7,7 @@ import useCachedResources from './hooks/useCachedResources';
 import BottomTabNavigator from './navigation/BottomTabNavigator';
 import LinkingConfiguration from './navigation/LinkingConfiguration';
 import Ingredients from "./screens/Ingredients";
+import AddMealScreen from "./screens/AddMealScreen";
 
 const Stack = createStackNavigator();
 
@@ -23,6 +24,7 @@ export default function App(props) {
           <Stack.Navigator>
             <Stack.Screen name="Root" component={BottomTabNavigator} />
             <Stack.Screen name="Ingredients" component={Ingredients} />
+            <Stack.Screen name="Add Meals" component={AddMealScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </View>
