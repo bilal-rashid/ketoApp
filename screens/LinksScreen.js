@@ -1,127 +1,127 @@
 import { Ionicons } from '@expo/vector-icons';
-import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
-import {useState,useEffect} from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import { Button, Platform} from 'react-native';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {MonoText} from "../components/StyledText";
 // import * as Progress from 'react-native-progress';
 import * as Progress from 'react-native-progress';
 import MealComponent from "../components/MealComponent";
 
-
-export default function LinksScreen(props) {
-  useEffect(() => {
-
-  }, [])
-  const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState('date');
-  const [show, setShow] = useState(false);
-
-  const onChange = (event, selectedDate) => {
+export default class LinksScreen extends React.Component {
+  constructor () {
+    super();
+    this.state = {
+      date: new Date(),
+      mode: 'date',
+      show: false
+    };
+  }
+  // private _closeDialog = (): void => {
+  onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
-    setShow(false);
-    setDate(currentDate);
+    this.setState({
+      show: false,
+      date: currentDate
+    })
+  };
+  showMode = (currentMode) => {
+    this.setState({
+      show: true,
+      mode: currentMode
+    })
   };
 
-  const showMode = currentMode => {
-    setShow(true);
-    setMode(currentMode);
+  showDatepicker = () => {
+    this.showMode('date');
   };
 
-  const showDatepicker = () => {
-    showMode('date');
+  gotoIngredients = (num) => {
+    this.props.navigation.navigate('Ingredients', {id:num});
   };
+  render () {
+    return (
+        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+          <View style={styles.getStartedContainer}>
 
-  const showTimepicker = () => {
-    showMode('time');
-  };
-  const gotoIngredients = (num) => {
-    props.navigation.navigate('Ingredients', {id:num});
-  };
-  return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-      <View style={styles.getStartedContainer}>
+            <Text style={styles.getStartedText}>Set Date:</Text>
+            <TouchableOpacity onPress={this.showDatepicker}>
+              <Text style={styles.dateStyle}>{this.state.date.toLocaleDateString()}</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.progressContainer}>
+            <View style={styles.progressBarContainer} >
+              <View style={{marginBottom:5}}>
+                <Progress.Bar progress={0.4} width={null} height={10} color={'#f37f4a'} />
+              </View>
+              <View style={styles.progressTextContainer}>
+                <Text style={styles.progressTextLeft}>Einweis</Text>
+                <Text style={styles.progressTextRight}>0.0/1g</Text>
+              </View>
+            </View>
+            <View style={styles.progressBarContainer} >
+              <View style={{marginBottom:5}}>
+                <Progress.Bar progress={0.7} width={null} height={10} color={'#933dde'} />
+              </View>
+              <View style={styles.progressTextContainer}>
+                <Text style={styles.progressTextLeft}>Fett</Text>
+                <Text style={styles.progressTextRight}>0.0/1g</Text>
+              </View>
+            </View>
+            <View style={styles.progressBarContainer} >
+              <View style={{marginBottom:5}}>
+                <Progress.Bar progress={0.5} width={null} height={10} color={'#3b3a39'} />
+              </View>
+              <View style={styles.progressTextContainer}>
+                <Text style={styles.progressTextLeft}>Kohlenhydrate</Text>
+                <Text style={styles.progressTextRight}>0.0/1g</Text>
+              </View>
+            </View>
+          </View>
+          <View style={{height:1, backgroundColor:'#5f5f5f', marginTop:10}}/>
+          <MealComponent
+              callBackAdd = {this.gotoIngredients}
+              mealText={'Frühstück'}
+              imageSrc={require('../assets/images/mug.png')}/>
+          <MealComponent
+              callBackAdd = {this.gotoIngredients}
+              mealText={'Mittagessen'}
+              imageSrc={require('../assets/images/meat.png')}/>
+          <MealComponent
+              callBackAdd = {this.gotoIngredients}
+              mealText={'Abendessen'}
+              imageSrc={require('../assets/images/dinner.png')}/>
+          {/*<Progress.Bar progress={0.3} width={200}  color={['12', '12', '12']} />*/}
+          {this.state.show && (
+              <DateTimePicker
+                  testID="dateTimePicker"
+                  value={this.state.date}
+                  mode={this.state.mode}
+                  display="default"
+                  onChange={this.onChange}
+              />
+          )}
+          {/*<OptionButton*/}
+          {/*  icon="md-school"*/}
+          {/*  label="Read the Expo documentation"*/}
+          {/*  onPress={() => WebBrowser.openBrowserAsync('https://docs.expo.io')}*/}
+          {/*/>*/}
 
-        <Text style={styles.getStartedText}>Set Date:</Text>
-        <TouchableOpacity onPress={showDatepicker}>
-          <Text style={styles.dateStyle}>{date.toLocaleDateString()}</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.progressContainer}>
-        <View style={styles.progressBarContainer} >
-          <View style={{marginBottom:5}}>
-            <Progress.Bar progress={0.4} width={null} height={10} color={'#f37f4a'} />
-          </View>
-          <View style={styles.progressTextContainer}>
-            <Text style={styles.progressTextLeft}>Einweis</Text>
-            <Text style={styles.progressTextRight}>0.0/1g</Text>
-          </View>
-        </View>
-        <View style={styles.progressBarContainer} >
-          <View style={{marginBottom:5}}>
-            <Progress.Bar progress={0.7} width={null} height={10} color={'#933dde'} />
-          </View>
-          <View style={styles.progressTextContainer}>
-            <Text style={styles.progressTextLeft}>Fett</Text>
-            <Text style={styles.progressTextRight}>0.0/1g</Text>
-          </View>
-        </View>
-        <View style={styles.progressBarContainer} >
-          <View style={{marginBottom:5}}>
-            <Progress.Bar progress={0.5} width={null} height={10} color={'#3b3a39'} />
-          </View>
-          <View style={styles.progressTextContainer}>
-            <Text style={styles.progressTextLeft}>Kohlenhydrate</Text>
-            <Text style={styles.progressTextRight}>0.0/1g</Text>
-          </View>
-        </View>
-      </View>
-      <View style={{height:1, backgroundColor:'#5f5f5f', marginTop:10}}/>
-      <MealComponent
-          callBackAdd = {gotoIngredients}
-          mealText={'Frühstück'}
-          imageSrc={require('../assets/images/mug.png')}/>
-      <MealComponent
-          callBackAdd = {gotoIngredients}
-          mealText={'Mittagessen'}
-          imageSrc={require('../assets/images/meat.png')}/>
-      <MealComponent
-          callBackAdd = {gotoIngredients}
-          mealText={'Abendessen'}
-          imageSrc={require('../assets/images/dinner.png')}/>
-      {/*<Progress.Bar progress={0.3} width={200}  color={['12', '12', '12']} />*/}
-      {show && (
-          <DateTimePicker
-              testID="dateTimePicker"
-              value={date}
-              mode={mode}
-              display="default"
-              onChange={onChange}
-          />
-      )}
-      {/*<OptionButton*/}
-      {/*  icon="md-school"*/}
-      {/*  label="Read the Expo documentation"*/}
-      {/*  onPress={() => WebBrowser.openBrowserAsync('https://docs.expo.io')}*/}
-      {/*/>*/}
+          {/*<OptionButton*/}
+          {/*  icon="md-compass"*/}
+          {/*  label="Read the React Navigation documentation"*/}
+          {/*  onPress={() => WebBrowser.openBrowserAsync('https://reactnavigation.org')}*/}
+          {/*/>*/}
 
-      {/*<OptionButton*/}
-      {/*  icon="md-compass"*/}
-      {/*  label="Read the React Navigation documentation"*/}
-      {/*  onPress={() => WebBrowser.openBrowserAsync('https://reactnavigation.org')}*/}
-      {/*/>*/}
-
-      {/*<OptionButton*/}
-      {/*  icon="ios-chatboxes"*/}
-      {/*  label="Ask a question on the forums"*/}
-      {/*  onPress={() => WebBrowser.openBrowserAsync('https://forums.expo.io')}*/}
-      {/*  isLastOption*/}
-      {/*/>*/}
-    </ScrollView>
-  );
+          {/*<OptionButton*/}
+          {/*  icon="ios-chatboxes"*/}
+          {/*  label="Ask a question on the forums"*/}
+          {/*  onPress={() => WebBrowser.openBrowserAsync('https://forums.expo.io')}*/}
+          {/*  isLastOption*/}
+          {/*/>*/}
+        </ScrollView>
+    );
+  }
 }
 
 function OptionButton({ icon, label, onPress, isLastOption }) {

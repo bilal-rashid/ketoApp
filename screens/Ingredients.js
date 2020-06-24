@@ -4,40 +4,37 @@ import { Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react
 import { ScrollView } from 'react-native-gesture-handler';
 
 import { MonoText } from '../components/StyledText';
-
-export default function Ingredients(props) {
-    var params = props.navigation;
-    const { goBack } = props.navigation;
-    const keys = props.route.params.id;
-    const backpress = () => {
-        goBack();
+export default class Ingredients extends React.Component {
+    backPress = () => {
+        this.props.navigation.goBack();
     };
-    console.warn(JSON.stringify(keys));
-    return (
-        <View style={styles.container}>
-            <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+    render () {
+        return (
+            <View style={styles.container}>
+                <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
 
 
-                <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-                    <MonoText onPress={backpress}>{keys}</MonoText>
-                </View>
+                    <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
+                        <MonoText onPress={this.backPress}>{this.props.route.params.id}</MonoText>
+                    </View>
 
-                {/*<View style={styles.helpContainer}>*/}
-                {/*  <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>*/}
-                {/*    <Text style={styles.helpLinkText}>Help, it didn’t automatically reload!</Text>*/}
-                {/*  </TouchableOpacity>*/}
+                    {/*<View style={styles.helpContainer}>*/}
+                    {/*  <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>*/}
+                    {/*    <Text style={styles.helpLinkText}>Help, it didn’t automatically reload!</Text>*/}
+                    {/*  </TouchableOpacity>*/}
+                    {/*</View>*/}
+                </ScrollView>
+
+                {/*<View style={styles.tabBarInfoContainer}>*/}
+                {/*  <Text style={styles.tabBarInfoText}>This is a tab bar. You can edit it in:</Text>*/}
+
+                {/*  <View style={[styles.codeHighlightContainer, styles.navigationFilename]}>*/}
+                {/*    <MonoText style={styles.codeHighlightText}>navigation/BottomTabNavigator.js</MonoText>*/}
+                {/*  </View>*/}
                 {/*</View>*/}
-            </ScrollView>
-
-            {/*<View style={styles.tabBarInfoContainer}>*/}
-            {/*  <Text style={styles.tabBarInfoText}>This is a tab bar. You can edit it in:</Text>*/}
-
-            {/*  <View style={[styles.codeHighlightContainer, styles.navigationFilename]}>*/}
-            {/*    <MonoText style={styles.codeHighlightText}>navigation/BottomTabNavigator.js</MonoText>*/}
-            {/*  </View>*/}
-            {/*</View>*/}
-        </View>
-    );
+            </View>
+        );
+    }
 }
 
 function DevelopmentModeNotice() {

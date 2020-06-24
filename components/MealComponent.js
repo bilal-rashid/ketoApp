@@ -4,23 +4,23 @@ import {Image, Platform, StyleSheet, Text, TouchableOpacity,View} from 'react-na
 import Colors from '../constants/Colors';
 import {useEffect} from "react";
 
-export default function MealComponent(props) {
-    useEffect(() => {
+export default class MealComponent extends React.Component {
 
-    }, [])
-    return (
-        <View style={styles.container}>
-            <Image
-                source={props.imageSrc
-                }
-                style={styles.imageStyle}
-            />
-            <Text style={styles.mealText}>{props.mealText}</Text>
-            <Text onPress={() => props.callBackAdd(43)} style={styles.helpLinkText}>
-                Add
-            </Text>
-        </View>
-    );
+    render () {
+        return (
+            <View style={styles.container}>
+                <Image
+                    source={this.props.imageSrc
+                    }
+                    style={styles.imageStyle}
+                />
+                <Text style={styles.mealText}>{this.props.mealText}</Text>
+                <Text onPress={() => this.props.callBackAdd(43)} style={styles.helpLinkText}>
+                    Add
+                </Text>
+            </View>
+        );
+    }
 }
 const styles = StyleSheet.create({
     container: {
