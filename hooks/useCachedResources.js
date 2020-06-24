@@ -2,9 +2,11 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import * as React from 'react';
+import * as SQLite from 'expo-sqlite';
 
 export default function useCachedResources() {
   const [isLoadingComplete, setLoadingComplete] = React.useState(false);
+  const db = SQLite.openDatabase("db.db");
 
   // Load any resources or data that we need prior to rendering the app
   React.useEffect(() => {
@@ -12,6 +14,11 @@ export default function useCachedResources() {
       try {
         SplashScreen.preventAutoHideAsync();
 
+        db.transaction(tx => {
+          tx.executeSql(
+              "create table if not exists meals (id integer primary key autoincrement, protein int,fat int,carb int, name text);"
+          );
+        });
         // Load fonts
         await Font.loadAsync({
           ...Ionicons.font,

@@ -4,9 +4,20 @@ import { Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react
 import { ScrollView } from 'react-native-gesture-handler';
 
 import { MonoText } from '../components/StyledText';
+import * as SQLite from 'expo-sqlite';
+
+const db = SQLite.openDatabase("db.db");
 export default class Ingredients extends React.Component {
     backPress = () => {
+        db.transaction(tx => {
+            tx.executeSql(
+                `select * from meals;`,
+                null,
+                (_, { rows: { _array } }) => console.warn(JSON.stringify(_array))
+            );
+        });
         this.props.navigation.goBack();
+
     };
     render () {
         return (
