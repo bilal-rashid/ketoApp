@@ -15,6 +15,11 @@ export default class Ingredients extends React.Component {
             items: []
         };
     }
+
+    componentWillUnmount() {
+        this._unsubscribe();
+    }
+
     componentDidMount() {
         db.transaction(tx => {
             tx.executeSql(
@@ -22,6 +27,10 @@ export default class Ingredients extends React.Component {
                 null,
                 (_, { rows: { _array } }) => this.setState({items: _array})
             );
+        });
+        this._unsubscribe = this.props.navigation.addListener('focus', () => {
+            // do something
+            console.warn('resume');
         });
     }
 
