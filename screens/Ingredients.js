@@ -6,6 +6,7 @@ import {RectButton, ScrollView} from 'react-native-gesture-handler';
 import { MonoText } from '../components/StyledText';
 import * as SQLite from 'expo-sqlite';
 import {Ionicons} from "@expo/vector-icons";
+import MealItem from "../components/MealItem";
 
 const db = SQLite.openDatabase("db.db");
 export default class Ingredients extends React.Component {
@@ -21,16 +22,15 @@ export default class Ingredients extends React.Component {
     }
 
     componentDidMount() {
-        db.transaction(tx => {
-            tx.executeSql(
-                `select * from meals;`,
-                null,
-                (_, { rows: { _array } }) => this.setState({items: _array})
-            );
-        });
         this._unsubscribe = this.props.navigation.addListener('focus', () => {
             // do something
-            console.warn('resume');
+            db.transaction(tx => {
+                tx.executeSql(
+                    `select * from meals;`,
+                    null,
+                    (_, { rows: { _array } }) => this.setState({items: _array})
+                );
+            });
         });
     }
 
@@ -52,14 +52,14 @@ export default class Ingredients extends React.Component {
         // console.warn("Payload is called .....................");
         return (
             <View style={styles.container}>
-                <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
+                <TouchableOpacity onPress={this.addMeal} style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
                     <Ionicons name="md-add-circle" size={32} color="green" />
-                    <MonoText style={{color:'blue',marginLeft: 10, alignSelf:'center'}} onPress={this.addMeal}>Add Meal</MonoText>
-                </View>
+                    <MonoText style={{color:'blue',marginLeft: 10, alignSelf:'center'}}>Add Meal</MonoText>
+                </TouchableOpacity>
                     <FlatList
                         keyExtractor={(item) => item.id.toString() }
                         data={this.state.items}
-                        renderItem={({ item }) => <Text key={item.id+''} style={styles.item}>{item.name}</Text>}
+                        renderItem={({ item }) => <MealItem item={item}/>}
                     />
                 <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
                     <MonoText onPress={this.backPress}>{this.props.route.params.id}</MonoText>
