@@ -64,7 +64,7 @@ export default class Ingredients extends React.Component {
         }
     };
     render () {
-        console.log(this.state.selectedItems.length);
+        console.warn(this.props.route.params.date.getDate());
         return (
             <View style={styles.container}>
                 <TouchableOpacity onPress={this.addMeal} style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>

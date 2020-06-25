@@ -24,6 +24,7 @@ export default class MealItem extends React.Component {
                 <View style={styles.container}>
                     <View style={styles.innerContainer}>
                         <Text style={styles.item}>{this.props.item.name}</Text>
+                        <Text style={styles.groupItem}>Group: {this.props.item.group_name}</Text>
                         <View style={styles.valuesContainer}>
                             <Text style={[styles.valuesText,{marginLeft:10}]}>Carb: </Text>
                             <Text style={styles.valuesText}>{this.props.item.carb}g</Text>
@@ -85,6 +86,11 @@ const styles = StyleSheet.create({
         padding: 10,
         fontSize: 18,
         height: 44,
+    },
+    groupItem: {
+        marginLeft: 10,
+        fontSize: 14,
+        color: 'green'
     },
     valuesText: {
         fontSize: 12,

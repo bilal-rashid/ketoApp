@@ -15,7 +15,7 @@ export default class MealComponent extends React.Component {
                     style={styles.imageStyle}
                 />
                 <Text style={styles.mealText}>{this.props.mealText}</Text>
-                <Text onPress={() => this.props.callBackAdd(43)} style={styles.helpLinkText}>
+                <Text onPress={() => this.props.callBackAdd(this.props.mealType)} style={styles.helpLinkText}>
                     Add
                 </Text>
             </View>

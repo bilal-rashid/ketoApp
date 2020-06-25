@@ -49,22 +49,23 @@ export default class LogMealScreen extends React.Component {
         })
     }
     onSave = () => {
-        if (this.state.protein && this.state.fat && this.state.name && this.state.carb) {
-            this.setState({error: false});
-            db.transaction(
-                tx => {
-                    tx.executeSql("insert into meals (protein, fat,carb,name) values " +
-                        "(" + this.state.protein + "," + this.state.fat + "," + this.state.carb + ", '" + this.state.name + "')", null);
-                },
-                null,
-                () => {
-                    this.backPress();
-                }
-            );
-        } else {
-            this.setState({error: true});
-
-        }
+        this.props.navigation.navigate('Root');
+        // if (this.state.protein && this.state.fat && this.state.name && this.state.carb) {
+        //     this.setState({error: false});
+        //     db.transaction(
+        //         tx => {
+        //             tx.executeSql("insert into meals (protein, fat,carb,name) values " +
+        //                 "(" + this.state.protein + "," + this.state.fat + "," + this.state.carb + ", '" + this.state.name + "')", null);
+        //         },
+        //         null,
+        //         () => {
+        //             this.backPress();
+        //         }
+        //     );
+        // } else {
+        //     this.setState({error: true});
+        //
+        // }
     }
     render () {
         console.log(this.props.route.params);

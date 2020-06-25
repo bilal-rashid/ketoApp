@@ -4,13 +4,14 @@ import { FlatList,Image, Platform, StyleSheet, Text, TouchableOpacity, View } fr
 import { ScrollView } from 'react-native-gesture-handler';
 
 import * as SQLite from 'expo-sqlite';
-import { TextInput,Button,Alert } from 'react-native';
+import { TextInput,Button,Alert,Picker } from 'react-native';
 const db = SQLite.openDatabase("db.db");
 export default class AddMealScreen extends React.Component {
     constructor () {
         super();
         this.state = {
             name: '',
+            group: '',
             protein: 0.0,
             fat: 0.0,
             carb: 0.0,
@@ -49,14 +50,17 @@ export default class AddMealScreen extends React.Component {
         })
     }
     onSave = () => {
-        if (this.state.protein && this.state.fat && this.state.name && this.state.carb) {
+        if (this.state.protein && this.state.fat && this.state.carb && this.state.name.length>2
+        && this.state.group.length>2) {
             this.setState({error: false});
             db.transaction(
                 tx => {
-                    tx.executeSql("insert into meals (protein, fat,carb,name) values " +
-                        "(" + this.state.protein + "," + this.state.fat + "," + this.state.carb + ", '" + this.state.name + "')", null);
+                    tx.executeSql("insert into meals (protein, fat, carb, name,group_name) values " +
+                        "(" + this.state.protein + "," + this.state.fat + "," + this.state.carb + ", '" + this.state.name
+                        + "','"+this.state.group+"');", null,
+                        (_t,_r)=> console.log('kkkk', _r));
                 },
-                null,
+                (_err)=>{console.warn('error',_err)},
                 () => {
                     this.backPress();
                 }
@@ -101,13 +105,26 @@ export default class AddMealScreen extends React.Component {
                     keyboardType={'decimal-pad'}
 
                 />
+                <Picker
+                    selectedValue={this.state.group}
+                    onValueChange={(itemValue, itemIndex) => this.setState({ group: itemValue })}>
+                    <Picker.Item label="Select" value='n' />
+                    <Picker.Item label="Porridge" value="Porridge" />
+                    <Picker.Item label="Britta Alagna" value="Britta Alagna" />
+                    <Picker.Item label="Egg" value="Egg" />
+                    <Picker.Item label="Ready made Porridges" value="Ready made Porridges" />
+                    <Picker.Item label="Fats" value="Fats" />
+                    <Picker.Item label="Fish" value="Fish" />
+                    <Picker.Item label="Meat" value="Meat" />
+                    <Picker.Item label="Fruit" value="Fruit" />
+                </Picker>
 
                 <View style={{marginLeft:100, marginRight:100,marginTop:20,marginBottom:20}}>
                     <Button title="Add" onPress={this.onSave} />
                 </View>
                 <Separator />
                 { this.state.error && (
-                <Text style={styles.codeHighlightText}>Some values are missing. Please fill them out and try to save again</Text>)
+                <Text style={styles.codeHighlightText}>Some valuesk are missing. Please fill them out and try to save again</Text>)
                 }
                 {/*<View style={styles.helpContainer}>*/}
                 {/*  <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>*/}

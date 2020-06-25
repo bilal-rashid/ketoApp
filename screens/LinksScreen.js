@@ -7,7 +7,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 // import * as Progress from 'react-native-progress';
 import * as Progress from 'react-native-progress';
 import MealComponent from "../components/MealComponent";
-
+import Enums from '../constants/Enums';
 import * as SQLite from 'expo-sqlite';
 
 const db = SQLite.openDatabase("db.db");
@@ -45,8 +45,8 @@ export default class LinksScreen extends React.Component {
     );
   };
 
-  gotoIngredients = (num) => {
-    this.props.navigation.navigate('Ingredients', {id:num});
+  gotoIngredients = (meal) => {
+    this.props.navigation.navigate('Ingredients', {mealType:meal, date: this.state.date});
   };
   render () {
     return (
@@ -92,13 +92,16 @@ export default class LinksScreen extends React.Component {
           <MealComponent
               callBackAdd = {this.gotoIngredients}
               mealText={'Frühstück'}
+              mealType={Enums.breakFast}
               imageSrc={require('../assets/images/mug.png')}/>
           <MealComponent
               callBackAdd = {this.gotoIngredients}
+              mealType={Enums.lunch}
               mealText={'Mittagessen'}
               imageSrc={require('../assets/images/meat.png')}/>
           <MealComponent
               callBackAdd = {this.gotoIngredients}
+              mealType={Enums.dinner}
               mealText={'Abendessen'}
               imageSrc={require('../assets/images/dinner.png')}/>
           {/*<Progress.Bar progress={0.3} width={200}  color={['12', '12', '12']} />*/}
