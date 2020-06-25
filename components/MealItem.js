@@ -32,7 +32,7 @@ export default class MealItem extends React.Component {
                             <Text style={styles.valuesText}>{this.props.item.protein}g</Text>
                         </View>
                     </View>
-                    <View>
+                    <View style={{alignSelf:'center'}}>
                         {this.state.selected && (
                             <Ionicons name="md-checkmark" size={32} color='#077bac'/>)
                         }

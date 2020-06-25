@@ -13,7 +13,8 @@ export default class AddMealScreen extends React.Component {
             name: '',
             protein: 0.0,
             fat: 0.0,
-            carb: 0.0
+            carb: 0.0,
+            error:false
         };
     }
     backPress = () => {
@@ -48,16 +49,22 @@ export default class AddMealScreen extends React.Component {
         })
     }
     onSave = () => {
-        db.transaction(
-            tx => {
-                tx.executeSql("insert into meals (protein, fat,carb,name) values " +
-                    "("+this.state.protein+","+this.state.fat+","+this.state.carb+", '"+this.state.name+"')", null);
-            },
-            null,
-                ()=>{
+        if (this.state.protein && this.state.fat && this.state.name && this.state.carb) {
+            this.setState({error: false});
+            db.transaction(
+                tx => {
+                    tx.executeSql("insert into meals (protein, fat,carb,name) values " +
+                        "(" + this.state.protein + "," + this.state.fat + "," + this.state.carb + ", '" + this.state.name + "')", null);
+                },
+                null,
+                () => {
                     this.backPress();
                 }
-        );
+            );
+        } else {
+            this.setState({error: true});
+
+        }
     }
     render () {
         return (
@@ -99,7 +106,9 @@ export default class AddMealScreen extends React.Component {
                     <Button title="Add" onPress={this.onSave} />
                 </View>
                 <Separator />
-
+                { this.state.error && (
+                <Text style={styles.codeHighlightText}>Some values are missing. Please fill them out and try to save again</Text>)
+                }
                 {/*<View style={styles.helpContainer}>*/}
                 {/*  <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>*/}
                 {/*    <Text style={styles.helpLinkText}>Help, it didn’t automatically reload!</Text>*/}
@@ -194,7 +203,9 @@ const styles = StyleSheet.create({
         marginVertical: 7,
     },
     codeHighlightText: {
-        color: 'rgba(96,100,109, 0.8)',
+        color: 'rgba(238,17,17,0.8)',
+        margin:5,
+        textAlign:'center'
     },
     codeHighlightContainer: {
         flexDirection:'row',
