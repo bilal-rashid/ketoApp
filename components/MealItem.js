@@ -13,6 +13,7 @@ export default class MealItem extends React.Component {
     }
     select = () => {
         const selected = this.state.selected;
+        this.props.onItemSelected(!selected,this.props.item);
         this.setState({selected:!selected});
     };
 

@@ -8,6 +8,7 @@ import BottomTabNavigator from './navigation/BottomTabNavigator';
 import LinkingConfiguration from './navigation/LinkingConfiguration';
 import Ingredients from "./screens/Ingredients";
 import AddMealScreen from "./screens/AddMealScreen";
+import LogMealScreen from "./screens/LogMealScreen";
 
 const Stack = createStackNavigator();
 
@@ -25,6 +26,7 @@ export default function App(props) {
             <Stack.Screen name="Root" component={BottomTabNavigator} />
             <Stack.Screen name="Ingredients" component={Ingredients} />
             <Stack.Screen name="Add Meals" component={AddMealScreen} />
+            <Stack.Screen name="Set Amount" component={LogMealScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </View>
