@@ -18,8 +18,50 @@ export default class LinksScreen extends React.Component {
     this.state = {
       date: new Date(),
       mode: 'date',
-      show: false
+      show: false,
+      items: []
     };
+  }
+  componentDidMount() {
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
+      // do something
+      this.getDailyLogs();
+    });
+  }
+  componentWillUnmount() {
+    this._unsubscribe();
+  }
+  getMealQuantities = (logId) => {
+    db.transaction(tx => {
+      tx.executeSql(
+          `select * from mealquantity where log_id = ?;`,
+          [logId],
+          (_, { rows: { _array } }) => {
+            if (_array.length > 0) {
+              this.setState({items: _array});
+            } else {
+              this.setState({items: []});
+            }
+          }
+      );
+    });
+  }
+  getDailyLogs = (date = this.state.date) => {
+    var result;
+    const formatted_date = date.getDate() + "-" + months[date.getMonth()] + "-" + date.getFullYear();
+    db.transaction(tx => {
+      tx.executeSql(
+          `select * from dailylogs where date = ?;`,
+          [formatted_date],
+          (_, { rows: { _array } }) => {
+            if (_array.length > 0) {
+              this.getMealQuantities(_array[0].id);
+            } else {
+              this.setState({items: []});
+            }
+          }
+      );
+    });
   }
   // private _closeDialog = (): void => {
   onChange = (event, selectedDate) => {
@@ -27,7 +69,8 @@ export default class LinksScreen extends React.Component {
     this.setState({
       show: false,
       date: currentDate
-    })
+    });
+    this.getDailyLogs();
   };
   showMode = (currentMode) => {
     this.setState({
@@ -38,13 +81,13 @@ export default class LinksScreen extends React.Component {
 
   showDatepicker = () => {
     this.showMode('date');
-    db.transaction(tx => {
-      tx.executeSql(
-          `select * from mealquantity;`,
-          null,
-          (_, { rows: { _array } }) => console.warn(_array)
-      );
-    });
+    // db.transaction(tx => {
+    //   tx.executeSql(
+    //       `select * from mealquantity;`,
+    //       null,
+    //       (_, { rows: { _array } }) => console.warn(_array)
+    //   );
+    // });
     // db.transaction(
     //     tx => {
     //       tx.executeSql("insert into meals (protein, fat,carb,name) values (12.4,21,5.5, 'channay')", null);
@@ -90,6 +133,7 @@ export default class LinksScreen extends React.Component {
     this.props.navigation.navigate('Ingredients', {mealType:meal, logId: logId});
   }
   render () {
+    console.warn(this.state);
     return (
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
           <View style={styles.getStartedContainer}>
@@ -134,16 +178,19 @@ export default class LinksScreen extends React.Component {
               callBackAdd = {this.checkLogs}
               mealText={'Frühstück'}
               mealType={Enums.breakFast}
+              mealQuantities={this.state.items.filter(p => p.meal_type === Enums.breakFast)}
               imageSrc={require('../assets/images/mug.png')}/>
           <MealComponent
               callBackAdd = {this.checkLogs}
               mealType={Enums.lunch}
               mealText={'Mittagessen'}
+              mealQuantities={this.state.items.filter(p => p.meal_type === Enums.lunch)}
               imageSrc={require('../assets/images/meat.png')}/>
           <MealComponent
               callBackAdd = {this.checkLogs}
               mealType={Enums.dinner}
               mealText={'Abendessen'}
+              mealQuantities={this.state.items.filter(p => p.meal_type === Enums.dinner)}
               imageSrc={require('../assets/images/dinner.png')}/>
           {/*<Progress.Bar progress={0.3} width={200}  color={['12', '12', '12']} />*/}
           {this.state.show && (
