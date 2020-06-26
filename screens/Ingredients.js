@@ -50,7 +50,10 @@ export default class Ingredients extends React.Component {
         this.props.navigation.navigate('Add Meals');
     };
     setAmount = () => {
-        this.props.navigation.navigate('Set Amount', {selectedItems: this.state.selectedItems});
+        if (this.state.selectedItems.length > 0) {
+            this.props.navigation.navigate('Set Amount', {selectedItems: this.state.selectedItems,
+            logId:this.props.route.params.logId, mealType: this.props.route.params.mealType});
+        }
     };
     onItemSelected = (selected, item) => {
         if (selected) {
@@ -64,7 +67,7 @@ export default class Ingredients extends React.Component {
         }
     };
     render () {
-        console.warn(this.props.route.params.date.getDate());
+        // console.warn(this.props.route.params.date.getDate());
         return (
             <View style={styles.container}>
                 <TouchableOpacity onPress={this.addMeal} style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
@@ -78,9 +81,9 @@ export default class Ingredients extends React.Component {
                             onItemSelected={this.onItemSelected}
                             item={item}/>}
                     />
-                <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-                    <MonoText onPress={this.setAmount}>{this.props.route.params.id}</MonoText>
-                </View>
+                    <TouchableOpacity onPress={this.setAmount} style={styles.buttonStyle}>
+                        <Text style={styles.buttonTextStyle}>Set Amount</Text>
+                    </TouchableOpacity>
 
                     {/*<View style={styles.helpContainer}>*/}
                     {/*  <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>*/}
@@ -240,4 +243,17 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#2e78b7',
     },
+    buttonStyle: {
+        backgroundColor: 'green',
+        width:170,
+        alignSelf: 'center',
+        alignItems: 'center',
+        padding:13,
+        borderRadius: 10,
+        marginBottom:5
+    },
+    buttonTextStyle: {
+        color:'#fff',
+        fontSize: 15,
+    }
 });

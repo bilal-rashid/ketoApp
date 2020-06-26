@@ -58,7 +58,7 @@ export default class AddMealScreen extends React.Component {
                     tx.executeSql("insert into meals (protein, fat, carb, name,group_name) values " +
                         "(" + this.state.protein + "," + this.state.fat + "," + this.state.carb + ", '" + this.state.name
                         + "','"+this.state.group+"');", null,
-                        (_t,_r)=> console.log('kkkk', _r));
+                        (_t,_r)=> console.log('kkkk', _r.insertId));
                 },
                 (_err)=>{console.warn('error',_err)},
                 () => {

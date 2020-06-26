@@ -83,9 +83,8 @@ const styles = StyleSheet.create({
         marginRight:10
     },
     item: {
-        padding: 10,
+        paddingLeft: 10,
         fontSize: 18,
-        height: 44,
     },
     groupItem: {
         marginLeft: 10,

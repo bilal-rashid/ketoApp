@@ -11,6 +11,7 @@ import Enums from '../constants/Enums';
 import * as SQLite from 'expo-sqlite';
 
 const db = SQLite.openDatabase("db.db");
+const months = ["01", "02", "03","04", "05", "06", "07", "08", "09", "10", "11", "12"];
 export default class LinksScreen extends React.Component {
   constructor () {
     super();
@@ -37,17 +38,52 @@ export default class LinksScreen extends React.Component {
 
   showDatepicker = () => {
     this.showMode('date');
-    db.transaction(
-        tx => {
-          tx.executeSql("insert into meals (protein, fat,carb,name) values (12.4,21,5.5, 'channay')", null);
-          // tx.executeSql("insert into meals (protein, fat,carb,name) values (12,11,5, 'channay2')", null);
-        }
-    );
+    // db.transaction(
+    //     tx => {
+    //       tx.executeSql("insert into meals (protein, fat,carb,name) values (12.4,21,5.5, 'channay')", null);
+    //       // tx.executeSql("insert into meals (protein, fat,carb,name) values (12,11,5, 'channay2')", null);
+    //     }
+    // );
   };
 
-  gotoIngredients = (meal) => {
-    this.props.navigation.navigate('Ingredients', {mealType:meal, date: this.state.date});
+  checkLogs = (meal) => {
+    // this.props.navigation.navigate('Ingredients', {mealType:meal, date: this.state.date});
+    const formatted_date = this.state.date.getDate() + "-" + months[this.state.date.getMonth()] + "-" + this.state.date.getFullYear();
+    db.transaction(tx => {
+      tx.executeSql(
+          `select * from dailylogs where date = ?;`,
+          [formatted_date],
+          (_, { rows: { _array } }) => {
+            if (_array.length > 0) {
+              console.warn('found');
+              this.gotoIngredients(meal, _array[0].id)
+            } else {
+              console.warn('inserted');
+              this.insertLogAndNavigate(meal);
+            }
+          }
+      );
+    });
   };
+  insertLogAndNavigate = (meal) => {
+    const formatted_date = this.state.date.getDate() + "-" + months[this.state.date.getMonth()] + "-" + this.state.date.getFullYear();
+    db.transaction(
+        tx => {
+          tx.executeSql("insert into dailylogs (date) values " +
+              "('" + formatted_date + "');", null,
+              (_t,_r)=> {
+                console.log('kkkk', _r.insertId);
+                this.gotoIngredients(meal,_r.insertId);
+              });
+        },
+        (_err)=>{console.warn('error',_err)},
+        () => {
+        }
+    );
+  }
+  gotoIngredients = (meal, logId) => {
+    this.props.navigation.navigate('Ingredients', {mealType:meal, logId: logId});
+  }
   render () {
     return (
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
@@ -90,17 +126,17 @@ export default class LinksScreen extends React.Component {
           </View>
           <View style={{height:1, backgroundColor:'#5f5f5f', marginTop:10}}/>
           <MealComponent
-              callBackAdd = {this.gotoIngredients}
+              callBackAdd = {this.checkLogs}
               mealText={'Frühstück'}
               mealType={Enums.breakFast}
               imageSrc={require('../assets/images/mug.png')}/>
           <MealComponent
-              callBackAdd = {this.gotoIngredients}
+              callBackAdd = {this.checkLogs}
               mealType={Enums.lunch}
               mealText={'Mittagessen'}
               imageSrc={require('../assets/images/meat.png')}/>
           <MealComponent
-              callBackAdd = {this.gotoIngredients}
+              callBackAdd = {this.checkLogs}
               mealType={Enums.dinner}
               mealText={'Abendessen'}
               imageSrc={require('../assets/images/dinner.png')}/>
