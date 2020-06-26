@@ -38,6 +38,13 @@ export default class LinksScreen extends React.Component {
 
   showDatepicker = () => {
     this.showMode('date');
+    db.transaction(tx => {
+      tx.executeSql(
+          `select * from mealquantity;`,
+          null,
+          (_, { rows: { _array } }) => console.warn(_array)
+      );
+    });
     // db.transaction(
     //     tx => {
     //       tx.executeSql("insert into meals (protein, fat,carb,name) values (12.4,21,5.5, 'channay')", null);
@@ -55,10 +62,8 @@ export default class LinksScreen extends React.Component {
           [formatted_date],
           (_, { rows: { _array } }) => {
             if (_array.length > 0) {
-              console.warn('found');
               this.gotoIngredients(meal, _array[0].id)
             } else {
-              console.warn('inserted');
               this.insertLogAndNavigate(meal);
             }
           }

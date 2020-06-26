@@ -65,10 +65,37 @@ export default class LogMealScreen extends React.Component {
     }
     onSave = () => {
         if (this.validate()) {
-            this.setState({error:false})
+            let resultMeals = [];
+            this.setState({error:false});
+            const keys = Object.keys(this.state.values);
+            for (let i=0; i < keys.length; i++) {
+                let meal = {...this.props.route.params.selectedItems.find(p => p.id === (+keys[i]))};
+                meal.carb = +((meal.carb * this.state.values[keys[i]]/100).toFixed(3)).toString();
+                meal.protein = +((meal.protein * this.state.values[keys[i]]/100).toFixed(3)).toString();
+                meal.fat = +((meal.fat * this.state.values[keys[i]]/100).toFixed(3)).toString();
+                resultMeals.push(meal);
+            }
+            console.warn(resultMeals);
+            resultMeals.forEach( meal => {
+                db.transaction(
+                    tx => {
+                        tx.executeSql("insert into mealquantity (log_id, meal_type, meal_name, protein," +
+                            "fat,carb) values " +
+                            "(" + this.props.route.params.logId + "," + this.props.route.params.mealType + ",'" +
+                            meal.name + "', " + meal.protein + "," + meal.fat
+                            + "," + meal.carb + ");", null,
+                            (_t,_r)=> console.log('kkkk', _r.insertId));
+                    },
+                    (_err)=>{console.warn('error',_err)},
+                    () => {
+                    }
+                );
+            });
+            this.props.navigation.navigate('Root');
+
 
         } else {
-            this.setState({error:true})
+            this.setState({error:true});
         }
         // this.props.navigation.navigate('Root');
         // if (this.state.protein && this.state.fat && this.state.name && this.state.carb) {
@@ -95,7 +122,8 @@ export default class LogMealScreen extends React.Component {
         this.setState({values: temp});
     }
     render () {
-        console.log(this.state);
+        // console.log(this.state);
+        // console.log('hhhhha',this.props.route.params);
         return (
             <View style={styles.container}>
                 <FlatList
