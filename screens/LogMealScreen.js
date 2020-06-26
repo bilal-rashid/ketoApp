@@ -1,22 +1,28 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
-import { FlatList,Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { FlatList, Platform, StyleSheet, Text, View } from 'react-native';
 
 import * as SQLite from 'expo-sqlite';
-import { TextInput,Button,Alert } from 'react-native';
+import { Button } from 'react-native';
+import MealLogItem from "../components/MealLogItem";
 const db = SQLite.openDatabase("db.db");
 export default class LogMealScreen extends React.Component {
     constructor () {
         super();
         this.state = {
-            name: '',
-            protein: 0.0,
-            fat: 0.0,
-            carb: 0.0,
-            error:false
+            error:false,
+            values:{}
         };
     }
+    componentDidMount() {
+        const items = this.props.route.params.selectedItems;
+        let tempObj = {};
+        for (let i=0; i < items.length; i++) {
+            tempObj[items[i].id+''] = 0;
+        }
+        this.setState({values: tempObj});
+    }
+
     backPress = () => {
         db.transaction(tx => {
             tx.executeSql(
@@ -48,8 +54,23 @@ export default class LogMealScreen extends React.Component {
             name:value
         })
     }
+    validate = () =>  {
+        const keys = Object.keys(this.state.values);
+        for (let i=0; i < keys.length; i++) {
+            if (this.state.values[keys[i]] === 0) {
+                return false;
+            }
+        }
+        return true;
+    }
     onSave = () => {
-        this.props.navigation.navigate('Root');
+        if (this.validate()) {
+            this.setState({error:false})
+
+        } else {
+            this.setState({error:true})
+        }
+        // this.props.navigation.navigate('Root');
         // if (this.state.protein && this.state.fat && this.state.name && this.state.carb) {
         //     this.setState({error: false});
         //     db.transaction(
@@ -67,25 +88,30 @@ export default class LogMealScreen extends React.Component {
         //
         // }
     }
+    onChangeValue = (value, id) => {
+        console.log(value,id);
+        let temp = {...this.state.values};
+        temp[id+''] = value;
+        this.setState({values: temp});
+    }
     render () {
-        console.log(this.props.route.params);
+        console.log(this.state);
         return (
             <View style={styles.container}>
-                <TextInput
-                    style={styles.textInputStyle}
-                    placeholder={'Name'}
-                    onChangeText={this.onChangeName}
-                    keyboardType={'default'}
-
+                <FlatList
+                    keyExtractor={(item) => item.id.toString() }
+                    data={this.props.route.params.selectedItems}
+                    renderItem={({ item }) => <MealLogItem
+                        onValueChange={this.onChangeValue}
+                        item={item}/>}
                 />
 
-                <View style={{marginLeft:100, marginRight:100,marginTop:20,marginBottom:20}}>
-                    <Button title="Add" onPress={this.onSave} />
-                </View>
-                <Separator />
                 { this.state.error && (
                     <Text style={styles.codeHighlightText}>Some values are missing. Please fill them out and try to save again</Text>)
                 }
+                <View style={{marginLeft:100, marginRight:100,marginTop:20,marginBottom:20}}>
+                    <Button title="Save" onPress={this.onSave} />
+                </View>
                 {/*<View style={styles.helpContainer}>*/}
                 {/*  <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>*/}
                 {/*    <Text style={styles.helpLinkText}>Help, it didn’t automatically reload!</Text>*/}

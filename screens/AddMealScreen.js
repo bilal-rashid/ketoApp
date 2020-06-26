@@ -1,7 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
-import { FlatList,Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import {  Platform, StyleSheet, Text, View } from 'react-native';
 
 import * as SQLite from 'expo-sqlite';
 import { TextInput,Button,Alert,Picker } from 'react-native';
@@ -76,7 +75,6 @@ export default class AddMealScreen extends React.Component {
                 <TextInput
                     style={styles.textInputStyle}
                     placeholder={'Name'}
-                    value={this.state.name}
                     onChangeText={this.onChangeName}
                     keyboardType={'default'}
 
@@ -84,7 +82,6 @@ export default class AddMealScreen extends React.Component {
                 <TextInput
                     style={styles.textInputStyle}
                     placeholder={'Eiweiß in Gram pro 100g'}
-                    value={this.state.protein}
                     onChangeText={this.onChangeProtein}
                     keyboardType={'decimal-pad'}
 
@@ -92,7 +89,6 @@ export default class AddMealScreen extends React.Component {
                 <TextInput
                     style={styles.textInputStyle}
                     placeholder={'Fett in Gram pro 100g'}
-                    value={this.state.fat}
                     onChangeText={this.onChangeFat}
                     keyboardType={'decimal-pad'}
 
@@ -100,7 +96,6 @@ export default class AddMealScreen extends React.Component {
                 <TextInput
                     style={styles.textInputStyle}
                     placeholder={'Kohlenhydrate in Gram pro 100g'}
-                    value={this.state.carb}
                     onChangeText={this.onChangeCarb}
                     keyboardType={'decimal-pad'}
 
