@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     },
     item: {
         paddingLeft: 10,
-        fontSize: 18,
+        fontSize: 16,
         marginTop: 10
     },
     groupItem: {
@@ -74,5 +74,5 @@ const styles = StyleSheet.create({
     valuesText: {
         fontSize: 12,
     },
-    textInputStyle: { height: 40, borderColor: 'gray', borderWidth: 1, borderRadius: 4, margin: 5, padding: 4 }
+    textInputStyle: { height: 40,width:120, borderColor: 'gray', borderWidth: 1, borderRadius: 4, margin: 5, padding: 4 }
 });
