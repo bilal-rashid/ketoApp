@@ -36,13 +36,13 @@ export default class Ingredients extends React.Component {
     }
 
     backPress = () => {
-        db.transaction(tx => {
-            tx.executeSql(
-                `select * from meals;`,
-                null,
-                (_, { rows: { _array } }) => console.warn(JSON.stringify(_array))
-            );
-        });
+        // db.transaction(tx => {
+        //     tx.executeSql(
+        //         `select * from meals;`,
+        //         null,
+        //         (_, { rows: { _array } }) => console.warn(JSON.stringify(_array))
+        //     );
+        // });
         this.props.navigation.goBack();
 
     };
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding:13,
         borderRadius: 10,
-        marginBottom:5
+        marginBottom:30
     },
     buttonTextStyle: {
         color:'#fff',

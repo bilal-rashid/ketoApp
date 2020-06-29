@@ -24,13 +24,13 @@ export default class LogMealScreen extends React.Component {
     }
 
     backPress = () => {
-        db.transaction(tx => {
-            tx.executeSql(
-                `select * from meals;`,
-                null,
-                (_, { rows: { _array } }) => console.warn(JSON.stringify(_array))
-            );
-        });
+        // db.transaction(tx => {
+        //     tx.executeSql(
+        //         `select * from meals;`,
+        //         null,
+        //         (_, { rows: { _array } }) => console.warn(JSON.stringify(_array))
+        //     );
+        // });
         this.props.navigation.goBack();
 
     };
@@ -75,7 +75,6 @@ export default class LogMealScreen extends React.Component {
                 meal.fat = +((meal.fat * this.state.values[keys[i]]/100).toFixed(3)).toString();
                 resultMeals.push(meal);
             }
-            console.warn(resultMeals);
             resultMeals.forEach( meal => {
                 db.transaction(
                     tx => {

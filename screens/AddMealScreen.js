@@ -18,13 +18,13 @@ export default class AddMealScreen extends React.Component {
         };
     }
     backPress = () => {
-        db.transaction(tx => {
-            tx.executeSql(
-                `select * from meals;`,
-                null,
-                (_, { rows: { _array } }) => console.warn(JSON.stringify(_array))
-            );
-        });
+        // db.transaction(tx => {
+        //     tx.executeSql(
+        //         `select * from meals;`,
+        //         null,
+        //         (_, { rows: { _array } }) => console.warn(JSON.stringify(_array))
+        //     );
+        // });
         this.props.navigation.goBack();
 
     };

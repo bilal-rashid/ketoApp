@@ -133,7 +133,6 @@ export default class LinksScreen extends React.Component {
     this.props.navigation.navigate('Ingredients', {mealType:meal, logId: logId});
   }
   render () {
-    console.warn(this.state);
     return (
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
           <View style={styles.getStartedContainer}>
