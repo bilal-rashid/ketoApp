@@ -1,8 +1,8 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
-import { Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-
+import * as SecureStore from 'expo-secure-store';
 import { MonoText } from '../components/StyledText';
 export default class HomeScreen extends React.Component {
   constructor() {
@@ -13,8 +13,14 @@ export default class HomeScreen extends React.Component {
 
   componentDidMount() {
   }
-  gotoIngredients = () => {
-
+  fetchval = () => {
+    SecureStore.getItemAsync('notFirstLaunch').then(value => {
+      console.warn(value);
+    });
+  }
+  saveval = () => {
+    console.warn('call');
+    SecureStore.setItemAsync('notFirstLaunch', 'bilal').then(value => {console.warn(value)})
   }
   render () {
     return (
@@ -22,28 +28,47 @@ export default class HomeScreen extends React.Component {
           <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
             <View style={styles.welcomeContainer}>
               <Image
+
                   source={
                     __DEV__
-                        ? require('../assets/images/robot-dev.png')
+                        ? require('../assets/images/user.png')
                         : require('../assets/images/robot-prod.png')
                   }
                   style={styles.welcomeImage}
               />
             </View>
+            <TextInput
+                style={styles.textInputStyle}
+                placeholder={'Name'}
+                keyboardType={'default'}
+            />
+            <TextInput
+                style={styles.textInputStyle}
+                placeholder={'Calories per day'}
+                keyboardType={'decimal-pad'}
+            />
 
             <View style={styles.getStartedContainer}>
-              <DevelopmentModeNotice />
-
-              <Text style={styles.getStartedText}>Open up the code for this screen:</Text>
-
-              <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-                <MonoText>screens/HomeScen.js</MonoText>
-              </View>
-
-              <Text style={styles.getStartedText}>
-                Change any of the text, save the file, and your app will automatically reload.
-              </Text>
+              <Text  style={styles.getStartedText}>Proportion:</Text>
             </View>
+            <TextInput
+                style={styles.textInputStyle}
+                placeholder={'Protein%'}
+                keyboardType={'decimal-pad'}
+            />
+            <TextInput
+                style={styles.textInputStyle}
+                placeholder={'Fat %'}
+                keyboardType={'decimal-pad'}
+            />
+            <TextInput
+                style={styles.textInputStyle}
+                placeholder={'Carbohydrate %'}
+                keyboardType={'decimal-pad'}
+            />
+            <TouchableOpacity style={styles.buttonStyle}>
+              <Text style={styles.buttonTextStyle}>Save</Text>
+            </TouchableOpacity>
 
             {/*<View style={styles.helpContainer}>*/}
             {/*  <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>*/}
@@ -148,6 +173,9 @@ const styles = StyleSheet.create({
     color: 'rgba(96,100,109, 1)',
     lineHeight: 24,
     textAlign: 'center',
+    marginBottom:10,
+    marginTop:20,
+    fontWeight: 'bold'
   },
   tabBarInfoContainer: {
     position: 'absolute',
@@ -188,4 +216,21 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#2e78b7',
   },
+  textInputStyle: {
+    marginLeft: 30,
+    marginRight:30,
+    height: 40, borderColor: 'gray', borderWidth: 1, borderRadius: 4, margin: 5, padding: 4 },
+  buttonStyle: {
+    backgroundColor: '#519a55',
+    width:150,
+    alignSelf: 'center',
+    alignItems: 'center',
+    padding:10,
+    borderRadius: 10,
+    marginTop:30
+  },
+  buttonTextStyle: {
+    color:'#fff',
+    fontSize: 19,
+  }
 });
