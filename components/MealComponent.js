@@ -1,56 +1,30 @@
 import * as React from 'react';
 import {Image, StyleSheet, Text, FlatList,TouchableOpacity,View} from 'react-native';
-const DATA = [
-    {
-        id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-        title: 'First Item',
-    },
-    {
-        id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-        title: 'Second Item',
-    },
-    {
-        id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-        title: 'Second Item',
-    },
-    {
-        id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-        title: 'Second Item',
-    },
-    {
-        id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-        title: 'Second Item',
-    },
-    {
-        id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-        title: 'Second Item',
-    },
-    {
-        id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-        title: 'Second Item',
-    },
-    {
-        id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-        title: 'Second Item',
-    },
-    {
-        id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-        title: 'Second Item',
-    },
-    {
-        id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-        title: 'Second Item',
-    },
-    {
-        id: '58694a0f-3da1-471f-bd96-145571e29d72',
-        title: 'Third Item',
-    },
-];
 
-function Item({ title }) {
+function Item({ item }) {
     return (
-        <View style={styles.item}>
-            <Text style={styles.title}>{title}</Text>
+        <View style={styles.listItemContainer}>
+            <View style={styles.listItemContainer3}>
+                <Text style={{fontSize:16}}>{item.meal_name}</Text>
+            </View>
+            <View style={styles.listItemContainer2}>
+                <Text>{item.protein}g</Text>
+                <Text>{item.fat}g</Text>
+                <Text>{item.carb}g</Text>
+            </View>
+        </View>
+    );
+}
+function ListHeder() {
+    return (
+        <View style={styles.listItemContainer}>
+            <View style={styles.listItemContainer3}>
+            </View>
+            <View style={styles.listItemContainer2}>
+                <Text style={{fontWeight:'bold',marginLeft: 10}}>E</Text>
+                <Text style={{fontWeight:'bold'}}>F</Text>
+                <Text style={{fontWeight:'bold',marginRight:10}}>K</Text>
+            </View>
         </View>
     );
 }
@@ -91,11 +65,19 @@ export default class MealComponent extends React.Component {
                     </TouchableOpacity>
                 </View>
                 { this.state.show &&
-                <FlatList
-                    data={DATA}
-                    renderItem={({ item }) => <Item title={item.title} />}
-                    keyExtractor={item => item.id}
-                />}
+                <View>
+                    <FlatList
+                        data={this.props.mealQuantities}
+                        renderItem={({ item }) => <Item item={item} />}
+                        keyExtractor={item => item.id.toString()}
+                        ListHeaderComponent={<ListHeder/>}
+                    />
+                    {
+                        this.props.mealQuantities.length === 0 &&
+                        <View><Text style={{alignSelf:'center', color:'red'}}>No Values</Text></View>
+                    }
+                </View>
+                }
             </View>
         );
     }
@@ -108,6 +90,34 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         borderBottomColor:'#b1afaf',
         borderBottomWidth:3
+    },
+    listItemContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        borderBottomColor:'#e2e1e1',
+        borderBottomWidth:1
+    },
+    listItemContainer2: {
+        paddingLeft:5,
+        paddingRight:5,
+        paddingTop:2,
+        paddingBottom:2,
+        flex: 2,
+        textAlign:'center',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginRight:10
+    },
+    listItemContainer3: {
+        marginLeft: 5,
+        paddingLeft:5,
+        paddingRight:5,
+        paddingTop:2,
+        paddingBottom:2,
+        flex: 3,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     },
     imageStyle: {
         width: 100,
