@@ -1,6 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
-import { FlatList,Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList,Alert, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import {RectButton, ScrollView} from 'react-native-gesture-handler';
 
 import { MonoText } from '../components/StyledText';
@@ -25,13 +25,17 @@ export default class Ingredients extends React.Component {
     componentDidMount() {
         this._unsubscribe = this.props.navigation.addListener('focus', () => {
             // do something
-            db.transaction(tx => {
-                tx.executeSql(
-                    `select * from meals;`,
-                    null,
-                    (_, { rows: { _array } }) => this.setState({items: _array})
-                );
-            });
+            this.getMealsFromDb();
+        });
+    }
+
+    getMealsFromDb = () => {
+        db.transaction(tx => {
+            tx.executeSql(
+                `select * from meals;`,
+                null,
+                (_, { rows: { _array } }) => this.setState({items: _array})
+            );
         });
     }
 
@@ -49,6 +53,32 @@ export default class Ingredients extends React.Component {
     addMeal = () => {
         this.props.navigation.navigate('Add Meals');
     };
+    deleteMeal = () => {
+        Alert.alert(
+            "Delete "+ this.state.selectedItems[0].name,
+            "Are you sure?",
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => {
+                    },
+                    style: "cancel"
+                },
+                { text: "OK", onPress: () => {
+                        db.transaction(tx => {
+                            tx.executeSql(
+                                "delete from meals where id = "+this.state.selectedItems[0].id+";",
+                                null,
+                                ()=>{
+                                    this.getMealsFromDb();
+                                }
+                            );
+                        });
+                    } }
+            ],
+            { cancelable: false }
+        );
+    }
     setAmount = () => {
         if (this.state.selectedItems.length > 0) {
             this.props.navigation.navigate('Set Amount', {selectedItems: this.state.selectedItems,
@@ -74,6 +104,13 @@ export default class Ingredients extends React.Component {
                     <Ionicons name="md-add-circle" size={32} color="green" />
                     <MonoText style={{color:'blue',marginLeft: 10, alignSelf:'center'}}>Add Meal</MonoText>
                 </TouchableOpacity>
+
+                { this.state.selectedItems.length === 1 &&
+                    <TouchableOpacity onPress={this.deleteMeal} style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
+                        <Ionicons name="md-trash" size={32} color="red" />
+                        <MonoText style={{color:'red',marginLeft: 10, alignSelf:'center'}}>Delete Meal</MonoText>
+                    </TouchableOpacity>
+                }
                     <FlatList
                         keyExtractor={(item) => item.id.toString() }
                         data={this.state.items}
