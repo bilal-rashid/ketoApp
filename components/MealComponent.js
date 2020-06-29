@@ -1,5 +1,7 @@
 import * as React from 'react';
 import {Image, StyleSheet, Text, FlatList,TouchableOpacity,View} from 'react-native';
+import {Ionicons} from "@expo/vector-icons";
+import {MonoText} from "./StyledText";
 
 function Item({ item }) {
     return (
@@ -74,7 +76,12 @@ export default class MealComponent extends React.Component {
                     />
                     {
                         this.props.mealQuantities.length === 0 &&
-                        <View><Text style={{alignSelf:'center', color:'red'}}>No Values</Text></View>
+                        <View >
+                            <View style={{flexDirection:'row', alignSelf: 'center'}}>
+                                <Ionicons style={{alignSelf: 'center'}} name="md-information-circle" size={32} color="red" />
+                                <MonoText style={{color:'red',marginLeft: 10, alignSelf:'center'}}>No Values</MonoText>
+                            </View>
+                        </View>
                     }
                 </View>
                 }
@@ -145,5 +152,5 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 32,
-    },
+    }
 });
