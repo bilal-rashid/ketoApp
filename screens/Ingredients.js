@@ -34,7 +34,8 @@ export default class Ingredients extends React.Component {
             tx.executeSql(
                 `select * from meals;`,
                 null,
-                (_, { rows: { _array } }) => this.setState({items: _array})
+                (_, { rows: { _array } }) => this.setState({items: _array,
+                    selectedItems:[]})
             );
         });
     }
