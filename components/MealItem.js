@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     groupItem: {
         marginLeft: 10,
         fontSize: 14,
-        color: 'green'
+        color: '#007AFF'
     },
     valuesText: {
         fontSize: 12,

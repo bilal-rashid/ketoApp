@@ -3,7 +3,7 @@ import * as React from 'react';
 import {  Platform, StyleSheet, Text, View } from 'react-native';
 
 import * as SQLite from 'expo-sqlite';
-import { TextInput,Button,Alert,Picker } from 'react-native';
+import { TextInput,Button,Alert,Picker,TouchableOpacity } from 'react-native';
 const db = SQLite.openDatabase("db.db");
 export default class AddMealScreen extends React.Component {
     constructor () {
@@ -69,9 +69,32 @@ export default class AddMealScreen extends React.Component {
 
         }
     }
+    componentDidMount() {
+        this.props.navigation.setOptions({
+            headerRight: () => (
+                <TouchableOpacity onPress={this.onSave}>
+                    <Text style={{color:'#007AFF', fontSize:17, marginRight:15}}>Add</Text>
+                </TouchableOpacity>
+            ),
+        });
+    }
+
     render () {
         return (
             <View style={styles.container}>
+                <Picker
+                    selectedValue={this.state.group}
+                    onValueChange={(itemValue, itemIndex) => this.setState({ group: itemValue })}>
+                    <Picker.Item label="Select" value='n' />
+                    <Picker.Item label="Porridge" value="Porridge" />
+                    <Picker.Item label="Britta Alagna" value="Britta Alagna" />
+                    <Picker.Item label="Egg" value="Egg" />
+                    <Picker.Item label="Ready made Porridges" value="Ready made Porridges" />
+                    <Picker.Item label="Fats" value="Fats" />
+                    <Picker.Item label="Fish" value="Fish" />
+                    <Picker.Item label="Meat" value="Meat" />
+                    <Picker.Item label="Fruit" value="Fruit" />
+                </Picker>
                 <TextInput
                     style={styles.textInputStyle}
                     placeholder={'Name'}
@@ -100,19 +123,6 @@ export default class AddMealScreen extends React.Component {
                     keyboardType={'decimal-pad'}
 
                 />
-                <Picker
-                    selectedValue={this.state.group}
-                    onValueChange={(itemValue, itemIndex) => this.setState({ group: itemValue })}>
-                    <Picker.Item label="Select" value='n' />
-                    <Picker.Item label="Porridge" value="Porridge" />
-                    <Picker.Item label="Britta Alagna" value="Britta Alagna" />
-                    <Picker.Item label="Egg" value="Egg" />
-                    <Picker.Item label="Ready made Porridges" value="Ready made Porridges" />
-                    <Picker.Item label="Fats" value="Fats" />
-                    <Picker.Item label="Fish" value="Fish" />
-                    <Picker.Item label="Meat" value="Meat" />
-                    <Picker.Item label="Fruit" value="Fruit" />
-                </Picker>
 
                 <View style={{marginLeft:100, marginRight:100,marginTop:20,marginBottom:20}}>
                     <Button title="Add" onPress={this.onSave} />

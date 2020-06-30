@@ -1,6 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
-import { FlatList, Platform, StyleSheet, Text, View } from 'react-native';
+import {FlatList, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import * as SQLite from 'expo-sqlite';
 import { Button } from 'react-native';
@@ -21,6 +21,13 @@ export default class LogMealScreen extends React.Component {
             tempObj[items[i].id+''] = 0;
         }
         this.setState({values: tempObj});
+        this.props.navigation.setOptions({
+            headerRight: () => (
+                <TouchableOpacity onPress={this.onSave}>
+                    <Text style={{color:'#007AFF', fontSize:17, marginRight:15}}>Save</Text>
+                </TouchableOpacity>
+            ),
+        });
     }
 
     backPress = () => {

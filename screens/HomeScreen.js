@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
     marginRight:30,
     height: 40, borderColor: 'gray', borderWidth: 1, borderRadius: 4, margin: 5, padding: 4 },
   buttonStyle: {
-    backgroundColor: '#519a55',
+    backgroundColor: '#007AFF',
     width:150,
     alignSelf: 'center',
     alignItems: 'center',

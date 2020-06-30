@@ -38,7 +38,6 @@ export default class Ingredients extends React.Component {
                 (_, { rows: { _array } }) => {this.setState({items: _array,
                     filteredItems:_array,
                     selectedItems:[]});
-                console.warn('kahli kr dia')
                 }
             );
         });
@@ -111,8 +110,8 @@ export default class Ingredients extends React.Component {
         return (
             <View style={styles.container}>
                 <TouchableOpacity onPress={this.addMeal} style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-                    <Ionicons name="md-add-circle" size={32} color="green" />
-                    <MonoText style={{color:'blue',marginLeft: 10, alignSelf:'center'}}>Add Meal</MonoText>
+                    <Ionicons name="md-add-circle" size={32} color="#007AFF" />
+                    <MonoText style={{color:'#007AFF',marginLeft: 10, alignSelf:'center'}}>Add Meal</MonoText>
                 </TouchableOpacity>
 
                 { this.state.selectedItems.length === 1 &&
@@ -299,7 +298,7 @@ const styles = StyleSheet.create({
         color: '#2e78b7',
     },
     buttonStyle: {
-        backgroundColor: 'green',
+        backgroundColor: '#007AFF',
         width:170,
         alignSelf: 'center',
         alignItems: 'center',
