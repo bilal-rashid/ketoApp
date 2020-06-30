@@ -109,17 +109,18 @@ export default class Ingredients extends React.Component {
         // console.warn(this.props.route.params.date.getDate());
         return (
             <View style={styles.container}>
-                <TouchableOpacity onPress={this.addMeal} style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-                    <Ionicons name="md-add-circle" size={32} color="#007AFF" />
-                    <MonoText style={{color:'#007AFF',marginLeft: 10, alignSelf:'center'}}>Add Meal</MonoText>
-                </TouchableOpacity>
-
-                { this.state.selectedItems.length === 1 &&
-                    <TouchableOpacity onPress={this.deleteMeal} style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-                        <Ionicons name="md-trash" size={32} color="red" />
-                        <MonoText style={{color:'red',marginLeft: 10, alignSelf:'center'}}>Delete Meal</MonoText>
+                <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
+                    <TouchableOpacity onPress={this.addMeal} style={{flexDirection: 'row'}}>
+                        <Ionicons name="md-add-circle" size={32} color="#007AFF" />
+                        <MonoText style={{color:'#007AFF',marginLeft: 10, alignSelf:'center'}}>Add Meal</MonoText>
                     </TouchableOpacity>
-                }
+                    {this.state.selectedItems.length === 1 &&
+                        <TouchableOpacity onPress={this.deleteMeal} style={{flexDirection: 'row', marginRight: 5}}>
+                            <Ionicons name="md-trash" size={32} color="red"/>
+                            <MonoText style={{color: 'red', marginLeft: 10, alignSelf: 'center'}}>Delete Meal</MonoText>
+                        </TouchableOpacity>
+                    }
+                </View>
                 <TextInput
                     style={styles.textInputStyle}
                     placeholder={'Search'}
@@ -240,17 +241,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginHorizontal: 50,
     },
-    homeScreenFilename: {
-        marginVertical: 7,
-    },
     codeHighlightText: {
         color: 'rgba(96,100,109, 0.8)',
     },
     codeHighlightContainer: {
         flexDirection:'row',
+        justifyContent: 'space-between',
         backgroundColor: 'rgba(0,0,0,0.05)',
         borderRadius: 3,
         paddingHorizontal: 4,
+    },
+    homeScreenFilename: {
+        marginVertical: 7,
     },
     getStartedText: {
         fontSize: 17,
