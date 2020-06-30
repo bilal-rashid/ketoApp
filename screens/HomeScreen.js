@@ -8,19 +8,76 @@ export default class HomeScreen extends React.Component {
   constructor() {
     super();
     this.state = {
+      editMode: false,
+      name: '',
+      calories: 0,
+      protein:0,
+      fat:0,
+      carb:0
     };
   }
 
   componentDidMount() {
+    this.fetchFromLocalStorage();
   }
-  fetchval = () => {
-    SecureStore.getItemAsync('notFirstLaunch').then(value => {
-      console.warn(value);
+  fetchFromLocalStorage = () => {
+    SecureStore.getItemAsync('user_name').then(user_name => {
+      SecureStore.getItemAsync('user_calories').then(user_calories => {
+        SecureStore.getItemAsync('user_protein').then(user_protein => {
+          SecureStore.getItemAsync('user_fat').then(user_fat => {
+            SecureStore.getItemAsync('user_carb').then(user_carb => {
+              this.setState({
+                name: (user_name)? user_name: '',
+                calories: (user_calories)? user_calories: 0,
+                protein: (user_protein)? user_protein: 0,
+                fat: (user_fat)? user_fat: 0,
+                carb: (user_carb)? user_carb: 0
+              });
+            });
+          });
+        });
+      });
     });
   }
   saveval = () => {
     console.warn('call');
     SecureStore.setItemAsync('notFirstLaunch', 'bilal').then(value => {console.warn(value)})
+  }
+  editProfile = () => {
+    this.setState({editMode: true});
+  }
+  saveProfile = () => {
+    SecureStore.setItemAsync('user_name', this.state.name);
+    SecureStore.setItemAsync('user_calories', this.state.calories.toString());
+    SecureStore.setItemAsync('user_protein', this.state.protein.toString());
+    SecureStore.setItemAsync('user_fat', this.state.fat.toString());
+    SecureStore.setItemAsync('user_carb', this.state.carb.toString());
+    this.setState({editMode: false});
+  }
+  onChangeName = (value) => {
+    this.setState({
+      name:value
+    })
+  }
+  onChangeCalories = (value) => {
+    this.setState({
+      calories:+value
+    })
+  }
+  onChangeProtein = (value) => {
+    this.setState({
+      protein:+value
+    })
+  }
+  onChangeFat = (value) => {
+    this.setState({
+      fat:+value
+    })
+  }
+  onChangeCarb = (value) => {
+    this.setState({
+      carb:+value
+    })
   }
   render () {
     return (
@@ -37,38 +94,106 @@ export default class HomeScreen extends React.Component {
                   style={styles.welcomeImage}
               />
             </View>
-            <TextInput
-                style={styles.textInputStyle}
-                placeholder={'Name'}
-                keyboardType={'default'}
-            />
-            <TextInput
-                style={styles.textInputStyle}
-                placeholder={'Calories per day'}
-                keyboardType={'decimal-pad'}
-            />
+            { !this.state.editMode &&
+              <View>
+                <Text style={{fontSize: 19, alignSelf: 'center', marginRight: 15, marginTop: 20}}>{this.state.name}</Text>
+                <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                  <Text style={{
+                    fontSize: 19,
+                    color: 'black',
+                    alignSelf: 'center',
+                    marginRight: 5,
+                    marginTop: 20
+                  }}>{this.state.calories}</Text>
+                  <Text style={{fontSize: 14, color: 'grey', alignSelf: 'center', marginRight: 15, marginTop: 20}}>Kalorien
+                    pro Tag</Text>
+                </View>
+                <View style={styles.getStartedContainer}>
+                  <Text style={styles.getStartedText}>Verhältnis:</Text>
+                </View>
+                <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                  <Text style={{
+                    fontSize: 17,
+                    color: 'grey',
+                    alignSelf: 'center',
+                    marginRight: 15,
+                    marginTop: 20
+                  }}>Eiweiß</Text>
+                  <Text style={{fontSize: 19, color: 'black', alignSelf: 'center', marginRight: 15, marginTop: 20}}>{this.state.protein}%</Text>
+                </View>
+                <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                  <Text style={{
+                    fontSize: 17,
+                    color: 'grey',
+                    alignSelf: 'center',
+                    marginRight: 15,
+                    marginTop: 20
+                  }}>Fett</Text>
+                  <Text style={{fontSize: 19, color: 'black', alignSelf: 'center', marginRight: 15, marginTop: 20}}>{this.state.fat}
+                    %</Text>
+                </View>
+                <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                  <Text style={{
+                    fontSize: 17,
+                    color: 'grey',
+                    alignSelf: 'center',
+                    marginRight: 15,
+                    marginTop: 20
+                  }}>Kohlenhydrat</Text>
+                  <Text style={{fontSize: 19, color: 'black', alignSelf: 'center', marginRight: 15, marginTop: 20}}>{this.state.carb}
+                    %</Text>
+                </View>
+                <TouchableOpacity onPress={this.editProfile} style={styles.buttonStyle}>
+                  <Text style={styles.buttonTextStyle}>Edit</Text>
+                </TouchableOpacity>
+              </View>
+            }
+            { this.state.editMode &&
+              <View>
+                <TextInput
+                    style={styles.textInputStyle}
+                    placeholder={'Name'}
+                    value={this.state.name}
+                    onChangeText={this.onChangeName}
+                    keyboardType={'default'}
+                />
+                <TextInput
+                    style={styles.textInputStyle}
+                    placeholder={'Kalorien pro Tag'}
+                    value={this.state.calories.toString()}
+                    onChangeText={this.onChangeCalories}
+                    keyboardType={'decimal-pad'}
+                />
 
-            <View style={styles.getStartedContainer}>
-              <Text  style={styles.getStartedText}>Proportion:</Text>
-            </View>
-            <TextInput
-                style={styles.textInputStyle}
-                placeholder={'Protein%'}
-                keyboardType={'decimal-pad'}
-            />
-            <TextInput
-                style={styles.textInputStyle}
-                placeholder={'Fat %'}
-                keyboardType={'decimal-pad'}
-            />
-            <TextInput
-                style={styles.textInputStyle}
-                placeholder={'Carbohydrate %'}
-                keyboardType={'decimal-pad'}
-            />
-            <TouchableOpacity style={styles.buttonStyle}>
-              <Text style={styles.buttonTextStyle}>Save</Text>
-            </TouchableOpacity>
+                <View style={styles.getStartedContainer}>
+                  <Text style={styles.getStartedText}>Verhältnis:</Text>
+                </View>
+                <TextInput
+                    style={styles.textInputStyle}
+                    placeholder={'Protein%'}
+                    value={this.state.protein.toString()}
+                    onChangeText={this.onChangeProtein}
+                    keyboardType={'decimal-pad'}
+                />
+                <TextInput
+                    style={styles.textInputStyle}
+                    placeholder={'Fat %'}
+                    value={this.state.fat.toString()}
+                    onChangeText={this.onChangeFat}
+                    keyboardType={'decimal-pad'}
+                />
+                <TextInput
+                    style={styles.textInputStyle}
+                    placeholder={'Carbohydrate %'}
+                    value={this.state.carb.toString()}
+                    onChangeText={this.onChangeCarb}
+                    keyboardType={'decimal-pad'}
+                />
+                <TouchableOpacity onPress={this.saveProfile} style={styles.buttonStyle}>
+                  <Text style={styles.buttonTextStyle}>Save</Text>
+                </TouchableOpacity>
+              </View>
+            }
 
             {/*<View style={styles.helpContainer}>*/}
             {/*  <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>*/}
@@ -152,6 +277,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     marginTop: 3,
     marginLeft: -10,
+    tintColor: 'grey'
   },
   getStartedContainer: {
     alignItems: 'center',
@@ -172,6 +298,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: 'rgba(96,100,109, 1)',
     lineHeight: 24,
+    marginRight: 15,
     textAlign: 'center',
     marginBottom:10,
     marginTop:20,
