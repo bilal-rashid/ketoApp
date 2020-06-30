@@ -1,6 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
-import { FlatList,Alert, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {FlatList, Alert, Platform, StyleSheet, Text, TouchableOpacity, View, TextInput} from 'react-native';
 import {RectButton, ScrollView} from 'react-native-gesture-handler';
 
 import { MonoText } from '../components/StyledText';
@@ -14,6 +14,7 @@ export default class Ingredients extends React.Component {
         super();
         this.state = {
             items: [],
+            filteredItems: [],
             selectedItems: []
         };
     }
@@ -34,8 +35,11 @@ export default class Ingredients extends React.Component {
             tx.executeSql(
                 `select * from meals;`,
                 null,
-                (_, { rows: { _array } }) => this.setState({items: _array,
-                    selectedItems:[]})
+                (_, { rows: { _array } }) => {this.setState({items: _array,
+                    filteredItems:_array,
+                    selectedItems:[]});
+                console.warn('kahli kr dia')
+                }
             );
         });
     }
@@ -96,7 +100,12 @@ export default class Ingredients extends React.Component {
             temp.splice(temp.indexOf(temp.find(p=>p.id===item.id)),1);
             this.setState({selectedItems: temp});
         }
-    };
+    }
+    onChange = (value) => {
+        var filteredItems = this.state.items.filter(p => p.name.toLowerCase().includes(value.toLowerCase()) ||
+            p.group_name.toLowerCase().includes(value.toLowerCase()));
+        this.setState({filteredItems:filteredItems});
+    }
     render () {
         // console.warn(this.props.route.params.date.getDate());
         return (
@@ -112,11 +121,19 @@ export default class Ingredients extends React.Component {
                         <MonoText style={{color:'red',marginLeft: 10, alignSelf:'center'}}>Delete Meal</MonoText>
                     </TouchableOpacity>
                 }
+                <TextInput
+                    style={styles.textInputStyle}
+                    placeholder={'Search'}
+                    onChangeText={this.onChange}
+                    keyboardType={'default'}
+
+                />
                     <FlatList
                         keyExtractor={(item) => item.id.toString() }
-                        data={this.state.items}
+                        data={this.state.filteredItems}
                         renderItem={({ item }) => <MealItem
                             onItemSelected={this.onItemSelected}
+                            selected={this.state.selectedItems.filter(p=>p.id === item.id).length === 1}
                             item={item}/>}
                     />
                     <TouchableOpacity onPress={this.setAmount} style={styles.buttonStyle}>
@@ -293,5 +310,6 @@ const styles = StyleSheet.create({
     buttonTextStyle: {
         color:'#fff',
         fontSize: 15,
-    }
+    },
+    textInputStyle: { height: 40, borderColor: 'gray', borderWidth: 1, borderRadius: 4, margin: 5, padding: 4 }
 });

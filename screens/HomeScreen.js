@@ -32,7 +32,7 @@ export default class HomeScreen extends React.Component {
                   source={
                     __DEV__
                         ? require('../assets/images/user.png')
-                        : require('../assets/images/robot-prod.png')
+                        : require('../assets/images/user.png')
                   }
                   style={styles.welcomeImage}
               />

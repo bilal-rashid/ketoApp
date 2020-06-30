@@ -12,13 +12,11 @@ export default class MealItem extends React.Component {
         };
     }
     select = () => {
-        const selected = this.state.selected;
-        this.props.onItemSelected(!selected,this.props.item);
-        this.setState({selected:!selected});
+        this.props.onItemSelected(!this.props.selected,this.props.item);
     };
 
     render () {
-        const backgroundColor = (this.state.selected)? '#cdcccc' : '#fff';
+        const backgroundColor = (this.props.selected)? '#cdcccc' : '#fff';
         return (
             <TouchableOpacity style={{backgroundColor: backgroundColor}} onPress={this.select}>
                 <View style={styles.container}>
@@ -35,7 +33,7 @@ export default class MealItem extends React.Component {
                         </View>
                     </View>
                     <View style={{alignSelf:'center'}}>
-                        {this.state.selected && (
+                        {this.props.selected && (
                             <Ionicons name="md-checkmark" size={32} color='#077bac'/>)
                         }
                     </View>
