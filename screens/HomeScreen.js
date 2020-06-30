@@ -13,7 +13,8 @@ export default class HomeScreen extends React.Component {
       calories: 0,
       protein:0,
       fat:0,
-      carb:0
+      carb:0,
+      error:false
     };
   }
 
@@ -28,10 +29,10 @@ export default class HomeScreen extends React.Component {
             SecureStore.getItemAsync('user_carb').then(user_carb => {
               this.setState({
                 name: (user_name)? user_name: '',
-                calories: (user_calories)? user_calories: 0,
-                protein: (user_protein)? user_protein: 0,
-                fat: (user_fat)? user_fat: 0,
-                carb: (user_carb)? user_carb: 0
+                calories: (user_calories)? +user_calories: 0,
+                protein: (user_protein)? +user_protein: 0,
+                fat: (user_fat)? +user_fat: 0,
+                carb: (user_carb)? +user_carb: 0
               });
             });
           });
@@ -47,12 +48,17 @@ export default class HomeScreen extends React.Component {
     this.setState({editMode: true});
   }
   saveProfile = () => {
-    SecureStore.setItemAsync('user_name', this.state.name);
-    SecureStore.setItemAsync('user_calories', this.state.calories.toString());
-    SecureStore.setItemAsync('user_protein', this.state.protein.toString());
-    SecureStore.setItemAsync('user_fat', this.state.fat.toString());
-    SecureStore.setItemAsync('user_carb', this.state.carb.toString());
-    this.setState({editMode: false});
+    const totalPercent = this.state.protein + this.state.fat + this.state.carb;
+    if (totalPercent > 100) {
+      this.setState({error: true});
+    } else {
+      SecureStore.setItemAsync('user_name', this.state.name);
+      SecureStore.setItemAsync('user_calories', this.state.calories.toString());
+      SecureStore.setItemAsync('user_protein', this.state.protein.toString());
+      SecureStore.setItemAsync('user_fat', this.state.fat.toString());
+      SecureStore.setItemAsync('user_carb', this.state.carb.toString());
+      this.setState({editMode: false, error: false});
+    }
   }
   onChangeName = (value) => {
     this.setState({
@@ -95,7 +101,7 @@ export default class HomeScreen extends React.Component {
               />
             </View>
             { !this.state.editMode &&
-              <View>
+              <View style={{borderRadius:10,borderColor: '#d2d1d1', borderWidth: 1, marginRight:50, marginLeft:50}}>
                 <Text style={{fontSize: 19, alignSelf: 'center', marginRight: 15, marginTop: 20}}>{this.state.name}</Text>
                 <View style={{flexDirection: 'row', justifyContent: 'center'}}>
                   <Text style={{
@@ -189,6 +195,9 @@ export default class HomeScreen extends React.Component {
                     onChangeText={this.onChangeCarb}
                     keyboardType={'decimal-pad'}
                 />
+                {this.state.error &&
+                  <Text style={{color: 'red', alignSelf: 'center', marginTop: 10}}>Ungültig Verhältnis</Text>
+                }
                 <TouchableOpacity onPress={this.saveProfile} style={styles.buttonStyle}>
                   <Text style={styles.buttonTextStyle}>Save</Text>
                 </TouchableOpacity>
@@ -354,6 +363,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding:10,
     borderRadius: 10,
+    marginBottom:10,
     marginTop:30
   },
   buttonTextStyle: {
