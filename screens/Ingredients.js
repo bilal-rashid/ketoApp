@@ -103,7 +103,7 @@ export default class Ingredients extends React.Component {
     onChange = (value) => {
         var filteredItems = this.state.items.filter(p => p.name.toLowerCase().includes(value.toLowerCase()) ||
             p.group_name.toLowerCase().includes(value.toLowerCase()));
-        this.setState({filteredItems:filteredItems});
+        this.setState({filteredItems:filteredItems, selectedItems:[]});
     }
     render () {
         // console.warn(this.props.route.params.date.getDate());

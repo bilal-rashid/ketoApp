@@ -43,6 +43,6 @@ function getHeaderTitle(route) {
     case 'Home':
       return 'Profile';
     case 'Links':
-      return 'Meta Keto';
+      return 'Keto';
   }
 }

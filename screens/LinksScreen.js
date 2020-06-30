@@ -167,7 +167,7 @@ export default class LinksScreen extends React.Component {
                 <Progress.Bar progress={0.5} width={null} height={10} color={'#3b3a39'} />
               </View>
               <View style={styles.progressTextContainer}>
-                <Text style={styles.progressTextLeft}>Kohlenhydrate jjjj</Text>
+                <Text style={styles.progressTextLeft}>Kohlenhydrate</Text>
                 <Text style={styles.progressTextRight}>0.0/1g</Text>
               </View>
             </View>
