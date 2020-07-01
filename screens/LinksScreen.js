@@ -202,7 +202,12 @@ export default class LinksScreen extends React.Component {
               </View>
               <View style={styles.progressTextContainer}>
                 <Text style={styles.progressTextLeft}>Einweis</Text>
-                <Text style={styles.progressTextRight}>{this.state.proteinToday}/{this.state.proteinTarget}g</Text>
+                {((this.state.proteinToday/this.state.proteinTarget) <= 1) &&
+                  <Text style={styles.progressTextRight}>{this.state.proteinToday}/{this.state.proteinTarget}g</Text>
+                }
+                {((this.state.proteinToday/this.state.proteinTarget) > 1) &&
+                  <Text style={styles.progressTextRightDanger}>{this.state.proteinToday}/{this.state.proteinTarget}g</Text>
+                }
               </View>
 
             </View>
@@ -212,7 +217,12 @@ export default class LinksScreen extends React.Component {
               </View>
               <View style={styles.progressTextContainer}>
                 <Text style={styles.progressTextLeft}>Fett</Text>
-                <Text style={styles.progressTextRight}>{this.state.fatToday}/{this.state.fatTarget}g</Text>
+                {((this.state.fatToday/this.state.fatTarget) <= 1) &&
+                  <Text style={styles.progressTextRight}>{this.state.fatToday}/{this.state.fatTarget}g</Text>
+                }
+                {((this.state.fatToday/this.state.fatTarget) > 1) &&
+                  <Text style={styles.progressTextRightDanger}>{this.state.fatToday}/{this.state.fatTarget}g</Text>
+                }
               </View>
             </View>
             <View style={styles.progressBarContainer} >
@@ -221,7 +231,12 @@ export default class LinksScreen extends React.Component {
               </View>
               <View style={styles.progressTextContainer}>
                 <Text style={styles.progressTextLeft}>Kohlenhydrate</Text>
-                <Text style={styles.progressTextRight}>{this.state.carbToday}/{this.state.carbTarget}g</Text>
+                {((this.state.carbToday/this.state.carbTarget) <= 1) &&
+                  <Text style={styles.progressTextRight}>{this.state.carbToday}/{this.state.carbTarget}g</Text>
+                }
+                {((this.state.carbToday/this.state.carbTarget) > 1) &&
+                  <Text style={styles.progressTextRightDanger}>{this.state.carbToday}/{this.state.carbTarget}g</Text>
+                }
               </View>
             </View>
           </View>
@@ -322,6 +337,10 @@ const styles = StyleSheet.create({
   progressTextRight: {
     fontSize:12,
     color:'#656363'
+  },
+  progressTextRightDanger: {
+    fontSize:12,
+    color:'#ee2c2c'
   },
   progressTextContainer: {
     flex: 1,
