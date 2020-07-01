@@ -124,9 +124,9 @@ export default class AddMealScreen extends React.Component {
 
                 />
 
-                <View style={{marginLeft:100, marginRight:100,marginTop:20,marginBottom:20}}>
-                    <Button title="Add" onPress={this.onSave} />
-                </View>
+                {/*<View style={{marginLeft:100, marginRight:100,marginTop:20,marginBottom:20}}>*/}
+                {/*    <Button title="Add" onPress={this.onSave} />*/}
+                {/*</View>*/}
                 <Separator />
                 { this.state.error && (
                 <Text style={styles.codeHighlightText}>Some valuesk are missing. Please fill them out and try to save again</Text>)

@@ -143,9 +143,9 @@ export default class LogMealScreen extends React.Component {
                 { this.state.error && (
                     <Text style={styles.codeHighlightText}>Some values are missing. Please fill them out and try to save again</Text>)
                 }
-                <View style={{marginLeft:100, marginRight:100,marginTop:20,marginBottom:20}}>
-                    <Button title="Save" onPress={this.onSave} />
-                </View>
+                {/*<View style={{marginLeft:100, marginRight:100,marginTop:20,marginBottom:20}}>*/}
+                {/*    <Button title="Save" onPress={this.onSave} />*/}
+                {/*</View>*/}
                 {/*<View style={styles.helpContainer}>*/}
                 {/*  <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>*/}
                 {/*    <Text style={styles.helpLinkText}>Help, it didn’t automatically reload!</Text>*/}
