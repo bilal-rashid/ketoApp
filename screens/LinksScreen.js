@@ -9,6 +9,7 @@ import * as Progress from 'react-native-progress';
 import MealComponent from "../components/MealComponent";
 import Enums from '../constants/Enums';
 import * as SQLite from 'expo-sqlite';
+import * as SecureStore from "expo-secure-store";
 
 const db = SQLite.openDatabase("db.db");
 const months = ["01", "02", "03","04", "05", "06", "07", "08", "09", "10", "11", "12"];
@@ -19,13 +20,49 @@ export default class LinksScreen extends React.Component {
       date: new Date(),
       mode: 'date',
       show: false,
-      items: []
+      items: [],
+      proteinTarget: 1,
+      proteinToday: 0,
+      fatTarget: 1,
+      fatToday: 0,
+      carbTarget: 1,
+      carbToday: 0,
     };
   }
   componentDidMount() {
     this._unsubscribe = this.props.navigation.addListener('focus', () => {
       // do something
+      this.getUserPreferences();
       this.getDailyLogs();
+    });
+  }
+  getUserPreferences = () => {
+    var target_protein_in_gram = 1;
+    var target_fat_in_gram = 1;
+    var target_carb_in_gram = 1;
+    SecureStore.getItemAsync('user_calories').then(user_calories => {
+      SecureStore.getItemAsync('user_protein').then(user_protein => {
+        SecureStore.getItemAsync('user_fat').then(user_fat => {
+          SecureStore.getItemAsync('user_carb').then(user_carb => {
+            if (user_calories && user_carb && user_fat && user_protein) {
+              if (user_calories > 0 && user_protein > 0) {
+                target_protein_in_gram = ((user_calories * user_protein / 100) / 4.1).toFixed(2);
+              }
+              if (user_calories > 0 && user_fat > 0) {
+                target_fat_in_gram = ((user_calories * user_fat / 100) / 9.3).toFixed(2);
+              }
+              if (user_calories > 0 && user_carb > 0) {
+                target_carb_in_gram = ((user_calories * user_carb / 100) / 4.1).toFixed(2);
+              }
+              this.setState({
+                proteinTarget: target_protein_in_gram,
+                fatTarget: target_fat_in_gram,
+                carbTarget: target_carb_in_gram
+              });
+            }
+          });
+        });
+      });
     });
   }
   componentWillUnmount() {
@@ -38,9 +75,23 @@ export default class LinksScreen extends React.Component {
           [logId],
           (_, { rows: { _array } }) => {
             if (_array.length > 0) {
-              this.setState({items: _array});
+              var proteinToday = 0;
+              var fatToday = 0;
+              var carbToday = 0;
+              _array.forEach(item => {
+                proteinToday = proteinToday + item.protein;
+                carbToday = carbToday + item.carb;
+                fatToday = fatToday + item.fat;
+              });
+              this.setState({items: _array,
+                proteinToday: proteinToday,
+              carbToday: carbToday,
+              fatToday: fatToday});
             } else {
-              this.setState({items: []});
+              this.setState({items: [],
+                proteinToday: 0,
+                carbToday: 0,
+                fatToday: 0});
             }
           }
       );
@@ -57,7 +108,10 @@ export default class LinksScreen extends React.Component {
             if (_array.length > 0) {
               this.getMealQuantities(_array[0].id);
             } else {
-              this.setState({items: []});
+              this.setState({items: [],
+                proteinToday: 0,
+                carbToday: 0,
+                fatToday: 0});
             }
           }
       );
@@ -65,12 +119,11 @@ export default class LinksScreen extends React.Component {
   }
   // private _closeDialog = (): void => {
   onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
     this.setState({
       show: false,
-      date: currentDate
+      date: selectedDate
     });
-    this.getDailyLogs();
+    this.getDailyLogs(selectedDate);
   };
   showMode = (currentMode) => {
     this.setState({
@@ -145,30 +198,30 @@ export default class LinksScreen extends React.Component {
           <View style={styles.progressContainer}>
             <View style={styles.progressBarContainer} >
               <View style={{marginBottom:5}}>
-                <Progress.Bar progress={0.4} width={null} height={10} color={'#f37f4a'} />
+                <Progress.Bar progress={this.state.proteinToday/this.state.proteinTarget} width={null} height={10} color={'#f37f4a'} />
               </View>
               <View style={styles.progressTextContainer}>
                 <Text style={styles.progressTextLeft}>Einweis</Text>
-                <Text style={styles.progressTextRight}>0.0/1g</Text>
+                <Text style={styles.progressTextRight}>{this.state.proteinToday}/{this.state.proteinTarget}g</Text>
               </View>
 
             </View>
             <View style={styles.progressBarContainer} >
               <View style={{marginBottom:5}}>
-                <Progress.Bar progress={0.7} width={null} height={10} color={'#933dde'} />
+                <Progress.Bar progress={this.state.fatToday/this.state.fatTarget} width={null} height={10} color={'#933dde'} />
               </View>
               <View style={styles.progressTextContainer}>
                 <Text style={styles.progressTextLeft}>Fett</Text>
-                <Text style={styles.progressTextRight}>0.0/1g</Text>
+                <Text style={styles.progressTextRight}>{this.state.fatToday}/{this.state.fatTarget}g</Text>
               </View>
             </View>
             <View style={styles.progressBarContainer} >
               <View style={{marginBottom:5}}>
-                <Progress.Bar progress={0.5} width={null} height={10} color={'#3b3a39'} />
+                <Progress.Bar progress={this.state.carbToday/this.state.carbTarget} width={null} height={10} color={'#3b3a39'} />
               </View>
               <View style={styles.progressTextContainer}>
                 <Text style={styles.progressTextLeft}>Kohlenhydrate</Text>
-                <Text style={styles.progressTextRight}>0.0/1g</Text>
+                <Text style={styles.progressTextRight}>{this.state.carbToday}/{this.state.carbTarget}g</Text>
               </View>
             </View>
           </View>
