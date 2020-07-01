@@ -49,8 +49,8 @@ export default class AddMealScreen extends React.Component {
         })
     }
     onSave = () => {
-        if (this.state.protein && this.state.fat && this.state.carb && this.state.name.length>2
-        && this.state.group.length>2) {
+        if (this.state.protein && this.state.fat && this.state.carb && this.state.name.length>1
+        && this.state.group.length>1) {
             this.setState({error: false});
             db.transaction(
                 tx => {
@@ -86,14 +86,28 @@ export default class AddMealScreen extends React.Component {
                     selectedValue={this.state.group}
                     onValueChange={(itemValue, itemIndex) => this.setState({ group: itemValue })}>
                     <Picker.Item label="Select" value='n' />
-                    <Picker.Item label="Porridge" value="Porridge" />
+                    <Picker.Item label="Gemüse" value="Gemüse" />
+                    <Picker.Item label="Früchte" value="Früchte" />
+                    <Picker.Item label="Ei" value="Ei" />
+                    <Picker.Item label="Fette" value="Fette" />
+                    <Picker.Item label="Fleisch/ Wurst" value="Fleisch/ Wurst" />
+                    <Picker.Item label="Fisch" value="Fisch" />
+                    <Picker.Item label="Kakao" value="Kakao" />
+                    <Picker.Item label="KetoNahrung speziell" value="KetoNahrung speziell" />
+                    <Picker.Item label="Vitamine" value="Vitamine" />
+                    <Picker.Item label="Nahrungsergänzung" value="Nahrungsergänzung" />
+                    <Picker.Item label="Getränke" value="Getränke" />
+                    <Picker.Item label="Nüsse/ Samen" value="Nüsse/ Samen" />
+                    <Picker.Item label="Mehle" value="Mehle" />
+                    <Picker.Item label="Brei" value="Brei" />
+                    <Picker.Item label="Nussmus" value="Nussmus" />
+                    <Picker.Item label="Süssung" value="Süssung" />
+                    <Picker.Item label="Käse/ Milchprodukte" value="Käse/ Milchprodukte" />
+                    <Picker.Item label="Fertigbreie" value="Fertigbreie" />
+                    <Picker.Item label="Getreide-und Brotprodukte" value="Getreide-und Brotprodukte" />
+                    <Picker.Item label="Nudeln/Reis" value="Nudeln/Reis" />
                     <Picker.Item label="Britta Alagna" value="Britta Alagna" />
-                    <Picker.Item label="Egg" value="Egg" />
-                    <Picker.Item label="Ready made Porridges" value="Ready made Porridges" />
-                    <Picker.Item label="Fats" value="Fats" />
-                    <Picker.Item label="Fish" value="Fish" />
-                    <Picker.Item label="Meat" value="Meat" />
-                    <Picker.Item label="Fruit" value="Fruit" />
+                    <Picker.Item label="Gekochte Breie" value="Gekochte Breie" />
                 </Picker>
                 <TextInput
                     style={styles.textInputStyle}

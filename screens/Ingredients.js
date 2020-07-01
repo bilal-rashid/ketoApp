@@ -7,6 +7,7 @@ import { MonoText } from '../components/StyledText';
 import * as SQLite from 'expo-sqlite';
 import {Ionicons} from "@expo/vector-icons";
 import MealItem from "../components/MealItem";
+import InitialData from "../constants/InitialData";
 
 const db = SQLite.openDatabase("db.db");
 export default class Ingredients extends React.Component {
@@ -31,11 +32,19 @@ export default class Ingredients extends React.Component {
     }
 
     getMealsFromDb = () => {
+        var dataId = 9000;
+        const array = JSON.parse(new InitialData().getData());
+        array.forEach(item => {
+            item['id'] = dataId;
+            dataId++;
+        });
         db.transaction(tx => {
             tx.executeSql(
                 `select * from meals;`,
                 null,
-                (_, { rows: { _array } }) => {this.setState({items: _array,
+                (_, { rows: { _array } }) => {
+                    _array = _array.reverse().concat(array)
+                    this.setState({items: _array,
                     filteredItems:_array,
                     selectedItems:[]});
                 }
@@ -58,30 +67,46 @@ export default class Ingredients extends React.Component {
         this.props.navigation.navigate('Add Meals');
     };
     deleteMeal = () => {
-        Alert.alert(
-            "Delete "+ this.state.selectedItems[0].name,
-            "Are you sure?",
-            [
-                {
-                    text: "Cancel",
-                    onPress: () => {
+        if (this.state.selectedItems[0].id > 8999) {
+            Alert.alert(
+                "Anfangsdaten können nicht gelöscht werden",
+                null,
+                [
+                    {
+                        text: "Ok",
+                        onPress: () => {
+                        },
+                        style: "cancel"
+                    }
+                ],
+                { cancelable: true }
+            );
+        } else {
+            Alert.alert(
+                "Delete "+ this.state.selectedItems[0].name,
+                "Are you sure?",
+                [
+                    {
+                        text: "Cancel",
+                        onPress: () => {
+                        },
+                        style: "cancel"
                     },
-                    style: "cancel"
-                },
-                { text: "OK", onPress: () => {
-                        db.transaction(tx => {
-                            tx.executeSql(
-                                "delete from meals where id = "+this.state.selectedItems[0].id+";",
-                                null,
-                                ()=>{
-                                    this.getMealsFromDb();
-                                }
-                            );
-                        });
-                    } }
-            ],
-            { cancelable: false }
-        );
+                    { text: "OK", onPress: () => {
+                            db.transaction(tx => {
+                                tx.executeSql(
+                                    "delete from meals where id = "+this.state.selectedItems[0].id+";",
+                                    null,
+                                    ()=>{
+                                        this.getMealsFromDb();
+                                    }
+                                );
+                            });
+                        } }
+                ],
+                { cancelable: false }
+            );
+        }
     }
     setAmount = () => {
         if (this.state.selectedItems.length > 0) {

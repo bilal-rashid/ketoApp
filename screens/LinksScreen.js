@@ -21,12 +21,12 @@ export default class LinksScreen extends React.Component {
       mode: 'date',
       show: false,
       items: [],
-      proteinTarget: 1,
-      proteinToday: 0,
-      fatTarget: 1,
-      fatToday: 0,
-      carbTarget: 1,
-      carbToday: 0,
+      proteinTarget: 1.0,
+      proteinToday: 0.0,
+      fatTarget: 1.0,
+      fatToday: 0.0,
+      carbTarget: 1.0,
+      carbToday: 0.0,
     };
   }
   componentDidMount() {
@@ -203,10 +203,10 @@ export default class LinksScreen extends React.Component {
               <View style={styles.progressTextContainer}>
                 <Text style={styles.progressTextLeft}>Einweis</Text>
                 {((this.state.proteinToday/this.state.proteinTarget) <= 1) &&
-                  <Text style={styles.progressTextRight}>{this.state.proteinToday}/{this.state.proteinTarget}g</Text>
+                  <Text style={styles.progressTextRight}>{parseFloat(this.state.proteinToday.toString()).toFixed(2)}/{this.state.proteinTarget}g</Text>
                 }
                 {((this.state.proteinToday/this.state.proteinTarget) > 1) &&
-                  <Text style={styles.progressTextRightDanger}>{this.state.proteinToday}/{this.state.proteinTarget}g</Text>
+                  <Text style={styles.progressTextRightDanger}>{parseFloat(this.state.proteinToday.toString()).toFixed(2)}/{this.state.proteinTarget}g</Text>
                 }
               </View>
 
@@ -218,10 +218,10 @@ export default class LinksScreen extends React.Component {
               <View style={styles.progressTextContainer}>
                 <Text style={styles.progressTextLeft}>Fett</Text>
                 {((this.state.fatToday/this.state.fatTarget) <= 1) &&
-                  <Text style={styles.progressTextRight}>{this.state.fatToday}/{this.state.fatTarget}g</Text>
+                  <Text style={styles.progressTextRight}>{parseFloat(this.state.fatToday.toString()).toFixed(2)}/{this.state.fatTarget}g</Text>
                 }
                 {((this.state.fatToday/this.state.fatTarget) > 1) &&
-                  <Text style={styles.progressTextRightDanger}>{this.state.fatToday}/{this.state.fatTarget}g</Text>
+                  <Text style={styles.progressTextRightDanger}>{parseFloat(this.state.fatToday.toString()).toFixed(2)}/{this.state.fatTarget}g</Text>
                 }
               </View>
             </View>
@@ -232,10 +232,10 @@ export default class LinksScreen extends React.Component {
               <View style={styles.progressTextContainer}>
                 <Text style={styles.progressTextLeft}>Kohlenhydrate</Text>
                 {((this.state.carbToday/this.state.carbTarget) <= 1) &&
-                  <Text style={styles.progressTextRight}>{this.state.carbToday}/{this.state.carbTarget}g</Text>
+                  <Text style={styles.progressTextRight}>{parseFloat(this.state.carbToday.toString()).toFixed(2)}/{this.state.carbTarget}g</Text>
                 }
                 {((this.state.carbToday/this.state.carbTarget) > 1) &&
-                  <Text style={styles.progressTextRightDanger}>{this.state.carbToday}/{this.state.carbTarget}g</Text>
+                  <Text style={styles.progressTextRightDanger}>{parseFloat(this.state.carbToday.toString()).toFixed(2)}/{this.state.carbTarget}g</Text>
                 }
               </View>
             </View>
