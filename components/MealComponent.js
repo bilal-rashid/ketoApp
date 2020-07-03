@@ -83,6 +83,15 @@ export default class MealComponent extends React.Component {
                             </View>
                         </View>
                     }
+                    {
+                        this.props.mealQuantities.length > 0 &&
+                        <TouchableOpacity
+                            onPress={() => this.props.callBackClear(this.props.mealQuantities)}>
+                            <Text  style={styles.clearText}>
+                                Clear
+                            </Text>
+                        </TouchableOpacity>
+                    }
                 </View>
                 }
             </View>
@@ -142,6 +151,13 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#2e78b7',
         alignSelf: 'center',
+        marginRight:10
+    },
+    clearText: {
+        fontSize: 16,
+        marginTop: 5,
+        color: '#2e78b7',
+        alignSelf: 'flex-end',
         marginRight:10
     },
     item: {

@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as React from 'react';
-import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, Image, Alert} from 'react-native';
 import { Button, Platform} from 'react-native';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -103,7 +103,8 @@ export default class LinksScreen extends React.Component {
               this.setState({items: [],
                 proteinToday: 0,
                 carbToday: 0,
-                fatToday: 0});
+                fatToday: 0,
+                caloriesToday: 0});
             }
           }
       );
@@ -198,6 +199,41 @@ export default class LinksScreen extends React.Component {
   gotoIngredients = (meal, logId) => {
     this.props.navigation.navigate('Ingredients', {mealType:meal, logId: logId});
   }
+  clearData = (items) => {
+    Alert.alert(
+        "Clear Section",
+        "Are you sure?",
+        [
+          {
+            text: "Cancel",
+            onPress: () => {
+            },
+            style: "cancel"
+          },
+          { text: "OK", onPress: () => {
+              this.deleteSection(items);
+            }
+          }
+        ],
+        { cancelable: false }
+    );
+  }
+  deleteSection = (items) => {
+    var idsString = '(';
+    items.forEach(item => {
+      idsString = idsString.concat(item.id+',');
+    })
+    idsString = idsString.slice(0, -1)+')';
+    db.transaction(tx => {
+      tx.executeSql(
+          "delete from mealquantity where id in " + idsString + ";",
+          null,
+          ()=>{
+            this.getDailyLogs();
+          }
+      );
+    });
+  }
   render () {
     return (
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
@@ -273,18 +309,21 @@ export default class LinksScreen extends React.Component {
           <MealComponent
               callBackAdd = {this.checkLogs}
               mealText={'Frühstück'}
+              callBackClear = {this.clearData}
               mealType={Enums.breakFast}
               mealQuantities={this.state.items.filter(p => p.meal_type === Enums.breakFast)}
               imageSrc={require('../assets/images/mug.png')}/>
           <MealComponent
               callBackAdd = {this.checkLogs}
               mealType={Enums.lunch}
+              callBackClear = {this.clearData}
               mealText={'Mittagessen'}
               mealQuantities={this.state.items.filter(p => p.meal_type === Enums.lunch)}
               imageSrc={require('../assets/images/meat.png')}/>
           <MealComponent
               callBackAdd = {this.checkLogs}
               mealType={Enums.dinner}
+              callBackClear = {this.clearData}
               mealText={'Abendessen'}
               mealQuantities={this.state.items.filter(p => p.meal_type === Enums.dinner)}
               imageSrc={require('../assets/images/dinner.png')}/>
