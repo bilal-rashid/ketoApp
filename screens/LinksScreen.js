@@ -208,7 +208,7 @@ export default class LinksScreen extends React.Component {
               <Text style={styles.dateStyle}>{this.state.date.toLocaleDateString()}</Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.progressContainer}>
+          <View style={styles.progressContainerWithBackground}>
             <View style={styles.progressBarContainer} >
               <View style={{marginBottom:5}}>
                 <Progress.Bar progress={this.state.caloriesToday/this.state.caloriesTarget} width={null} height={10} color={'#2c9aee'} />
@@ -345,6 +345,18 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     textAlign: 'center',
   },
+  progressContainerWithBackground: {
+    paddingTop: 10,
+    marginTop:20,
+    marginStart:10,
+    marginEnd: 10,
+    borderRadius: 4,
+    flexDirection: 'column',
+    borderColor: '#a09c9c',
+    backgroundColor: '#d5d5d5',
+    borderWidth: 1,
+  },
+
   progressContainer: {
     paddingTop: 10,
     marginTop:20,
@@ -365,7 +377,7 @@ const styles = StyleSheet.create({
   },
   progressTextRight: {
     fontSize:12,
-    color:'#656363'
+    color:'#3e3e3e'
   },
   progressTextRightDanger: {
     fontSize:12,
