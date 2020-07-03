@@ -248,6 +248,15 @@ export default class LinksScreen extends React.Component {
               <Text style={styles.dateStyle}>{this.state.date.toLocaleDateString()}</Text>
             </TouchableOpacity>
           </View>
+          {this.state.show && (
+              <DateTimePicker
+                  testID="dateTimePicker"
+                  value={this.state.date}
+                  mode={this.state.mode}
+                  display="default"
+                  onChange={this.onChange}
+              />
+          )}
           <View style={styles.progressContainerWithBackground}>
             <View style={styles.progressBarContainer} >
               <View style={{marginBottom:5}}>
@@ -341,15 +350,6 @@ export default class LinksScreen extends React.Component {
               mealQuantities={this.state.items.filter(p => p.meal_type === Enums.dinner)}
               imageSrc={require('../assets/images/dinner.png')}/>
           {/*<Progress.Bar progress={0.3} width={200}  color={['12', '12', '12']} />*/}
-          {this.state.show && (
-              <DateTimePicker
-                  testID="dateTimePicker"
-                  value={this.state.date}
-                  mode={this.state.mode}
-                  display="default"
-                  onChange={this.onChange}
-              />
-          )}
           {/*<OptionButton*/}
           {/*  icon="md-school"*/}
           {/*  label="Read the Expo documentation"*/}
