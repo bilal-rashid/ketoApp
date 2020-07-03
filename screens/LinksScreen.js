@@ -197,7 +197,11 @@ export default class LinksScreen extends React.Component {
     );
   }
   gotoIngredients = (meal, logId) => {
-    this.props.navigation.navigate('Ingredients', {mealType:meal, logId: logId});
+    this.props.navigation.navigate('Ingredients', {mealType:meal, logId: logId,
+    proteinPercent: this.state.proteinToday/this.state.proteinTarget,
+    fatPercent: this.state.fatToday/this.state.fatTarget,
+    carbPercent: this.state.carbToday/this.state.carbTarget,
+    });
   }
   clearData = (items) => {
     Alert.alert(

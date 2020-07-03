@@ -111,7 +111,11 @@ export default class Ingredients extends React.Component {
     setAmount = () => {
         if (this.state.selectedItems.length > 0) {
             this.props.navigation.navigate('Set Amount', {selectedItems: this.state.selectedItems,
-            logId:this.props.route.params.logId, mealType: this.props.route.params.mealType});
+            logId:this.props.route.params.logId, mealType: this.props.route.params.mealType,
+            proteinPercent: this.props.route.params.proteinPercent,
+            fatPercent: this.props.route.params.fatPercent,
+            carbPercent: this.props.route.params.carbPercent,
+            });
         }
     };
     onItemSelected = (selected, item) => {

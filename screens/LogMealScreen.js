@@ -5,6 +5,7 @@ import {FlatList, Platform, StyleSheet, Text, TouchableOpacity, View} from 'reac
 import * as SQLite from 'expo-sqlite';
 import { Button } from 'react-native';
 import MealLogItem from "../components/MealLogItem";
+import {Ionicons} from "@expo/vector-icons";
 const db = SQLite.openDatabase("db.db");
 export default class LogMealScreen extends React.Component {
     constructor () {
@@ -133,6 +134,48 @@ export default class LogMealScreen extends React.Component {
         // console.log('hhhhha',this.props.route.params);
         return (
             <View style={styles.container}>
+                <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
+                    <TouchableOpacity onPress={this.addMeal} style={{flexDirection: 'row'}}>
+                        <Ionicons name="md-information-circle" size={32} color="#007AFF" />
+                        <Text style={{color:'#007AFF',marginLeft: 10, alignSelf:'center'}}>Eiweiß Verbraucht</Text>
+                        {
+                            (this.props.route.params.proteinPercent*100) <= 100 &&
+                            <Text style={{color: '#007AFF', marginLeft: 10, alignSelf: 'center',fontWeight:'bold'}}>{(this.props.route.params.proteinPercent*100).toFixed(1)}%</Text>
+                        }
+                        {
+                            (this.props.route.params.proteinPercent*100) > 100 &&
+                            <Text style={{color: 'red', marginLeft: 10, alignSelf: 'center',fontWeight:'bold'}}>{(this.props.route.params.proteinPercent*100).toFixed(1)}%</Text>
+                        }
+                    </TouchableOpacity>
+                </View>
+                <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
+                    <TouchableOpacity onPress={this.addMeal} style={{flexDirection: 'row'}}>
+                        <Ionicons name="md-information-circle" size={32} color="#007AFF" />
+                        <Text style={{color:'#007AFF',marginLeft: 10, alignSelf:'center'}}>Fett Verbraucht</Text>
+                        {
+                            (this.props.route.params.fatPercent*100) <= 100 &&
+                            <Text style={{color: '#007AFF', marginLeft: 10, alignSelf: 'center',fontWeight:'bold'}}>{(this.props.route.params.fatPercent*100).toFixed(1)}%</Text>
+                        }
+                        {
+                            (this.props.route.params.fatPercent*100) > 100 &&
+                            <Text style={{color: 'red', marginLeft: 10, alignSelf: 'center',fontWeight:'bold'}}>{(this.props.route.params.fatPercent*100).toFixed(1)}%</Text>
+                        }
+                    </TouchableOpacity>
+                </View>
+                <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
+                    <TouchableOpacity onPress={this.addMeal} style={{flexDirection: 'row'}}>
+                        <Ionicons name="md-information-circle" size={32} color="#007AFF" />
+                        <Text style={{color:'#007AFF',marginLeft: 10, alignSelf:'center'}}>Kohlehydrate Verbraucht</Text>
+                        {
+                            (this.props.route.params.carbPercent*100) <= 100 &&
+                            <Text style={{color: '#007AFF', marginLeft: 10, alignSelf: 'center',fontWeight:'bold'}}>{(this.props.route.params.carbPercent*100).toFixed(1)}%</Text>
+                        }
+                        {
+                            (this.props.route.params.carbPercent*100) > 100 &&
+                            <Text style={{color: 'red', marginLeft: 10, alignSelf: 'center',fontWeight:'bold'}}>{(this.props.route.params.carbPercent*100).toFixed(1)}%</Text>
+                        }
+                    </TouchableOpacity>
+                </View>
                 <FlatList
                     keyExtractor={(item) => item.id.toString() }
                     data={this.props.route.params.selectedItems}
@@ -238,7 +281,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 50,
     },
     homeScreenFilename: {
-        marginVertical: 7,
+        marginVertical: 0,
     },
     codeHighlightText: {
         color: 'rgba(238,17,17,0.8)',
