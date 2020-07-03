@@ -27,6 +27,8 @@ export default class LinksScreen extends React.Component {
       fatToday: 0.0,
       carbTarget: 1.0,
       carbToday: 0.0,
+      caloriesTarget: 1.0,
+      caloriesToday: 0.0
     };
   }
   componentDidMount() {
@@ -57,7 +59,8 @@ export default class LinksScreen extends React.Component {
               this.setState({
                 proteinTarget: target_protein_in_gram,
                 fatTarget: target_fat_in_gram,
-                carbTarget: target_carb_in_gram
+                carbTarget: target_carb_in_gram,
+                caloriesTarget: user_calories
               });
             }
           });
@@ -78,15 +81,18 @@ export default class LinksScreen extends React.Component {
               var proteinToday = 0;
               var fatToday = 0;
               var carbToday = 0;
+              var caloriesToday = 0;
               _array.forEach(item => {
                 proteinToday = proteinToday + item.protein;
                 carbToday = carbToday + item.carb;
                 fatToday = fatToday + item.fat;
               });
+              caloriesToday = (proteinToday * 4.1) + (carbToday * 4.1) + (fatToday * 9.3);
               this.setState({items: _array,
                 proteinToday: proteinToday,
-              carbToday: carbToday,
-              fatToday: fatToday});
+                carbToday: carbToday,
+                caloriesToday:caloriesToday,
+                fatToday: fatToday});
             } else {
               this.setState({items: [],
                 proteinToday: 0,
@@ -111,6 +117,7 @@ export default class LinksScreen extends React.Component {
               this.setState({items: [],
                 proteinToday: 0,
                 carbToday: 0,
+                caloriesToday: 0,
                 fatToday: 0});
             }
           }
@@ -236,6 +243,20 @@ export default class LinksScreen extends React.Component {
                 }
                 {((this.state.carbToday/this.state.carbTarget) > 1) &&
                   <Text style={styles.progressTextRightDanger}>{parseFloat(this.state.carbToday.toString()).toFixed(2)}/{this.state.carbTarget}g</Text>
+                }
+              </View>
+            </View>
+            <View style={styles.progressBarContainer} >
+              <View style={{marginBottom:5}}>
+                <Progress.Bar progress={this.state.caloriesToday/this.state.caloriesTarget} width={null} height={10} color={'#2c9aee'} />
+              </View>
+              <View style={styles.progressTextContainer}>
+                <Text style={styles.progressTextLeft}>Kalorien</Text>
+                {((this.state.caloriesToday/this.state.caloriesTarget) <= 1) &&
+                <Text style={styles.progressTextRight}>{parseFloat(this.state.caloriesToday.toString()).toFixed(2)}/{this.state.caloriesTarget}</Text>
+                }
+                {((this.state.caloriesToday/this.state.caloriesTarget) > 1) &&
+                <Text style={styles.progressTextRightDanger}>{parseFloat(this.state.caloriesToday.toString()).toFixed(2)}/{this.state.caloriesTarget}</Text>
                 }
               </View>
             </View>
