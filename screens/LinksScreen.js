@@ -311,6 +311,9 @@ export default class LinksScreen extends React.Component {
           </View>
           <View style={{height:1, backgroundColor:'#5f5f5f', marginTop:10}}/>
           <MealComponent
+              fatTarget = {this.state.fatTarget}
+              proteinTarget = {this.state.proteinTarget}
+              carbTarget = {this.state.carbTarget}
               callBackAdd = {this.checkLogs}
               mealText={'Frühstück'}
               callBackClear = {this.clearData}
@@ -318,6 +321,9 @@ export default class LinksScreen extends React.Component {
               mealQuantities={this.state.items.filter(p => p.meal_type === Enums.breakFast)}
               imageSrc={require('../assets/images/mug.png')}/>
           <MealComponent
+              fatTarget = {this.state.fatTarget}
+              proteinTarget = {this.state.proteinTarget}
+              carbTarget = {this.state.carbTarget}
               callBackAdd = {this.checkLogs}
               mealType={Enums.lunch}
               callBackClear = {this.clearData}
@@ -325,6 +331,9 @@ export default class LinksScreen extends React.Component {
               mealQuantities={this.state.items.filter(p => p.meal_type === Enums.lunch)}
               imageSrc={require('../assets/images/meat.png')}/>
           <MealComponent
+              fatTarget = {this.state.fatTarget}
+              proteinTarget = {this.state.proteinTarget}
+              carbTarget = {this.state.carbTarget}
               callBackAdd = {this.checkLogs}
               mealType={Enums.dinner}
               callBackClear = {this.clearData}

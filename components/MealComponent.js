@@ -17,15 +17,24 @@ function Item({ item }) {
         </View>
     );
 }
-function ListHeder() {
+function ListHeder(props) {
     return (
         <View style={styles.listItemContainer}>
             <View style={styles.listItemContainer3}>
             </View>
             <View style={styles.listItemContainer2}>
-                <Text style={{fontWeight:'bold',marginLeft: 10}}>E</Text>
-                <Text style={{fontWeight:'bold'}}>F</Text>
-                <Text style={{fontWeight:'bold',marginRight:10}}>K</Text>
+                <View style={{flexDirection: 'row'}}>
+                    <Text style={{fontWeight:'bold'}}>E </Text>
+                    <Text style={{fontSize:11, alignSelf: 'center'}}>({((props.proteinToday/props.proteinTarget)*100).toFixed(1)}%)</Text>
+                </View>
+                <View style={{flexDirection: 'row'}}>
+                    <Text style={{fontWeight:'bold'}}>F </Text>
+                    <Text style={{fontSize:11, alignSelf: 'center'}}>({((props.fatToday/props.fatTarget)*100).toFixed(1)}%)</Text>
+                </View>
+                <View style={{flexDirection: 'row',marginLeft:5}}>
+                    <Text style={{fontWeight:'bold'}}>K </Text>
+                    <Text style={{fontSize:11, alignSelf: 'center'}}>({((props.carbToday/props.carbTarget)*100).toFixed(1)}%)</Text>
+                </View>
             </View>
         </View>
     );
@@ -42,6 +51,14 @@ export default class MealComponent extends React.Component {
         this.setState({show:!this.state.show});
     }
     render () {
+        var proteinToday = 0;
+        var fatToday = 0;
+        var carbToday = 0;
+        this.props.mealQuantities.forEach(item => {
+            proteinToday = proteinToday + item.protein;
+            carbToday = carbToday + item.carb;
+            fatToday = fatToday + item.fat;
+        });
         return (
             <View>
                 <View style={styles.container}>
@@ -72,7 +89,14 @@ export default class MealComponent extends React.Component {
                         data={this.props.mealQuantities}
                         renderItem={({ item }) => <Item item={item} />}
                         keyExtractor={item => item.id.toString()}
-                        ListHeaderComponent={<ListHeder/>}
+                        ListHeaderComponent={<ListHeder
+                            proteinToday={proteinToday}
+                            fatToday={fatToday}
+                            carbToday={carbToday}
+                            proteinTarget={this.props.proteinTarget}
+                            fatTarget={this.props.fatTarget}
+                            carbTarget={this.props.carbTarget}
+                        />}
                     />
                     {
                         this.props.mealQuantities.length === 0 &&
