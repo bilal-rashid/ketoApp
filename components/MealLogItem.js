@@ -11,6 +11,14 @@ export default class MealLogItem extends React.Component {
                 <View style={styles.container}>
                     <View style={styles.innerContainer}>
                         <Text style={styles.item}>{this.props.item.name}</Text>
+                        <View style={styles.valuesContainer}>
+                            <Text style={[styles.valuesText,{marginLeft:10}]}>Kohlehydrate: </Text>
+                            <Text style={styles.valuesText}>{this.props.item.carb}g</Text>
+                            <Text style={styles.valuesText}>  Fett: </Text>
+                            <Text style={styles.valuesText}>{this.props.item.fat}g</Text>
+                            <Text style={styles.valuesText}>  Eiweiß: </Text>
+                            <Text style={styles.valuesText}>{this.props.item.protein}g</Text>
+                        </View>
                     </View>
                     <TextInput
                         style={styles.textInputStyle}
@@ -39,6 +47,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     valuesContainer: {
+        marginTop:5,
         flex: 1,
         flexDirection: 'row',
     },
@@ -69,7 +78,7 @@ const styles = StyleSheet.create({
     groupItem: {
         marginLeft: 10,
         fontSize: 14,
-        color: 'green'
+        color: '#007AFF'
     },
     valuesText: {
         fontSize: 12,
