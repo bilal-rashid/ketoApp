@@ -80,6 +80,7 @@ export default class LogMealScreen extends React.Component {
                 meal.carb = +((meal.carb * this.state.values[keys[i]]/100).toFixed(3)).toString();
                 meal.protein = +((meal.protein * this.state.values[keys[i]]/100).toFixed(3)).toString();
                 meal.fat = +((meal.fat * this.state.values[keys[i]]/100).toFixed(3)).toString();
+                meal.name = meal.name + '('+this.state.values[keys[i]]+'g)';
                 resultMeals.push(meal);
             }
             resultMeals.forEach( meal => {
