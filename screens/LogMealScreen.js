@@ -138,42 +138,21 @@ export default class LogMealScreen extends React.Component {
                     <TouchableOpacity onPress={this.addMeal} style={{flexDirection: 'row'}}>
                         <Ionicons name="md-information-circle" size={32} color="#007AFF" />
                         <Text style={{color:'#007AFF',marginLeft: 10, alignSelf:'center'}}>Eiweiß Verbraucht</Text>
-                        {
-                            (this.props.route.params.proteinPercent*100) <= 100 &&
-                            <Text style={{color: '#007AFF', marginLeft: 10, alignSelf: 'center',fontWeight:'bold'}}>{(this.props.route.params.proteinPercent*100).toFixed(1)}%</Text>
-                        }
-                        {
-                            (this.props.route.params.proteinPercent*100) > 100 &&
-                            <Text style={{color: 'red', marginLeft: 10, alignSelf: 'center',fontWeight:'bold'}}>{(this.props.route.params.proteinPercent*100).toFixed(1)}%</Text>
-                        }
+                        <Text style={{color: '#007AFF', marginLeft: 10, alignSelf: 'center',fontWeight:'bold'}}>{(this.props.route.params.proteinPercent).toFixed(1)}g</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
                     <TouchableOpacity onPress={this.addMeal} style={{flexDirection: 'row'}}>
                         <Ionicons name="md-information-circle" size={32} color="#007AFF" />
                         <Text style={{color:'#007AFF',marginLeft: 10, alignSelf:'center'}}>Fett Verbraucht</Text>
-                        {
-                            (this.props.route.params.fatPercent*100) <= 100 &&
-                            <Text style={{color: '#007AFF', marginLeft: 10, alignSelf: 'center',fontWeight:'bold'}}>{(this.props.route.params.fatPercent*100).toFixed(1)}%</Text>
-                        }
-                        {
-                            (this.props.route.params.fatPercent*100) > 100 &&
-                            <Text style={{color: 'red', marginLeft: 10, alignSelf: 'center',fontWeight:'bold'}}>{(this.props.route.params.fatPercent*100).toFixed(1)}%</Text>
-                        }
+                        <Text style={{color: '#007AFF', marginLeft: 10, alignSelf: 'center',fontWeight:'bold'}}>{(this.props.route.params.fatPercent).toFixed(1)}g</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
                     <TouchableOpacity onPress={this.addMeal} style={{flexDirection: 'row'}}>
                         <Ionicons name="md-information-circle" size={32} color="#007AFF" />
                         <Text style={{color:'#007AFF',marginLeft: 10, alignSelf:'center'}}>Kohlehydrate Verbraucht</Text>
-                        {
-                            (this.props.route.params.carbPercent*100) <= 100 &&
-                            <Text style={{color: '#007AFF', marginLeft: 10, alignSelf: 'center',fontWeight:'bold'}}>{(this.props.route.params.carbPercent*100).toFixed(1)}%</Text>
-                        }
-                        {
-                            (this.props.route.params.carbPercent*100) > 100 &&
-                            <Text style={{color: 'red', marginLeft: 10, alignSelf: 'center',fontWeight:'bold'}}>{(this.props.route.params.carbPercent*100).toFixed(1)}%</Text>
-                        }
+                        <Text style={{color: '#007AFF', marginLeft: 10, alignSelf: 'center',fontWeight:'bold'}}>{(this.props.route.params.carbPercent).toFixed(1)}g</Text>
                     </TouchableOpacity>
                 </View>
                 <FlatList

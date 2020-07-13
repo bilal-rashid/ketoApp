@@ -25,15 +25,15 @@ function ListHeder(props) {
             <View style={styles.listItemContainer2}>
                 <View style={{flexDirection: 'row'}}>
                     <Text style={{fontWeight:'bold'}}>E </Text>
-                    <Text style={{fontSize:11, alignSelf: 'center'}}>({((props.proteinToday/props.proteinTarget)*100).toFixed(1)}%)</Text>
+                    <Text style={{fontSize:11, alignSelf: 'center'}}>({(props.proteinToday.toFixed(1))})g</Text>
                 </View>
                 <View style={{flexDirection: 'row'}}>
                     <Text style={{fontWeight:'bold'}}>F </Text>
-                    <Text style={{fontSize:11, alignSelf: 'center'}}>({((props.fatToday/props.fatTarget)*100).toFixed(1)}%)</Text>
+                    <Text style={{fontSize:11, alignSelf: 'center'}}>({((props.fatToday)).toFixed(1)})g</Text>
                 </View>
                 <View style={{flexDirection: 'row',marginLeft:5}}>
                     <Text style={{fontWeight:'bold'}}>K </Text>
-                    <Text style={{fontSize:11, alignSelf: 'center'}}>({((props.carbToday/props.carbTarget)*100).toFixed(1)}%)</Text>
+                    <Text style={{fontSize:11, alignSelf: 'center'}}>({((props.carbToday)).toFixed(1)})g</Text>
                 </View>
             </View>
         </View>
