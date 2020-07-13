@@ -3,18 +3,24 @@ import {Image, StyleSheet, Text, FlatList,TouchableOpacity,View} from 'react-nat
 import {Ionicons} from "@expo/vector-icons";
 import {MonoText} from "./StyledText";
 
-function Item({ item }) {
+function Item(props) {
+    const select = () => {
+        props.onItemSelected(!props.selected,props.item);
+    };
+    const backgroundColor = (props.selected)? '#cdcccc' : '#fff';
     return (
-        <View style={styles.listItemContainer}>
-            <View style={styles.listItemContainer3}>
-                <Text style={{fontSize:16}}>{item.meal_name}</Text>
+        <TouchableOpacity style={{backgroundColor: backgroundColor}} onPress={select}>
+            <View style={styles.listItemContainer}>
+                <View style={styles.listItemContainer3}>
+                    <Text style={{fontSize:16}}>{props.item.meal_name}</Text>
+                </View>
+                <View style={styles.listItemContainer2}>
+                    <Text>{props.item.protein}g</Text>
+                    <Text>{props.item.fat}g</Text>
+                    <Text>{props.item.carb}g</Text>
+                </View>
             </View>
-            <View style={styles.listItemContainer2}>
-                <Text>{item.protein}g</Text>
-                <Text>{item.fat}g</Text>
-                <Text>{item.carb}g</Text>
-            </View>
-        </View>
+        </TouchableOpacity>
     );
 }
 function ListHeder(props) {
@@ -44,11 +50,23 @@ export default class MealComponent extends React.Component {
     constructor () {
         super();
         this.state = {
-            show: false
+            show: false,
+            selectedItems:[]
         };
     }
     toggleShow = () => {
         this.setState({show:!this.state.show});
+    }
+    onItemSelected = (selected, item) => {
+        if (selected) {
+            this.setState({
+                selectedItems: [...this.state.selectedItems, item]
+            })
+        } else {
+            var temp = [...this.state.selectedItems];
+            temp.splice(temp.indexOf(temp.find(p=>p.id===item.id)),1);
+            this.setState({selectedItems: temp});
+        }
     }
     render () {
         var proteinToday = 0;
@@ -87,7 +105,10 @@ export default class MealComponent extends React.Component {
                 <View>
                     <FlatList
                         data={this.props.mealQuantities}
-                        renderItem={({ item }) => <Item item={item} />}
+                        renderItem={({ item }) => <Item
+                            onItemSelected={this.onItemSelected}
+                            selected={this.state.selectedItems.filter(p=>p.id === item.id).length === 1}
+                            item={item} />}
                         keyExtractor={item => item.id.toString()}
                         ListHeaderComponent={<ListHeder
                             proteinToday={proteinToday}
@@ -108,9 +129,14 @@ export default class MealComponent extends React.Component {
                         </View>
                     }
                     {
-                        this.props.mealQuantities.length > 0 &&
+                        this.state.selectedItems.length > 0 &&
                         <TouchableOpacity
-                            onPress={() => this.props.callBackClear(this.props.mealQuantities)}>
+                            onPress={() =>{
+                                this.props.callBackClear(this.state.selectedItems);
+                                this.setState({selectedItems: []});
+                            }
+
+                            }>
                             <Text  style={styles.clearText}>
                                 Clear
                             </Text>
