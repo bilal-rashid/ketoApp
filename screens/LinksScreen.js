@@ -133,11 +133,13 @@ export default class LinksScreen extends React.Component {
   }
   // private _closeDialog = (): void => {
   onChange = (event, selectedDate) => {
-    this.setState({
-      show: false,
-      date: selectedDate
-    });
-    this.getDailyLogs(selectedDate);
+    if(selectedDate) {
+      this.setState({
+        show: false,
+        date: selectedDate
+      });
+      this.getDailyLogs(selectedDate);
+    }
   };
   showMode = (currentMode) => {
     this.setState({
@@ -205,7 +207,7 @@ export default class LinksScreen extends React.Component {
   }
   clearData = (items) => {
     Alert.alert(
-        "Clear Section",
+        "Clear Selected Items",
         "Are you sure?",
         [
           {
