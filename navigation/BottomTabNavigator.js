@@ -4,9 +4,11 @@ import * as React from 'react';
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
 const BottomTab = createBottomTabNavigator();
-const INITIAL_ROUTE_NAME = 'Home';
+const Drawer = createDrawerNavigator();
+const INITIAL_ROUTE_NAME = 'Links';
 
 export default function BottomTabNavigator({ navigation, route }) {
   // Set the header title on the parent stack navigator depending on the
@@ -15,24 +17,36 @@ export default function BottomTabNavigator({ navigation, route }) {
   navigation.setOptions({ headerTitle: getHeaderTitle(route) });
 
   return (
-    <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
-      <BottomTab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          title: 'Profile',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-person" />,
-        }}
-      />
-      <BottomTab.Screen
-        name="Links"
-        component={LinksScreen}
-        options={{
-          title: 'Diet Plan',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-calendar" />,
-        }}
-      />
-    </BottomTab.Navigator>
+      <Drawer.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
+          <Drawer.Screen name="Home"
+                         component={HomeScreen}
+                         options={{
+                             title: 'Profil'
+                         }}/>
+          <Drawer.Screen name="Links"
+                         component={LinksScreen}
+                         options={{
+                             title: 'Eiweiß'
+                         }} />
+      </Drawer.Navigator>
+    // <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
+    //   <BottomTab.Screen
+    //     name="Home"
+    //     component={HomeScreen}
+    //     options={{
+    //       title: 'Profile',
+    //       tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-person" />,
+    //     }}
+    //   />
+    //   <BottomTab.Screen
+    //     name="Links"
+    //     component={LinksScreen}
+    //     options={{
+    //       title: 'Diet Plan',
+    //       tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-calendar" />,
+    //     }}
+    //   />
+    // </BottomTab.Navigator>
   );
 }
 
