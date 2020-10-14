@@ -85,6 +85,47 @@ export default class HomeScreen extends React.Component {
       carb:+value
     })
   }
+  // signInWithGoogleAsync = async () => {
+  // // "expo-google-app-auth": "^8.1.3",
+  //   try {
+  //     const result = await Google.logInAsync({
+  //       androidClientId: '917336913799-mrktimrtnfrqothn7rre1alhk5fatvu1.apps.googleusercontent.com',
+  //       iosClientId: '917336913799-3oo4f718m6dq5r7q5db5j59k06vph2b8.apps.googleusercontent.com',
+  //       scopes: ['profile', 'email'],
+  //     });
+  //
+  //     if (result.type === 'success') {
+  //       // console.warn(result.accessToken);
+  //       // console.warn(result);
+  //       GDrive.setAccessToken(accessToken);
+  //       GDrive.init();
+  //       console.warn(GDrive.isInitialized());
+  //
+  //       var fileContent = 'sample text'; // As a sample, upload a text file.
+  //       var file = new Blob([fileContent], {type: 'text/plain'});
+  //       var metadata = {
+  //         'name': 'sampleName', // Filename at Google Drive
+  //         'mimeType': 'text/plain' // mimeType at Google Drive
+  //       };
+  //       // fetch('https://www.googleapis.com/drive/v3/files?uploadType=multipart&fields=id', {
+  //       //   method: 'POST',
+  //       //   headers: {
+  //       //     Authorization: 'Bearer '+ result.accessToken,
+  //       //     Accept: 'application/json'
+  //       //   },
+  //       //   body: JSON.stringify({
+  //       //     metadata: new Blob([JSON.stringify(metadata)], {type: 'application/json'}),
+  //       //     file: file,
+  //       //   }),
+  //       // }).then(res => {console.warn(res)});
+  //       return result.accessToken;
+  //     } else {
+  //       return { cancelled: true };
+  //     }
+  //   } catch (e) {
+  //     return { error: true };
+  //   }
+  // }
   render () {
     return (
         <View style={styles.container}>

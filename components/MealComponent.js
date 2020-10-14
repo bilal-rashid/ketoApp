@@ -186,8 +186,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     imageStyle: {
-        width: 100,
-        height: 80,
+        width: 80,
+        height: 55,
         resizeMode: 'contain',
         marginTop: 3,
         marginLeft: -10,

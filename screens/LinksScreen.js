@@ -245,7 +245,15 @@ export default class LinksScreen extends React.Component {
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
           <View style={styles.getStartedContainer}>
 
-            <Text style={styles.getStartedText}>Set Date:</Text>
+            <TouchableOpacity onPress={this.showDatepicker}>
+              <Image
+                  source={require('../assets/images/calendar.png')
+                  }
+                  style={styles.imageStyle}
+              />
+            </TouchableOpacity>
+
+            {/*<Text style={styles.getStartedText}>Set Date:</Text>*/}
             <TouchableOpacity onPress={this.showDatepicker}>
               <Text style={styles.dateStyle}>{this.state.date.toLocaleDateString()}</Text>
             </TouchableOpacity>
@@ -336,11 +344,31 @@ export default class LinksScreen extends React.Component {
               proteinTarget = {this.state.proteinTarget}
               carbTarget = {this.state.carbTarget}
               callBackAdd = {this.checkLogs}
+              mealType={Enums.snack_one}
+              callBackClear = {this.clearData}
+              mealText={'Snack'}
+              mealQuantities={this.state.items.filter(p => p.meal_type === Enums.snack_one)}
+              imageSrc={require('../assets/images/pop-corn.png')}/>
+          <MealComponent
+              fatTarget = {this.state.fatTarget}
+              proteinTarget = {this.state.proteinTarget}
+              carbTarget = {this.state.carbTarget}
+              callBackAdd = {this.checkLogs}
               mealType={Enums.lunch}
               callBackClear = {this.clearData}
               mealText={'Mittagessen'}
               mealQuantities={this.state.items.filter(p => p.meal_type === Enums.lunch)}
               imageSrc={require('../assets/images/meat.png')}/>
+          <MealComponent
+              fatTarget = {this.state.fatTarget}
+              proteinTarget = {this.state.proteinTarget}
+              carbTarget = {this.state.carbTarget}
+              callBackAdd = {this.checkLogs}
+              mealType={Enums.snack_two}
+              callBackClear = {this.clearData}
+              mealText={'Snack'}
+              mealQuantities={this.state.items.filter(p => p.meal_type === Enums.snack_two)}
+              imageSrc={require('../assets/images/pop-corn.png')}/>
           <MealComponent
               fatTarget = {this.state.fatTarget}
               proteinTarget = {this.state.proteinTarget}
@@ -480,7 +508,7 @@ const styles = StyleSheet.create({
   dateStyle: {
     fontSize: 23,
     color: 'rgb(18,19,19)',
-    lineHeight: 24,
+    lineHeight: 35,
     marginLeft: 100,
     textAlign: 'right',
   },
@@ -548,5 +576,12 @@ const styles = StyleSheet.create({
     fontSize: 15,
     alignSelf: 'flex-start',
     marginTop: 1,
+  },
+  imageStyle: {
+    width: 30,
+    height: 30,
+    resizeMode: 'contain',
+    marginTop: 3,
+    marginLeft: 10,
   },
 });

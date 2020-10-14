@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ketoApp",
-    "slug": "ketoApp",
+    "name": "Keto",
+    "slug": "Keto",
     "platforms": [
       "ios",
       "android",
@@ -9,7 +9,7 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/splash.png",
     "scheme": "myapp",
     "splash": {
       "image": "./assets/images/splash.png",
@@ -28,6 +28,9 @@
     "web": {
       "favicon": "./assets/images/favicon.png"
     },
-    "description": ""
+    "description": "",
+    "android": {
+      "package": "com.keto.company"
+    }
   }
 }
