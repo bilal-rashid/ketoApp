@@ -241,6 +241,10 @@ export default class LinksScreen extends React.Component {
     });
   }
   render () {
+    let ratio = -1;
+    if (this.state.fatToday && this.state.proteinToday && this.state.carbToday) {
+      ratio = (this.state.fatToday/(this.state.proteinToday + this.state.carbToday)).toFixed(2);
+    }
     return (
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
           <View style={styles.getStartedContainer}>
@@ -257,6 +261,8 @@ export default class LinksScreen extends React.Component {
             <TouchableOpacity onPress={this.showDatepicker}>
               <Text style={styles.dateStyle}>{this.state.date.toLocaleDateString()}</Text>
             </TouchableOpacity>
+            {(ratio!== -1)?<Text style={styles.getStartedText}>Ratio:</Text>:null}
+            {(ratio!== -1)?<Text style={styles.ratioStyle}>{ratio}</Text>:null}
           </View>
           {this.state.show && (
               <DateTimePicker
@@ -483,11 +489,6 @@ const styles = StyleSheet.create({
     marginTop: 3,
     marginLeft: -10,
   },
-  getStartedContainer: {
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-    marginHorizontal: 50,
-  },
   homeScreenFilename: {
     marginVertical: 7,
   },
@@ -498,19 +499,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.05)',
     borderRadius: 3,
     paddingHorizontal: 4,
-  },
-  getStartedText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    lineHeight: 24,
-    textAlign: 'center',
-  },
-  dateStyle: {
-    fontSize: 23,
-    color: 'rgb(18,19,19)',
-    lineHeight: 35,
-    marginLeft: 100,
-    textAlign: 'right',
   },
   tabBarInfoContainer: {
     position: 'absolute',
@@ -582,6 +570,32 @@ const styles = StyleSheet.create({
     height: 30,
     resizeMode: 'contain',
     marginTop: 3,
-    marginLeft: 10,
+    marginLeft: 70,
   },
+  ratioStyle : {
+    padding: 2,
+    fontSize: 17,
+    color: 'rgb(19,19,19)',
+    lineHeight: 35,
+    textAlign: 'center'
+  },
+  getStartedText: {
+    padding: 2,
+    fontSize: 14,
+    color: 'rgb(96,100,109)',
+    lineHeight: 35,
+    textAlign: 'center',
+    marginLeft: 40
+  },
+  getStartedContainer: {
+    alignItems: 'stretch',
+    flexDirection: 'row'
+  },
+  dateStyle: {
+    fontSize: 23,
+    color: 'rgb(18,19,19)',
+    lineHeight: 35,
+    marginLeft: 40,
+    textAlign: 'right',
+  }
 });

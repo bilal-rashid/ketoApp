@@ -77,6 +77,11 @@ export default class MealComponent extends React.Component {
             carbToday = carbToday + item.carb;
             fatToday = fatToday + item.fat;
         });
+        let ratio = -1;
+        if (proteinToday + carbToday > 0) {
+            ratio = (fatToday/(proteinToday+carbToday)).toFixed(2);
+        }
+        let caloriesToday = ((proteinToday * 4.1) + (carbToday * 4.1) + (fatToday * 9.3)).toFixed(2);
         return (
             <View>
                 <View style={styles.container}>
@@ -91,7 +96,21 @@ export default class MealComponent extends React.Component {
                     <TouchableOpacity
                         style={{alignSelf: 'center'}}
                         onPress={this.toggleShow}>
-                    <Text  style={styles.mealText}>{this.props.mealText}</Text>
+                        {(this.props.mealText === 'Snack')?
+                            <Text  style={styles.mealTextSnack}>{this.props.mealText}</Text>:
+                            <Text  style={styles.mealText}>{this.props.mealText}</Text>
+                        }
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={{alignSelf: 'center'}}
+                        onPress={this.toggleShow}>
+                        <Text  style={styles.kalText}> kCal: {caloriesToday}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={{alignSelf: 'center'}}
+                        onPress={this.toggleShow}>
+                        {(ratio !== -1)?<Text  style={styles.ratioText}> Ratio: {ratio}</Text>:
+                            <Text  style={styles.ratioText}> Ratio: 0.00</Text>}
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={{alignSelf: 'center'}}
@@ -186,16 +205,27 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     imageStyle: {
-        width: 80,
-        height: 55,
+        width: 50,
+        height: 50,
         resizeMode: 'contain',
         marginTop: 3,
-        marginLeft: -10,
+    },
+    mealTextSnack: {
+        width: 90,
+        fontSize:17,
+        fontWeight:'bold'
     },
     mealText: {
-        fontSize:20,
-        fontWeight:'bold',
-        marginRight:40
+        fontSize:17,
+        fontWeight:'bold'
+    },
+    kalText: {
+        fontSize:15,
+        marginRight:10
+    },
+    ratioText: {
+        fontSize:15,
+        marginRight:10
     },
     helpLinkText: {
         fontSize: 16,
