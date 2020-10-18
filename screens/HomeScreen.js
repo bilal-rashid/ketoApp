@@ -1,19 +1,23 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
-import {Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View,Button} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as SecureStore from 'expo-secure-store';
-import { MonoText } from '../components/StyledText';
 export default class HomeScreen extends React.Component {
   constructor() {
     super();
     this.state = {
-      editMode: false,
+      editMode: true,
+      percentMode: false,
       name: '',
       calories: 0,
       protein:0,
       fat:0,
       carb:0,
+      proteinPercent:0,
+      fatPercent:0,
+      carbPercent:0,
+      ratio:0,
       error:false
     };
   }
@@ -30,9 +34,9 @@ export default class HomeScreen extends React.Component {
               this.setState({
                 name: (user_name)? user_name: '',
                 calories: (user_calories)? +user_calories: 0,
-                protein: (user_protein)? +user_protein: 0,
-                fat: (user_fat)? +user_fat: 0,
-                carb: (user_carb)? +user_carb: 0
+                proteinPercent: (user_protein)? +user_protein: 0,
+                fatPercent: (user_fat)? +user_fat: 0,
+                carbPercent: (user_carb)? +user_carb: 0
               });
             });
           });
@@ -47,43 +51,66 @@ export default class HomeScreen extends React.Component {
   editProfile = () => {
     this.setState({editMode: true});
   }
+  setPercentMode = () => {
+    this.setState({
+      percentMode: true
+    });
+  }
+  setValueMode = () => {
+    this.setState({
+      percentMode: false
+    });
+  }
   saveProfile = () => {
-    const totalPercent = this.state.protein + this.state.fat + this.state.carb;
+    const totalPercent = this.state.proteinPercent + this.state.fatPercent + this.state.carbPercent;
     if (totalPercent > 100) {
       this.setState({error: true});
     } else {
       SecureStore.setItemAsync('user_name', this.state.name);
       SecureStore.setItemAsync('user_calories', this.state.calories.toString());
-      SecureStore.setItemAsync('user_protein', this.state.protein.toString());
-      SecureStore.setItemAsync('user_fat', this.state.fat.toString());
-      SecureStore.setItemAsync('user_carb', this.state.carb.toString());
+      SecureStore.setItemAsync('user_protein', this.state.proteinPercent.toString());
+      SecureStore.setItemAsync('user_fat', this.state.fatPercent.toString());
+      SecureStore.setItemAsync('user_carb', this.state.carbPercent.toString());
       this.setState({editMode: false, error: false});
     }
   }
   onChangeName = (value) => {
     this.setState({
       name:value
-    })
+    });
   }
   onChangeCalories = (value) => {
     this.setState({
       calories:+value
-    })
+    });
+  }
+  onChangeProteinPercent = (value) => {
+    let carbPercent = 100 - this.state.fatPercent - (+value);
+    if (carbPercent > -1) {
+      this.setState({
+        proteinPercent: +value,
+        carbPercent: carbPercent
+      });
+    }
   }
   onChangeProtein = (value) => {
     this.setState({
       protein:+value
-    })
+    });
+  }
+  onChangeFatPercent = (value) => {
+    let carbPercent = 100 - this.state.proteinPercent - (+value);
+    if (carbPercent > -1) {
+      this.setState({
+        fatPercent: +value,
+        carbPercent: carbPercent
+      });
+    }
   }
   onChangeFat = (value) => {
     this.setState({
       fat:+value
-    })
-  }
-  onChangeCarb = (value) => {
-    this.setState({
-      carb:+value
-    })
+    });
   }
   // signInWithGoogleAsync = async () => {
   // // "expo-google-app-auth": "^8.1.3",
@@ -166,7 +193,7 @@ export default class HomeScreen extends React.Component {
                     marginRight: 15,
                     marginTop: 20
                   }}>Eiweiß</Text>
-                  <Text style={{fontSize: 19, color: 'black', alignSelf: 'center', marginRight: 15, marginTop: 20}}>{this.state.protein}%</Text>
+                  <Text style={{fontSize: 19, color: 'black', alignSelf: 'center', marginRight: 15, marginTop: 20}}>{this.state.proteinPercent}%</Text>
                 </View>
                 <View style={{flexDirection: 'row', justifyContent: 'center'}}>
                   <Text style={{
@@ -176,7 +203,7 @@ export default class HomeScreen extends React.Component {
                     marginRight: 15,
                     marginTop: 20
                   }}>Fett</Text>
-                  <Text style={{fontSize: 19, color: 'black', alignSelf: 'center', marginRight: 15, marginTop: 20}}>{this.state.fat}
+                  <Text style={{fontSize: 19, color: 'black', alignSelf: 'center', marginRight: 15, marginTop: 20}}>{this.state.fatPercent}
                     %</Text>
                 </View>
                 <View style={{flexDirection: 'row', justifyContent: 'center'}}>
@@ -187,7 +214,7 @@ export default class HomeScreen extends React.Component {
                     marginRight: 15,
                     marginTop: 20
                   }}>Kohlenhydrat</Text>
-                  <Text style={{fontSize: 19, color: 'black', alignSelf: 'center', marginRight: 15, marginTop: 20}}>{this.state.carb}
+                  <Text style={{fontSize: 19, color: 'black', alignSelf: 'center', marginRight: 15, marginTop: 20}}>{this.state.carbPercent}
                     %</Text>
                 </View>
                 <TouchableOpacity onPress={this.editProfile} style={styles.buttonStyle}>
@@ -197,45 +224,143 @@ export default class HomeScreen extends React.Component {
             }
             { this.state.editMode &&
               <View>
-                <TextInput
-                    style={styles.textInputStyle}
-                    placeholder={'Name'}
-                    value={this.state.name}
-                    onChangeText={this.onChangeName}
-                    keyboardType={'default'}
-                />
-                <TextInput
-                    style={styles.textInputStyle}
-                    placeholder={'Kalorien pro Tag'}
-                    value={this.state.calories.toString()}
-                    onChangeText={this.onChangeCalories}
-                    keyboardType={'decimal-pad'}
-                />
+                <View style = {{flex: 1,flexDirection:'row'}}>
+                  <TextInput
+                      style={styles.textViewStyle}
+                      value={'Name'}
+                      editable={false}
+                      textAlign={'center'}
+                  />
+                  <TextInput
+                      style={styles.textInputStyle}
+                      placeholder={'Name'}
+                      value={this.state.name}
+                      onChangeText={this.onChangeName}
+                      keyboardType={'default'}
+                  />
 
+                </View>
+                <View style = {{flexDirection:'row',justifyContent:'flex-start'}}>
+                  <TextInput
+                      style={styles.textViewStyle}
+                      value={'KCal'}
+                      editable={false}
+                      textAlign={'center'}
+                  />
+                  <TextInput
+                      style={styles.textInputStyle}
+                      placeholder={'Kalorien pro Tag'}
+                      value={this.state.calories.toString()}
+                      onChangeText={this.onChangeCalories}
+                      keyboardType={'decimal-pad'}
+                  />
+
+                </View>
                 <View style={styles.getStartedContainer}>
                   <Text style={styles.getStartedText}>Verhältnis:</Text>
                 </View>
-                <TextInput
-                    style={styles.textInputStyle}
-                    placeholder={'Protein%'}
-                    value={this.state.protein.toString()}
-                    onChangeText={this.onChangeProtein}
-                    keyboardType={'decimal-pad'}
-                />
-                <TextInput
-                    style={styles.textInputStyle}
-                    placeholder={'Fat %'}
-                    value={this.state.fat.toString()}
-                    onChangeText={this.onChangeFat}
-                    keyboardType={'decimal-pad'}
-                />
-                <TextInput
-                    style={styles.textInputStyle}
-                    placeholder={'Carbohydrate %'}
-                    value={this.state.carb.toString()}
-                    onChangeText={this.onChangeCarb}
-                    keyboardType={'decimal-pad'}
-                />
+                <View style = {{flexDirection:'row',alignContent:'center',justifyContent:'flex-end', backgroundColor:'#fff'}}>
+
+                  <View style={(this.state.percentMode)?styles.circle:styles.circleInvisible}>
+                  </View>
+                  <TouchableOpacity
+                      style={(this.state.percentMode) ? styles.textViewStyleEnabled:styles.textViewStyleDisabled }
+                      onPress={this.setPercentMode} >
+                    <Text>   %Methode</Text>
+                  </TouchableOpacity>
+                  <View style={(!this.state.percentMode)? styles.circle:styles.circleInvisible}>
+                  </View>
+                  <TouchableOpacity style={ (this.state.percentMode) ? styles.textViewStyleDisabled: styles.textViewStyleEnabled}
+                      onPress={this.setValueMode}>
+                    <Text>Grammbedarf</Text>
+                  </TouchableOpacity>
+
+                </View>
+                <View style = {{flexDirection:'row' }}>
+                  <TextInput
+                      style={styles.textViewStyle}
+                      value={'Eiweiß'}
+                      editable={false}
+                      textAlign={'center'}
+                  />
+                  <TextInput
+                      style={(this.state.percentMode)? styles.textInputStyle : styles.textInputStyleDisabled}
+                      editable={this.state.percentMode}
+                      placeholder={'Protein%'}
+                      value={this.state.proteinPercent.toString()}
+                      onChangeText={this.onChangeProteinPercent}
+                      keyboardType={'decimal-pad'}
+                  />
+                  <TextInput
+                      style={(!this.state.percentMode)? styles.textInputStyle : styles.textInputStyleDisabled}
+                      editable={!this.state.percentMode}
+                      placeholder={'Protein'}
+                      value={this.state.protein.toString()}
+                      onChangeText={this.onChangeProtein}
+                      keyboardType={'decimal-pad'}
+                  />
+                </View>
+                <View style = {{flexDirection:'row' }}>
+                  <TextInput
+                      style={styles.textViewStyle}
+                      value={'Fett'}
+                      editable={false}
+                      textAlign={'center'}
+                  />
+                  <TextInput
+                      style={(this.state.percentMode)? styles.textInputStyle : styles.textInputStyleDisabled}
+                      placeholder={'Fat %'}
+                      value={this.state.fatPercent.toString()}
+                      onChangeText={this.onChangeFatPercent}
+                      editable={this.state.percentMode}
+                      keyboardType={'decimal-pad'}
+                  />
+                  <TextInput
+                      style={(!this.state.percentMode)? styles.textInputStyle : styles.textInputStyleDisabled}
+                      placeholder={''}
+                      value={this.state.fat.toString()}
+                      editable={!this.state.percentMode}
+                      onChangeText={this.onChangeFat}
+                      keyboardType={'decimal-pad'}
+                  />
+                </View>
+                <View style = {{flexDirection:'row' }}>
+                  <TextInput
+                      style={styles.textViewStyle}
+                      value={'KH'}
+                      editable={false}
+                      textAlign={'center'}
+                  />
+                  <TextInput
+                      style={styles.textInputStyleDisabled}
+                      placeholder={'Carbohydrate %'}
+                      value={this.state.carbPercent.toString()}
+                      editable={false}
+                      keyboardType={'decimal-pad'}
+                  />
+                  <TextInput
+                      style={styles.textInputStyleDisabled}
+                      placeholder={'Carbohydrate'}
+                      value={this.state.carb.toString()}
+                      editable={false}
+                      keyboardType={'decimal-pad'}
+                  />
+                </View>
+                <View style = {{flexDirection:'row' }}>
+                  <TextInput
+                      style={styles.textViewStyle}
+                      value={'Ratio'}
+                      editable={false}
+                      textAlign={'center'}
+                  />
+                  <TextInput
+                      style={styles.textInputStyleDisabled}
+                      placeholder={''}
+                      value={this.state.ratio.toString()}
+                      editable={false}
+                      keyboardType={'decimal-pad'}
+                  />
+                </View>
                 {this.state.error &&
                   <Text style={{color: 'red', alignSelf: 'center', marginTop: 10}}>Ungültig Verhältnis</Text>
                 }
@@ -393,10 +518,51 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#2e78b7',
   },
+  circleInvisible: {
+    marginTop:10,
+    width:20,
+    height:20,
+    borderRadius:10,
+    backgroundColor:'#fff'
+  },
+  circle: {
+    marginTop:10,
+    width:20,
+    height:20,
+    borderRadius:10,
+    backgroundColor:'#5fd02d'
+  },
+  textViewStyleDisabled: {
+    width: 110,
+    height:30,
+    marginLeft: 5,
+    marginRight:10,
+    backgroundColor:'#9c9a9a',
+    justifyContent: 'center',
+    borderColor: 'gray', borderWidth: 1, borderRadius: 4, margin: 5, padding: 4 },
+  textViewStyleEnabled: {
+    width: 110,
+    height:30,
+    marginLeft: 5,
+    marginRight:10,
+    justifyContent: 'center',
+    borderColor: 'gray', borderWidth: 1, borderRadius: 4, margin: 5, padding: 4 },
+  textViewStyle: {
+    width: 90,
+    height:35,
+    marginLeft: 5,
+    borderColor: 'gray', borderWidth: 1, borderRadius: 4, margin: 5, padding: 4 },
   textInputStyle: {
-    marginLeft: 30,
-    marginRight:30,
-    height: 40, borderColor: 'gray', borderWidth: 1, borderRadius: 4, margin: 5, padding: 4 },
+    width:200,
+    flex: 1,
+    marginRight:5,
+    height: 35, borderColor: 'gray', borderWidth: 1, borderRadius: 4, margin: 5, padding: 4 },
+  textInputStyleDisabled: {
+    width:200,
+    flex: 1,
+    marginRight:5,
+    backgroundColor:'#9c9a9a',
+    height: 35, borderColor: 'gray', borderWidth: 1, borderRadius: 4, margin: 5, padding: 4 },
   buttonStyle: {
     backgroundColor: '#007AFF',
     width:150,
