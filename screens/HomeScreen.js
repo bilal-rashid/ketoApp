@@ -26,17 +26,34 @@ export default class HomeScreen extends React.Component {
     this.fetchFromLocalStorage();
   }
   fetchFromLocalStorage = () => {
+    var protein_in_gram = 1;
+    var fat_in_gram = 1;
+    var carb_in_gram = 1;
     SecureStore.getItemAsync('user_name').then(user_name => {
       SecureStore.getItemAsync('user_calories').then(user_calories => {
         SecureStore.getItemAsync('user_protein').then(user_protein => {
           SecureStore.getItemAsync('user_fat').then(user_fat => {
             SecureStore.getItemAsync('user_carb').then(user_carb => {
+              if (user_calories && user_carb && user_fat && user_protein) {
+                if (user_calories > 0 && user_protein > 0) {
+                  protein_in_gram = +(((user_calories * user_protein / 100) / 4.1).toFixed(2));
+                }
+                if (user_calories > 0 && user_fat > 0) {
+                  fat_in_gram = +(((user_calories * user_fat / 100) / 9.3).toFixed(2));
+                }
+                if (user_calories > 0 && user_carb > 0) {
+                  carb_in_gram = +(((user_calories * user_carb / 100) / 4.1).toFixed(2));
+                }
+              }
               this.setState({
                 name: (user_name)? user_name: '',
                 calories: (user_calories)? +user_calories: 0,
                 proteinPercent: (user_protein)? +user_protein: 0,
                 fatPercent: (user_fat)? +user_fat: 0,
-                carbPercent: (user_carb)? +user_carb: 0
+                carbPercent: (user_carb)? +user_carb: 0,
+                protein: protein_in_gram,
+                fat: fat_in_gram,
+                carb: carb_in_gram
               });
             });
           });
@@ -63,7 +80,7 @@ export default class HomeScreen extends React.Component {
   }
   saveProfile = () => {
     const totalPercent = this.state.proteinPercent + this.state.fatPercent + this.state.carbPercent;
-    if (totalPercent > 100) {
+    if (totalPercent > 101) {
       this.setState({error: true});
     } else {
       SecureStore.setItemAsync('user_name', this.state.name);
@@ -85,32 +102,106 @@ export default class HomeScreen extends React.Component {
     });
   }
   onChangeProteinPercent = (value) => {
-    let carbPercent = 100 - this.state.fatPercent - (+value);
+    let carbPercent = +(100 - this.state.fatPercent - (+value)).toFixed(2);
     if (carbPercent > -1) {
+      let protein_in_gram = 0;
+      let fat_in_gram = 0;
+      let carb_in_gram = 0;
+      if (this.state.calories > 0 && (+value) > 0) {
+        protein_in_gram = +((((this.state.calories * (+value) / 100) / 4.1)).toFixed(2));
+      }
+      if (this.state.calories > 0 && this.state.fatPercent > 0) {
+        fat_in_gram = +((((this.state.calories * this.state.fatPercent / 100) / 9.3)).toFixed(2));
+      }
+      if (this.state.calories > 0 && carbPercent > 0) {
+        carb_in_gram = +((((this.state.calories * carbPercent / 100) / 4.1)).toFixed(2));
+      }
       this.setState({
         proteinPercent: +value,
-        carbPercent: carbPercent
+        carbPercent: carbPercent,
+        fat: fat_in_gram,
+        protein: protein_in_gram,
+        carb: carb_in_gram
       });
     }
   }
   onChangeProtein = (value) => {
-    this.setState({
-      protein:+value
-    });
-  }
-  onChangeFatPercent = (value) => {
-    let carbPercent = 100 - this.state.proteinPercent - (+value);
-    if (carbPercent > -1) {
+    let proteinPercent = 0;
+    let fatPercent = 0;
+    let carbPercent = 0;
+    let carb = 0;
+    if (this.state.calories > 0 && (+value) > 0) {
+      carb = +((((this.state.calories - ((+value)*4.1) - (this.state.fat*9.3))/4)).toFixed(2));
+    }
+    if (this.state.calories > 0 && (+value) > 0) {
+      proteinPercent = +(((((+value) * 4.1)/this.state.calories)*100).toFixed(2));
+    }
+    if (this.state.calories > 0 && this.state.fat > 0) {
+      fatPercent = +((((this.state.fat * 4.1)/this.state.calories)*100).toFixed(2));
+    }
+    if (this.state.calories > 0 && carb > 0) {
+      carbPercent = +((100 - proteinPercent - fatPercent).toFixed(2));
+    }
+    if (carb > -0.01) {
       this.setState({
-        fatPercent: +value,
+        protein: +value,
+        carb: carb,
+        proteinPercent: proteinPercent,
+        fatPercent: fatPercent,
         carbPercent: carbPercent
       });
     }
   }
+  onChangeFatPercent = (value) => {
+    let carbPercent = +((100 - this.state.proteinPercent - (+value)).toFixed(2));
+    if (carbPercent > -1) {
+      let protein_in_gram = 0;
+      let fat_in_gram = 0;
+      let carb_in_gram = 0;
+      if (this.state.calories > 0 && this.state.proteinPercent > 0) {
+        protein_in_gram = +((((this.state.calories * this.state.proteinPercent / 100) / 4.1)).toFixed(2));
+      }
+      if (this.state.calories > 0 && (+value) > 0) {
+        fat_in_gram = +((((this.state.calories * (+value) / 100) / 9.3)).toFixed(2));
+      }
+      if (this.state.calories > 0 && carbPercent > 0) {
+        carb_in_gram = +((((this.state.calories * carbPercent / 100) / 4.1)).toFixed(2));
+      }
+      this.setState({
+        fatPercent: +value,
+        carbPercent: carbPercent,
+        fat: fat_in_gram,
+        protein: protein_in_gram,
+        carb: carb_in_gram
+      });
+    }
+  }
   onChangeFat = (value) => {
-    this.setState({
-      fat:+value
-    });
+    let proteinPercent = 0;
+    let fatPercent = 0;
+    let carbPercent = 0;
+    let carb = 0;
+    if (this.state.calories > 0 && this.state.protein > 0) {
+      carb = +(((((this.state.calories - (this.state.protein*4.1) - ((+value)*9.3))/4))).toFixed(2));
+    }
+    if (this.state.calories > 0 && this.state.protein > 0) {
+      proteinPercent = +((((this.state.protein * 4.1)/this.state.calories)*100).toFixed(2));
+    }
+    if (this.state.calories > 0 && (+value) > 0) {
+      fatPercent = +(((((+value) * 4.1)/this.state.calories)*100).toFixed(2));
+    }
+    if (this.state.calories > 0 && carb > 0) {
+      carbPercent = +(100 - proteinPercent - fatPercent).toFixed(2);
+    }
+    if (carb > -0.01) {
+      this.setState({
+        fat: +value,
+        carb: carb,
+        proteinPercent: proteinPercent,
+        fatPercent: fatPercent,
+        carbPercent: carbPercent
+      });
+    }
   }
   // signInWithGoogleAsync = async () => {
   // // "expo-google-app-auth": "^8.1.3",
