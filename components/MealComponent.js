@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Image, StyleSheet, Text, FlatList,TouchableOpacity,View} from 'react-native';
+import {Image, StyleSheet, Text, FlatList,TouchableOpacity,View,TextInput} from 'react-native';
 import {Ionicons} from "@expo/vector-icons";
 import {MonoText} from "./StyledText";
 
@@ -7,13 +7,26 @@ function Item(props) {
     const select = () => {
         props.onItemSelected(!props.selected,props.item);
     };
+    const onQtyChange = (value) => {
+        props.onQuantityChange(props.item, +value);
+    };
+    let mealName = '';
+    if (props.item.meal_name.length > 15) {
+        mealName = props.item.meal_name.substring(0,14) + '...';
+    } else {
+        mealName = props.item.meal_name;
+    }
     const backgroundColor = (props.selected)? '#cdcccc' : '#fff';
     return (
         <TouchableOpacity style={{backgroundColor: backgroundColor}} onPress={select}>
             <View style={styles.listItemContainer}>
                 <View style={styles.listItemContainer3}>
-                    <Text style={{fontSize:16}}>{props.item.meal_name}</Text>
+                    <Text style={{fontSize:16}}>{mealName}</Text>
+                    {props.selected && <TextInput onChangeText={onQtyChange} value={props.item.quantity.toString()} style={{borderColor: 'gray',backgroundColor:'#fff', borderWidth: 1, borderRadius: 4,width:40,height:20}}/>}
                 </View>
+                {/*<View style={{flex:2, backgroundColor:'#a8a7a7'}}>*/}
+                {/*    <TextInput style={{borderColor: 'gray', borderWidth: 1, borderRadius: 4}}/>*/}
+                {/*</View>*/}
                 <View style={styles.listItemContainer2}>
                     <Text>{props.item.protein}g</Text>
                     <Text>{props.item.fat}g</Text>
@@ -126,6 +139,7 @@ export default class MealComponent extends React.Component {
                         data={this.props.mealQuantities}
                         renderItem={({ item }) => <Item
                             onItemSelected={this.onItemSelected}
+                            onQuantityChange = {this.props.onQuantityChange}
                             selected={this.state.selectedItems.filter(p=>p.id === item.id).length === 1}
                             item={item} />}
                         keyExtractor={item => item.id.toString()}
@@ -248,5 +262,10 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 32,
-    }
+    },
+    textInputStyle: {
+        width:200,
+        flex: 1,
+        marginRight:5,
+        height: 35, borderColor: 'gray', borderWidth: 1, borderRadius: 4, margin: 5, padding: 4 }
 });

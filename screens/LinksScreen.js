@@ -240,6 +240,11 @@ export default class LinksScreen extends React.Component {
       );
     });
   }
+  onQuantityChange = (item, value) => {
+    let tempState = [...this.state.items];
+    tempState.filter(p => p.id === item.id)[0].quantity = value;
+    this.setState({items: tempState});
+  }
   render () {
     let ratio = -1;
     if (this.state.fatToday && this.state.proteinToday && this.state.carbToday) {
@@ -295,7 +300,7 @@ export default class LinksScreen extends React.Component {
                 <Progress.Bar progress={this.state.proteinToday/this.state.proteinTarget} width={null} height={10} color={'#f37f4a'} />
               </View>
               <View style={styles.progressTextContainer}>
-                <Text style={styles.progressTextLeft}>Einweis {'('+this.state.protein + '%)'}</Text>
+                <Text style={styles.progressTextLeft}>Eiweiß {'('+this.state.protein + '%)'}</Text>
                 {((this.state.proteinToday/this.state.proteinTarget) <= 1) &&
                   <Text style={styles.progressTextRight}>{parseFloat(this.state.proteinToday.toString()).toFixed(2)}/{this.state.proteinTarget}g</Text>
                 }
@@ -341,6 +346,7 @@ export default class LinksScreen extends React.Component {
               carbTarget = {this.state.carbTarget}
               callBackAdd = {this.checkLogs}
               mealText={'Frühstück'}
+              onQuantityChange={this.onQuantityChange}
               callBackClear = {this.clearData}
               mealType={Enums.breakFast}
               mealQuantities={this.state.items.filter(p => p.meal_type === Enums.breakFast)}
@@ -350,6 +356,7 @@ export default class LinksScreen extends React.Component {
               proteinTarget = {this.state.proteinTarget}
               carbTarget = {this.state.carbTarget}
               callBackAdd = {this.checkLogs}
+              onQuantityChange={this.onQuantityChange}
               mealType={Enums.snack_one}
               callBackClear = {this.clearData}
               mealText={'Snack'}
@@ -360,6 +367,7 @@ export default class LinksScreen extends React.Component {
               proteinTarget = {this.state.proteinTarget}
               carbTarget = {this.state.carbTarget}
               callBackAdd = {this.checkLogs}
+              onQuantityChange={this.onQuantityChange}
               mealType={Enums.lunch}
               callBackClear = {this.clearData}
               mealText={'Mittagessen'}
@@ -371,6 +379,7 @@ export default class LinksScreen extends React.Component {
               carbTarget = {this.state.carbTarget}
               callBackAdd = {this.checkLogs}
               mealType={Enums.snack_two}
+              onQuantityChange={this.onQuantityChange}
               callBackClear = {this.clearData}
               mealText={'Snack'}
               mealQuantities={this.state.items.filter(p => p.meal_type === Enums.snack_two)}
@@ -380,6 +389,7 @@ export default class LinksScreen extends React.Component {
               proteinTarget = {this.state.proteinTarget}
               carbTarget = {this.state.carbTarget}
               callBackAdd = {this.checkLogs}
+              onQuantityChange={this.onQuantityChange}
               mealType={Enums.dinner}
               callBackClear = {this.clearData}
               mealText={'Abendessen'}

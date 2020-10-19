@@ -6,7 +6,7 @@ import * as SQLite from 'expo-sqlite';
 
 export default function useCachedResources() {
   const [isLoadingComplete, setLoadingComplete] = React.useState(false);
-  const db = SQLite.openDatabase("db.db");
+  const db = SQLite.openDatabase("db.db",1.0);
 
   // Load any resources or data that we need prior to rendering the app
   React.useEffect(() => {
@@ -27,7 +27,7 @@ export default function useCachedResources() {
         db.transaction(tx => {
           tx.executeSql(
               "create table if not exists mealquantity (id integer primary key autoincrement, log_id integer," +
-              "meal_type integer,meal_name text,protein real,fat real, carb real);"
+              "meal_type integer,meal_name text,protein real,fat real, carb real, quantity real);"
           );
         });
         // Load fonts

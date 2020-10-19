@@ -75,23 +75,24 @@ export default class LogMealScreen extends React.Component {
         if (this.validate()) {
             let resultMeals = [];
             this.setState({error:false});
+            console.warn(this.state.values);
             const keys = Object.keys(this.state.values);
             for (let i=0; i < keys.length; i++) {
                 let meal = {...this.props.route.params.selectedItems.find(p => p.id === (+keys[i]))};
                 meal.carb = +((meal.carb * this.state.values[keys[i]]/100).toFixed(3)).toString();
                 meal.protein = +((meal.protein * this.state.values[keys[i]]/100).toFixed(3)).toString();
                 meal.fat = +((meal.fat * this.state.values[keys[i]]/100).toFixed(3)).toString();
-                meal.name = meal.name + '('+this.state.values[keys[i]]+'g)';
+                meal.quantity = this.state.values[keys[i]];
                 resultMeals.push(meal);
             }
             resultMeals.forEach( meal => {
                 db.transaction(
                     tx => {
                         tx.executeSql("insert into mealquantity (log_id, meal_type, meal_name, protein," +
-                            "fat,carb) values " +
+                            "fat,carb,quantity) values " +
                             "(" + this.props.route.params.logId + "," + this.props.route.params.mealType + ",'" +
                             meal.name + "', " + meal.protein + "," + meal.fat
-                            + "," + meal.carb + ");", null,
+                            + "," + meal.carb + "," + meal.quantity + ");", null,
                             (_t,_r)=> console.log('kkkk', _r.insertId));
                     },
                     (_err)=>{console.warn('error',_err)},
