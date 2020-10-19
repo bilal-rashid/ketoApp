@@ -53,7 +53,8 @@ export default class HomeScreen extends React.Component {
                 carbPercent: (user_carb)? +user_carb: 0,
                 protein: protein_in_gram,
                 fat: fat_in_gram,
-                carb: carb_in_gram
+                carb: carb_in_gram,
+                ratio: +((fat_in_gram/(protein_in_gram+carb_in_gram)).toFixed(2))
               });
             });
           });
@@ -121,7 +122,8 @@ export default class HomeScreen extends React.Component {
         carbPercent: carbPercent,
         fat: fat_in_gram,
         protein: protein_in_gram,
-        carb: carb_in_gram
+        carb: carb_in_gram,
+        ratio: +((fat_in_gram/(protein_in_gram+carb_in_gram)).toFixed(2))
       });
     }
   }
@@ -148,7 +150,8 @@ export default class HomeScreen extends React.Component {
         carb: carb,
         proteinPercent: proteinPercent,
         fatPercent: fatPercent,
-        carbPercent: carbPercent
+        carbPercent: carbPercent,
+        ratio: +((this.state.fat/((+value) + carb)).toFixed(2))
       });
     }
   }
@@ -172,34 +175,31 @@ export default class HomeScreen extends React.Component {
         carbPercent: carbPercent,
         fat: fat_in_gram,
         protein: protein_in_gram,
-        carb: carb_in_gram
+        carb: carb_in_gram,
+        ratio: +((fat_in_gram/(protein_in_gram+carb_in_gram)).toFixed(2))
       });
     }
   }
   onChangeFat = (value) => {
-    let proteinPercent = 0;
     let fatPercent = 0;
     let carbPercent = 0;
     let carb = 0;
-    if (this.state.calories > 0 && this.state.protein > 0) {
-      carb = +(((((this.state.calories - (this.state.protein*4.1) - ((+value)*9.3))/4))).toFixed(2));
-    }
-    if (this.state.calories > 0 && this.state.protein > 0) {
-      proteinPercent = +((((this.state.protein * 4.1)/this.state.calories)*100).toFixed(2));
+    if (this.state.calories > 0 && (+value) > 0) {
+      carb = +((((this.state.calories - (this.state.protein*4.1) - ((+value)*9.3))/4)).toFixed(2));
     }
     if (this.state.calories > 0 && (+value) > 0) {
-      fatPercent = +(((((+value) * 4.1)/this.state.calories)*100).toFixed(2));
+      fatPercent = +(((((+value) * 9.3)/this.state.calories)*100).toFixed(2));
     }
     if (this.state.calories > 0 && carb > 0) {
-      carbPercent = +(100 - proteinPercent - fatPercent).toFixed(2);
+      carbPercent = +((100 - this.state.proteinPercent - fatPercent).toFixed(2));
     }
     if (carb > -0.01) {
       this.setState({
         fat: +value,
         carb: carb,
-        proteinPercent: proteinPercent,
         fatPercent: fatPercent,
-        carbPercent: carbPercent
+        carbPercent: carbPercent,
+        ratio: +(((+value)/(this.state.protein + carb)).toFixed(2))
       });
     }
   }
