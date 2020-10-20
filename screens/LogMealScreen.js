@@ -79,20 +79,21 @@ export default class LogMealScreen extends React.Component {
             const keys = Object.keys(this.state.values);
             for (let i=0; i < keys.length; i++) {
                 let meal = {...this.props.route.params.selectedItems.find(p => p.id === (+keys[i]))};
-                meal.carb = +((meal.carb * this.state.values[keys[i]]/100).toFixed(3)).toString();
-                meal.protein = +((meal.protein * this.state.values[keys[i]]/100).toFixed(3)).toString();
-                meal.fat = +((meal.fat * this.state.values[keys[i]]/100).toFixed(3)).toString();
+                meal.carb = +((meal.carb * this.state.values[keys[i]]/100).toFixed(3));
+                meal.protein = +((meal.protein * this.state.values[keys[i]]/100).toFixed(3));
+                meal.fat = +((meal.fat * this.state.values[keys[i]]/100).toFixed(3));
                 meal.quantity = this.state.values[keys[i]];
+                meal.meal_id = (+keys[i]);
                 resultMeals.push(meal);
             }
             resultMeals.forEach( meal => {
                 db.transaction(
                     tx => {
                         tx.executeSql("insert into mealquantity (log_id, meal_type, meal_name, protein," +
-                            "fat,carb,quantity) values " +
+                            "fat,carb,quantity,meal_id) values " +
                             "(" + this.props.route.params.logId + "," + this.props.route.params.mealType + ",'" +
                             meal.name + "', " + meal.protein + "," + meal.fat
-                            + "," + meal.carb + "," + meal.quantity + ");", null,
+                            + "," + meal.carb + "," + meal.quantity + ","+ meal.meal_id +");", null,
                             (_t,_r)=> console.log('kkkk', _r.insertId));
                     },
                     (_err)=>{console.warn('error',_err)},

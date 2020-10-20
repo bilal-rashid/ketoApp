@@ -22,7 +22,7 @@ function Item(props) {
             <View style={styles.listItemContainer}>
                 <View style={styles.listItemContainer3}>
                     <Text style={{fontSize:16}}>{mealName}</Text>
-                    {props.selected && <TextInput onChangeText={onQtyChange} value={props.item.quantity.toString()} style={{borderColor: 'gray',backgroundColor:'#fff', borderWidth: 1, borderRadius: 4,width:40,height:20}}/>}
+                    {props.selected && <TextInput keyboardType={'decimal-pad'} onChangeText={onQtyChange} value={props.item.quantity.toString()} style={{borderColor: 'gray',backgroundColor:'#fff', borderWidth: 1, borderRadius: 4,width:40,height:20}}/>}
                 </View>
                 {/*<View style={{flex:2, backgroundColor:'#a8a7a7'}}>*/}
                 {/*    <TextInput style={{borderColor: 'gray', borderWidth: 1, borderRadius: 4}}/>*/}

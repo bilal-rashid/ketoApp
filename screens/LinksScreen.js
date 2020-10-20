@@ -10,6 +10,7 @@ import MealComponent from "../components/MealComponent";
 import Enums from '../constants/Enums';
 import * as SQLite from 'expo-sqlite';
 import * as SecureStore from "expo-secure-store";
+import InitialData from "../constants/InitialData";
 
 const db = SQLite.openDatabase("db.db");
 const months = ["01", "02", "03","04", "05", "06", "07", "08", "09", "10", "11", "12"];
@@ -21,6 +22,7 @@ export default class LinksScreen extends React.Component {
       mode: 'date',
       show: false,
       items: [],
+      ingredients: [],
       proteinTarget: 1.0,
       proteinToday: 0.0,
       fatTarget: 1.0,
@@ -39,6 +41,7 @@ export default class LinksScreen extends React.Component {
       // do something
       this.getUserPreferences();
       this.getDailyLogs();
+      this.getMealsFromDb();
     });
   }
   getUserPreferences = () => {
@@ -240,7 +243,48 @@ export default class LinksScreen extends React.Component {
       );
     });
   }
+  getMealsFromDb = () => {
+    var dataId = 9000;
+    const array = JSON.parse(new InitialData().getData());
+    array.forEach(item => {
+      item['id'] = dataId;
+      dataId++;
+    });
+    db.transaction(tx => {
+      tx.executeSql(
+          `select * from meals;`,
+          null,
+          (_, { rows: { _array } }) => {
+            _array = _array.reverse().concat(array)
+            this.setState({ingredients: _array});
+          }
+      );
+    });
+  }
   onQuantityChange = (item, value) => {
+    let ingredientItem = {...this.state.ingredients.filter(p => p.id === item.meal_id)[0]};
+    ingredientItem.carb = +((ingredientItem.carb * value/100).toFixed(3));
+    ingredientItem.protein = +((ingredientItem.protein * value/100).toFixed(3));
+    ingredientItem.fat = +((ingredientItem.fat * value/100).toFixed(3));
+    ingredientItem.quantity = value;
+    ingredientItem.meal_id = (item.meal_id);
+    db.transaction(
+        tx => {
+          tx.executeSql("UPDATE mealquantity " +
+              "SET protein = "+ingredientItem.protein+"," +
+              " fat = "+ingredientItem.fat+"," +
+              " carb = "+ingredientItem.carb+"," +
+              " quantity = "+ingredientItem.quantity+
+              " WHERE" +
+              " id = "+item.id+";", null,
+              (_t,_r)=> console.log('kkkk', _r.insertId));
+        },
+        (_err)=>{console.warn('DB Error',_err)},
+        () => {
+          this.getDailyLogs();
+        }
+    );
+
     let tempState = [...this.state.items];
     tempState.filter(p => p.id === item.id)[0].quantity = value;
     this.setState({items: tempState});
