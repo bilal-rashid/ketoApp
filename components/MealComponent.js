@@ -81,6 +81,18 @@ export default class MealComponent extends React.Component {
             this.setState({selectedItems: temp});
         }
     }
+    onIncrement = () => {
+        let selectedItems = [...this.state.selectedItems];
+        selectedItems[0].quantity = selectedItems[0].quantity + 1;
+        this.setState({selectedItems: selectedItems});
+        this.props.onQuantityChange(selectedItems[0], selectedItems[0].quantity);
+    }
+    onDecrement = () => {
+        let selectedItems = [...this.state.selectedItems];
+        selectedItems[0].quantity = selectedItems[0].quantity - 1;
+        this.setState({selectedItems: selectedItems});
+        this.props.onQuantityChange(selectedItems[0], selectedItems[0].quantity);
+    }
     render () {
         var proteinToday = 0;
         var fatToday = 0;
@@ -154,27 +166,58 @@ export default class MealComponent extends React.Component {
                     />
                     {
                         this.props.mealQuantities.length === 0 &&
-                        <View >
+                        <View style={{backgroundColor: '#d0cfcf'}}>
                             <View style={{flexDirection:'row', alignSelf: 'center'}}>
                                 <Ionicons style={{alignSelf: 'center'}} name="md-information-circle" size={32} color="red" />
                                 <MonoText style={{color:'red',marginLeft: 10, alignSelf:'center'}}>No Values</MonoText>
                             </View>
                         </View>
                     }
-                    {
-                        this.state.selectedItems.length > 0 &&
-                        <TouchableOpacity
-                            onPress={() =>{
-                                this.props.callBackClear(this.state.selectedItems);
-                                this.setState({selectedItems: []});
+
+                    <View style={{flexDirection:'row', flex:1, textAlign:'center', paddingLeft:5,marginTop:5, borderBottomWidth:1,
+                    borderBottomColor:'#b1afaf',paddingBottom:3}}>
+                            {
+                                this.state.selectedItems.length === 1 &&
+                                <TouchableOpacity
+                                    onPress={this.onDecrement}
+                                    style={styles.controlButtonStyle}>
+                                    <Text style={{color: '#fff', fontSize: 19}}>-1</Text>
+                                </TouchableOpacity>
+                            }
+                            {
+                                this.state.selectedItems.length === 1 &&
+                                <TouchableOpacity
+                                    onPress={this.onIncrement}
+                                    style={styles.controlButtonStyle}>
+                                    <Text style={{color: '#fff', fontSize: 19}}>+1</Text>
+                                </TouchableOpacity>
+                            }
+                            {this.state.selectedItems.length > 0 &&
+                                <TouchableOpacity
+                                    onPress={() =>{
+                                        this.props.callBackClear(this.state.selectedItems);
+                                        this.setState({selectedItems: []});
+                                    }}
+                                    style={styles.controlButtonStyle}>
+                                    <Image
+                                        source={require('../assets/images/trash.png')
+                                        }
+                                        style={{width:25,height:25,resizeMode: 'contain'}}
+                                    />
+                                </TouchableOpacity>
                             }
 
-                            }>
-                            <Text  style={styles.clearText}>
-                                Clear
-                            </Text>
-                        </TouchableOpacity>
-                    }
+                            <TouchableOpacity
+                                onPress={() => this.props.callBackAdd(this.props.mealType)}
+                                style={styles.controlButtonStyle}>
+                                <Image
+                                    source={require('../assets/images/search.png')
+                                    }
+                                    style={{width:25,height:25,resizeMode: 'contain'}}
+                                />
+                            </TouchableOpacity>
+                        </View>
+
                 </View>
                 }
             </View>
@@ -182,6 +225,11 @@ export default class MealComponent extends React.Component {
     }
 }
 const styles = StyleSheet.create({
+    controlButtonStyle: {
+        width:35,height:35, backgroundColor: '#4a83f1',
+        borderRadius: 4,marginLeft: 5, justifyContent: 'center',
+        alignItems: 'center'
+    },
     container: {
         padding:10,
         flex: 1,
