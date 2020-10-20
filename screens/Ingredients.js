@@ -110,12 +110,38 @@ export default class Ingredients extends React.Component {
     }
     setAmount = () => {
         if (this.state.selectedItems.length > 0) {
-            this.props.navigation.navigate('Set Amount', {selectedItems: this.state.selectedItems,
-            logId:this.props.route.params.logId, mealType: this.props.route.params.mealType,
-            proteinPercent: this.props.route.params.proteinPercent,
-            fatPercent: this.props.route.params.fatPercent,
-            carbPercent: this.props.route.params.carbPercent,
+            let resultMeals = [];
+            for (let i=0; i < this.state.selectedItems.length; i++) {
+                let meal = {...this.state.selectedItems[i]};
+                meal.carb = 0;
+                meal.protein = 0;
+                meal.fat = 0;
+                meal.quantity = 0;
+                meal.meal_id = meal.id;
+                resultMeals.push(meal);
+            }
+            resultMeals.forEach( meal => {
+                db.transaction(
+                    tx => {
+                        tx.executeSql("insert into mealquantity (log_id, meal_type, meal_name, protein," +
+                            "fat,carb,quantity,meal_id) values " +
+                            "(" + this.props.route.params.logId + "," + this.props.route.params.mealType + ",'" +
+                            meal.name + "', " + meal.protein + "," + meal.fat
+                            + "," + meal.carb + "," + meal.quantity + ","+ meal.meal_id +");", null,
+                            (_t,_r)=> console.log('kkkk', _r.insertId));
+                    },
+                    (_err)=>{console.warn('error',_err)},
+                    () => {
+                        this.props.navigation.navigate('Root');
+                    }
+                );
             });
+            // this.props.navigation.navigate('Set Amount', {selectedItems: this.state.selectedItems,
+            // logId:this.props.route.params.logId, mealType: this.props.route.params.mealType,
+            // proteinPercent: this.props.route.params.proteinPercent,
+            // fatPercent: this.props.route.params.fatPercent,
+            // carbPercent: this.props.route.params.carbPercent,
+            // });
         }
     };
     onItemSelected = (selected, item) => {
@@ -166,7 +192,7 @@ export default class Ingredients extends React.Component {
                             item={item}/>}
                     />
                     <TouchableOpacity onPress={this.setAmount} style={styles.buttonStyle}>
-                        <Text style={styles.buttonTextStyle}>Set Amount</Text>
+                        <Text style={styles.buttonTextStyle}>Save</Text>
                     </TouchableOpacity>
 
                     {/*<View style={styles.helpContainer}>*/}
