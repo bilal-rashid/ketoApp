@@ -167,12 +167,12 @@ export default class Ingredients extends React.Component {
                 <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
                     <TouchableOpacity onPress={this.addMeal} style={{flexDirection: 'row'}}>
                         <Ionicons name="md-add-circle" size={32} color="#007AFF" />
-                        <MonoText style={{color:'#007AFF',marginLeft: 10, alignSelf:'center'}}>Add Meal</MonoText>
+                        <MonoText style={{color:'#007AFF',marginLeft: 10, alignSelf:'center'}}>Add Ingredient</MonoText>
                     </TouchableOpacity>
                     {this.state.selectedItems.length === 1 &&
                         <TouchableOpacity onPress={this.deleteMeal} style={{flexDirection: 'row', marginRight: 5}}>
                             <Ionicons name="md-trash" size={32} color="red"/>
-                            <MonoText style={{color: 'red', marginLeft: 10, alignSelf: 'center'}}>Delete Meal</MonoText>
+                            <MonoText style={{color: 'red', marginLeft: 10, alignSelf: 'center'}}>Delete</MonoText>
                         </TouchableOpacity>
                     }
                 </View>
