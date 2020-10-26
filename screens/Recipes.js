@@ -155,17 +155,33 @@ export default class Recipes extends React.Component {
                     keyboardType={'default'}
 
                 />
-                <FlatList
-                    keyExtractor={(item) => item.id.toString() }
-                    data={this.state.filteredItems}
-                    renderItem={({ item }) => <MealItem
-                        onItemSelected={this.onItemSelected}
-                        selected={this.state.selectedItems.filter(p=>p.id === item.id).length === 1}
-                        item={item}/>}
-                />
-                <TouchableOpacity onPress={this.setAmount} style={styles.buttonStyle}>
-                    <Text style={styles.buttonTextStyle}>Save</Text>
-                </TouchableOpacity>
+                {
+                    this.state.filteredItems.length > 0 &&
+                    <FlatList
+                        keyExtractor={(item) => item.id.toString() }
+                        data={this.state.filteredItems}
+                        renderItem={({ item }) => <MealItem
+                            onItemSelected={this.onItemSelected}
+                            selected={this.state.selectedItems.filter(p=>p.id === item.id).length === 1}
+                            item={item}/>}
+                    />
+                }
+                {
+                    this.state.filteredItems.length === 0 &&
+                    <View style={{backgroundColor: '#d0cfcf'}}>
+                        <View style={{flexDirection:'row', alignSelf: 'center'}}>
+                            <Ionicons style={{alignSelf: 'center'}} name="md-information-circle" size={32} color="red" />
+                            <MonoText style={{color:'red',marginLeft: 10, alignSelf:'center'}}>No Values</MonoText>
+                        </View>
+                    </View>
+                }
+                {
+                    this.state.filteredItems.length > 0 &&
+                    <TouchableOpacity onPress={this.setAmount} style={styles.buttonStyle}>
+                        <Text style={styles.buttonTextStyle}>Save</Text>
+                    </TouchableOpacity>
+                }
+
 
                 {/*<View style={styles.helpContainer}>*/}
                 {/*  <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>*/}
