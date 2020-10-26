@@ -7,6 +7,7 @@ import useCachedResources from './hooks/useCachedResources';
 import BottomTabNavigator from './navigation/BottomTabNavigator';
 import LinkingConfiguration from './navigation/LinkingConfiguration';
 import Ingredients from "./screens/Ingredients";
+import Recipes from "./screens/Recipes";
 import AddMealScreen from "./screens/AddMealScreen";
 import LogMealScreen from "./screens/LogMealScreen";
 
@@ -25,6 +26,7 @@ export default function App(props) {
           <Stack.Navigator>
             <Stack.Screen name="Root" component={BottomTabNavigator} />
             <Stack.Screen name="Ingredients" component={Ingredients} />
+            <Stack.Screen name="Recipes" component={Recipes} />
             <Stack.Screen name="Add Meals" component={AddMealScreen} />
             <Stack.Screen name="Set Amount" component={LogMealScreen} />
           </Stack.Navigator>
