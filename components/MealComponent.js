@@ -16,7 +16,7 @@ function Item(props) {
     } else {
         mealName = props.item.meal_name;
     }
-    const backgroundColor = (props.selected)? '#cdcccc' : '#fff';
+    const backgroundColor = (props.selected)? '#cdcccc' : 'rgba(255,255,255,0)';
     return (
         <TouchableOpacity style={{backgroundColor: backgroundColor}} onPress={select}>
             <View style={styles.listItemContainer}>
@@ -206,7 +206,6 @@ export default class MealComponent extends React.Component {
                                     />
                                 </TouchableOpacity>
                             }
-
                             <TouchableOpacity
                                 onPress={() => this.props.callBackAdd(this.props.mealType)}
                                 style={styles.controlButtonStyle}>
@@ -216,6 +215,15 @@ export default class MealComponent extends React.Component {
                                     style={{width:25,height:25,resizeMode: 'contain'}}
                                 />
                             </TouchableOpacity>
+                            {this.state.selectedItems.length > 0 &&
+                            <TouchableOpacity
+                                onPress={() =>{
+                                    this.props.callBackAddMeal(this.state.selectedItems);
+                                    this.setState({selectedItems: []});
+                                }}
+                                style={styles.controlTextButtonStyle}>
+                                <Text style={{color: '#fff', fontSize: 17}}>Create Meal</Text>
+                            </TouchableOpacity>}
                         </View>
 
                 </View>
@@ -227,6 +235,11 @@ export default class MealComponent extends React.Component {
 const styles = StyleSheet.create({
     controlButtonStyle: {
         width:35,height:35, backgroundColor: '#4a83f1',
+        borderRadius: 4,marginLeft: 5, justifyContent: 'center',
+        alignItems: 'center'
+    },
+    controlTextButtonStyle: {
+        width:110,height:35, backgroundColor: '#4a83f1',
         borderRadius: 4,marginLeft: 5, justifyContent: 'center',
         alignItems: 'center'
     },

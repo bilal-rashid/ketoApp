@@ -1,9 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as React from 'react';
-import {StyleSheet, Text, View, TouchableOpacity, Image, Alert} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, Image, Alert, TextInput} from 'react-native';
 import { Button, Platform} from 'react-native';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { Modal, TouchableHighlight } from 'react-native';
 // import * as Progress from 'react-native-progress';
 import * as Progress from 'react-native-progress';
 import MealComponent from "../components/MealComponent";
@@ -33,7 +34,10 @@ export default class LinksScreen extends React.Component {
       caloriesToday: 0.0,
       protein: 0,
       fat: 0,
-      carb: 0
+      carb: 0,
+      modalOpen: false,
+      mealName:'',
+      meals:[],
     };
   }
   componentDidMount() {
@@ -261,6 +265,59 @@ export default class LinksScreen extends React.Component {
       );
     });
   }
+  saveIngradientsAsMeal = (items) => {
+    this.setState({meals: items});
+    this.openMealNameDialog();
+  }
+  onChangeMealName = (value) => {
+    this.setState({
+      mealName:value
+    });
+  }
+  onSaveMealName = () => {
+    if (this.state.mealName.length < 1)
+      return;
+    let mealObject = {name: this.state.mealName, description: 'null', protein:0, fat:0, carb:0};
+    this.state.meals.forEach(meal => {
+      mealObject.fat = mealObject.fat + meal.fat;
+      mealObject.carb = mealObject.carb + meal.carb;
+      mealObject.protein = mealObject.protein + meal.protein;
+    });
+    db.transaction(
+        tx => {
+          tx.executeSql("insert into recipe (protein, fat, carb, name," +
+              "description) values " +
+              "(" + mealObject.protein + "," + mealObject.fat + ",'" +
+              mealObject.carb + "', '" + mealObject.name + "'," + "'" +mealObject.description+ "'"  +");", null,
+              (_t,_r)=> {});
+        },
+        (_err)=>{console.warn('error',_err)},
+        () => {
+          this.showSuccessAndResetState();
+        }
+    );
+  }
+  showSuccessAndResetState  = () => {
+    this.setState({modalOpen:!this.state.modalOpen, meals:[], mealName:''});
+    Alert.alert(
+        "Success",
+        "Meal added successfully",
+        [
+          {
+            text: "Ok",
+            onPress: () => {
+            },
+          }
+        ],
+        { cancelable: true }
+    );
+  }
+  onCancelModal  = () => {
+    this.setState({modalOpen:!this.state.modalOpen, meals:[], mealName:''});
+  }
+  openMealNameDialog = () => {
+    this.setState({modalOpen: true});
+  }
   onQuantityChange = (item, value) => {
     let ingredientItem = {...this.state.ingredients.filter(p => p.id === item.meal_id)[0]};
     ingredientItem.carb = +((ingredientItem.carb * value/100).toFixed(3));
@@ -295,8 +352,42 @@ export default class LinksScreen extends React.Component {
       ratio = (this.state.fatToday/(this.state.proteinToday + this.state.carbToday)).toFixed(2);
     }
     return (
-        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+        <ScrollView style={(this.state.modalOpen)?styles.containerDark:styles.container} contentContainerStyle={styles.contentContainer}>
           <View style={styles.getStartedContainer}>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={this.state.modalOpen}
+                onRequestClose={() => {
+                  console.warn('close');
+                }}>
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                  <Text style={styles.modalText}>Please enter meal name</Text>
+                  <TextInput
+                      style={styles.textInputStyle}
+                      placeholder={'Name'}
+                      onChangeText={this.onChangeMealName}
+                      value={this.state.mealName}
+                  />
+
+
+                  <View style={{flexDirection:'row'}}>
+                    <TouchableHighlight
+                        style={{ ...styles.openButton, backgroundColor: '#e02e2e', marginRight: 5 }}
+                        onPress={this.onCancelModal}>
+                      <Text style={styles.textStyle}>Cancel</Text>
+                    </TouchableHighlight>
+                    <TouchableHighlight
+                        style={{ ...styles.openButton, backgroundColor: '#2196F3',marginLeft: 5 }}
+                        onPress={this.onSaveMealName}>
+                      <Text style={styles.textStyle}>Save</Text>
+                    </TouchableHighlight>
+                  </View>
+
+                </View>
+              </View>
+            </Modal>
 
             <TouchableOpacity onPress={this.showDatepicker}>
               <Image
@@ -392,6 +483,7 @@ export default class LinksScreen extends React.Component {
               mealText={'Frühstück'}
               onQuantityChange={this.onQuantityChange}
               callBackClear = {this.clearData}
+              callBackAddMeal = {this.saveIngradientsAsMeal}
               mealType={Enums.breakFast}
               mealQuantities={this.state.items.filter(p => p.meal_type === Enums.breakFast)}
               imageSrc={require('../assets/images/mug.png')}/>
@@ -402,6 +494,7 @@ export default class LinksScreen extends React.Component {
               callBackAdd = {this.checkLogs}
               onQuantityChange={this.onQuantityChange}
               mealType={Enums.snack_one}
+              callBackAddMeal = {this.saveIngradientsAsMeal}
               callBackClear = {this.clearData}
               mealText={'Snack'}
               mealQuantities={this.state.items.filter(p => p.meal_type === Enums.snack_one)}
@@ -411,6 +504,7 @@ export default class LinksScreen extends React.Component {
               proteinTarget = {this.state.proteinTarget}
               carbTarget = {this.state.carbTarget}
               callBackAdd = {this.checkLogs}
+              callBackAddMeal = {this.saveIngradientsAsMeal}
               onQuantityChange={this.onQuantityChange}
               mealType={Enums.lunch}
               callBackClear = {this.clearData}
@@ -422,6 +516,7 @@ export default class LinksScreen extends React.Component {
               proteinTarget = {this.state.proteinTarget}
               carbTarget = {this.state.carbTarget}
               callBackAdd = {this.checkLogs}
+              callBackAddMeal = {this.saveIngradientsAsMeal}
               mealType={Enums.snack_two}
               onQuantityChange={this.onQuantityChange}
               callBackClear = {this.clearData}
@@ -433,6 +528,7 @@ export default class LinksScreen extends React.Component {
               proteinTarget = {this.state.proteinTarget}
               carbTarget = {this.state.carbTarget}
               callBackAdd = {this.checkLogs}
+              callBackAddMeal = {this.saveIngradientsAsMeal}
               onQuantityChange={this.onQuantityChange}
               mealType={Enums.dinner}
               callBackClear = {this.clearData}
@@ -582,6 +678,9 @@ const styles = StyleSheet.create({
   navigationFilename: {
     marginTop: 5,
   },
+  textInputStyle: {
+    width:200,
+    height: 35, borderColor: 'gray', borderWidth: 1, borderRadius: 4,marginBottom:10,padding:5},
   helpContainer: {
     marginTop: 15,
     alignItems: 'center',
@@ -596,6 +695,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fafafa',
+  },
+  containerDark: {
+    flex: 1,
+    backgroundColor: 'rgba(5,5,5,0.16)',
   },
   contentContainer: {
     paddingTop: 15,
@@ -651,5 +754,41 @@ const styles = StyleSheet.create({
     lineHeight: 35,
     marginLeft: 40,
     textAlign: 'right',
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  openButton: {
+    borderRadius: 5,
+    padding: 10,
+    elevation: 2,
+    width:80
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
   }
 });

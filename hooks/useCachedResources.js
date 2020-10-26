@@ -30,6 +30,11 @@ export default function useCachedResources() {
               "meal_type integer,meal_name text,protein real,fat real, carb real, quantity real, meal_id integer);"
           );
         });
+        db.transaction(tx => {
+          tx.executeSql(
+              "create table if not exists recipe (id integer primary key autoincrement, protein real,fat real,carb real, name text, description text);"
+              ,null,(error)=>{},);
+        },(error)=>{});
         // Load fonts
         await Font.loadAsync({
           ...Ionicons.font,
