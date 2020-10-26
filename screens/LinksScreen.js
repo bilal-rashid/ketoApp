@@ -206,11 +206,32 @@ export default class LinksScreen extends React.Component {
     );
   }
   gotoIngredients = (meal, logId) => {
-    this.props.navigation.navigate('Ingredients', {mealType:meal, logId: logId,
-    proteinPercent: this.state.proteinToday,
-    fatPercent: this.state.fatToday,
-    carbPercent: this.state.carbToday,
-    });
+    Alert.alert(
+        "Select",
+        "Meals or Ingredients",
+        [
+          {
+            text: "Meals",
+            onPress: () => {
+              this.props.navigation.navigate('Recipes', {mealType:meal, logId: logId,
+                proteinPercent: this.state.proteinToday,
+                fatPercent: this.state.fatToday,
+                carbPercent: this.state.carbToday,
+              });
+            },
+            style: "cancel"
+          },
+          { text: "Ingredients", onPress: () => {
+              this.props.navigation.navigate('Ingredients', {mealType:meal, logId: logId,
+                proteinPercent: this.state.proteinToday,
+                fatPercent: this.state.fatToday,
+                carbPercent: this.state.carbToday,
+              });
+            }
+          }
+        ],
+        { cancelable: false }
+    );
   }
   clearData = (items) => {
     Alert.alert(
@@ -298,7 +319,7 @@ export default class LinksScreen extends React.Component {
     );
   }
   showSuccessAndResetState  = () => {
-    this.setState({modalOpen:!this.state.modalOpen, meals:[], mealName:''});
+    console.warn('hogya');
     Alert.alert(
         "Success",
         "Meal added successfully",
@@ -306,10 +327,11 @@ export default class LinksScreen extends React.Component {
           {
             text: "Ok",
             onPress: () => {
+              this.setState({modalOpen:!this.state.modalOpen, meals:[], mealName:''});
             },
           }
         ],
-        { cancelable: true }
+        { cancelable: false }
     );
   }
   onCancelModal  = () => {

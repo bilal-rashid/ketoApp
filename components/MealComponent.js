@@ -22,15 +22,15 @@ function Item(props) {
             <View style={styles.listItemContainer}>
                 <View style={styles.listItemContainer3}>
                     <Text style={{fontSize:16}}>{mealName}</Text>
-                    {props.selected && <TextInput keyboardType={'decimal-pad'} onChangeText={onQtyChange} value={props.item.quantity.toString()} style={{borderColor: 'gray',backgroundColor:'#fff', borderWidth: 1, borderRadius: 4,width:40,height:20}}/>}
+                    {(props.selected && props.item.meal_id !== -1) && <TextInput keyboardType={'decimal-pad'} onChangeText={onQtyChange} value={props.item.quantity.toString()} style={{borderColor: 'gray',backgroundColor:'#fff', borderWidth: 1, borderRadius: 4,width:40,height:20}}/>}
                 </View>
                 {/*<View style={{flex:2, backgroundColor:'#a8a7a7'}}>*/}
                 {/*    <TextInput style={{borderColor: 'gray', borderWidth: 1, borderRadius: 4}}/>*/}
                 {/*</View>*/}
                 <View style={styles.listItemContainer2}>
-                    <Text>{props.item.protein}g</Text>
-                    <Text>{props.item.fat}g</Text>
-                    <Text>{props.item.carb}g</Text>
+                    <Text>{(props.item.protein.toFixed(2))}g</Text>
+                    <Text>{(props.item.fat.toFixed(2))}g</Text>
+                    <Text>{(props.item.carb.toFixed(2))}g</Text>
                 </View>
             </View>
         </TouchableOpacity>
@@ -86,6 +86,15 @@ export default class MealComponent extends React.Component {
         selectedItems[0].quantity = selectedItems[0].quantity + 1;
         this.setState({selectedItems: selectedItems});
         this.props.onQuantityChange(selectedItems[0], selectedItems[0].quantity);
+    }
+    mealExists = () => {
+        let result = false;
+        this.state.selectedItems.forEach(item => {
+            if (item.meal_id === -1) {
+                result = true;
+            }
+        });
+        return result;
     }
     onDecrement = () => {
         let selectedItems = [...this.state.selectedItems];
@@ -215,7 +224,7 @@ export default class MealComponent extends React.Component {
                                     style={{width:25,height:25,resizeMode: 'contain'}}
                                 />
                             </TouchableOpacity>
-                            {this.state.selectedItems.length > 0 &&
+                            {(this.state.selectedItems.length > 0 && !this.mealExists()) &&
                             <TouchableOpacity
                                 onPress={() =>{
                                     this.props.callBackAddMeal(this.state.selectedItems);
