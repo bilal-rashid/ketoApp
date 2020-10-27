@@ -75,7 +75,6 @@ export default class LogMealScreen extends React.Component {
         if (this.validate()) {
             let resultMeals = [];
             this.setState({error:false});
-            console.warn(this.state.values);
             const keys = Object.keys(this.state.values);
             for (let i=0; i < keys.length; i++) {
                 let meal = {...this.props.route.params.selectedItems.find(p => p.id === (+keys[i]))};

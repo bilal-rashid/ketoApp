@@ -63,7 +63,6 @@ export default class HomeScreen extends React.Component {
     });
   }
   saveval = () => {
-    console.warn('call');
     SecureStore.setItemAsync('notFirstLaunch', 'bilal').then(value => {console.warn(value)})
   }
   editProfile = () => {
