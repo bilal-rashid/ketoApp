@@ -26,7 +26,7 @@ export default function BottomTabNavigator({ navigation, route }) {
           <Drawer.Screen name="Links"
                          component={LinksScreen}
                          options={{
-                             title: 'Eiweiß'
+                             title: 'Diet Plan'
                          }} />
       </Drawer.Navigator>
     // <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
