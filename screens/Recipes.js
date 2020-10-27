@@ -89,7 +89,9 @@ export default class Recipes extends React.Component {
             let resultMeals = [];
             for (let i=0; i < this.state.selectedItems.length; i++) {
                 let meal = {...this.state.selectedItems[i]};
-                meal.quantity = 1;
+                meal.protein_percent = meal.protein/meal.quantity;
+                meal.fat_percent = meal.fat/meal.quantity;
+                meal.carb_percent = meal.carb/meal.quantity;
                 meal.meal_id = -1;
                 resultMeals.push(meal);
             }
@@ -97,10 +99,12 @@ export default class Recipes extends React.Component {
                 db.transaction(
                     tx => {
                         tx.executeSql("insert into mealquantity (log_id, meal_type, meal_name, protein," +
-                            "fat,carb,quantity,meal_id) values " +
+                            "fat,carb,protein_percent,fat_percent,carb_percent,quantity,meal_id) values " +
                             "(" + this.props.route.params.logId + "," + this.props.route.params.mealType + ",'" +
                             meal.name + "', " + meal.protein + "," + meal.fat
-                            + "," + meal.carb + "," + meal.quantity + ","+ meal.meal_id +");", null,
+                            + "," + meal.carb + "," + meal.protein_percent + "," + meal.fat_percent + ","
+                            + meal.carb_percent + "," + meal.quantity + ","+ meal.meal_id +");"
+                            , null,
                             (_t,_r)=> console.log('kkkk', _r.insertId));
                     },
                     (_err)=>{console.warn('error',_err)},

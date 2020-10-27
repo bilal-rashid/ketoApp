@@ -27,12 +27,13 @@ export default function useCachedResources() {
         db.transaction(tx => {
           tx.executeSql(
               "create table if not exists mealquantity (id integer primary key autoincrement, log_id integer," +
-              "meal_type integer,meal_name text,protein real,fat real, carb real, quantity real, meal_id integer);"
+              "meal_type integer,meal_name text,protein real,fat real, carb real,protein_percent real," +
+              "fat_percent real,carb_percent real ,quantity real, meal_id integer);"
           );
         });
         db.transaction(tx => {
           tx.executeSql(
-              "create table if not exists recipe (id integer primary key autoincrement, protein real,fat real,carb real, name text, description text);"
+              "create table if not exists recipe (id integer primary key autoincrement, protein real,fat real,carb real,quantity real, name text, description text);"
               ,null,(error)=>{},);
         },(error)=>{});
         // Load fonts
