@@ -22,7 +22,8 @@ export default class MealItem extends React.Component {
                 <View style={styles.container}>
                     <View style={styles.innerContainer}>
                         <Text style={styles.item}>{this.props.item.name}</Text>
-                        {(this.props.item.group_name) && <Text style={styles.groupItem}>Group: {this.props.item.group_name}</Text>}
+                        {(this.props.item.group_name)?<Text style={styles.groupItem}>Group: {this.props.item.group_name}</Text>:
+                            <Text style={styles.groupItem}>Quantity: {(this.props.item.quantity.toFixed(1))}g</Text>}
                         <View style={styles.valuesContainer}>
                             <Text style={[styles.valuesText,{marginLeft:10}]}>Kohlehydrate: </Text>
                             <Text style={styles.valuesText}>{(this.props.item.carb.toFixed(2))}g</Text>
