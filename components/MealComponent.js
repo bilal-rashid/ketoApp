@@ -22,7 +22,7 @@ function Item(props) {
             <View style={styles.listItemContainer}>
                 <View style={styles.listItemContainer3}>
                     <Text style={{fontSize:16}}>{mealName}</Text>
-                    {(props.selected && props.item.meal_id !== -1) && <TextInput keyboardType={'decimal-pad'} onChangeText={onQtyChange} value={props.item.quantity.toString()} style={{borderColor: 'gray',backgroundColor:'#fff', borderWidth: 1, borderRadius: 4,width:40,height:20}}/>}
+                    {(props.selected) && <TextInput keyboardType={'decimal-pad'} onChangeText={onQtyChange} value={props.item.quantity.toString()} style={{borderColor: 'gray',backgroundColor:'#fff', borderWidth: 1, borderRadius: 4,width:40,height:20}}/>}
                 </View>
                 {/*<View style={{flex:2, backgroundColor:'#a8a7a7'}}>*/}
                 {/*    <TextInput style={{borderColor: 'gray', borderWidth: 1, borderRadius: 4}}/>*/}
@@ -83,6 +83,9 @@ export default class MealComponent extends React.Component {
     }
     onIncrement = () => {
         let selectedItems = [...this.state.selectedItems];
+        selectedItems[0].carb = +((selectedItems[0].carb_percent * (selectedItems[0].quantity + 1)).toFixed(3));
+        selectedItems[0].protein = +((selectedItems[0].protein_percent * (selectedItems[0].quantity + 1)).toFixed(3));
+        selectedItems[0].fat = +((selectedItems[0].fat_percent * (selectedItems[0].quantity + 1)).toFixed(3));
         selectedItems[0].quantity = selectedItems[0].quantity + 1;
         this.setState({selectedItems: selectedItems});
         this.props.onQuantityChange(selectedItems[0], selectedItems[0].quantity);
@@ -98,9 +101,22 @@ export default class MealComponent extends React.Component {
     }
     onDecrement = () => {
         let selectedItems = [...this.state.selectedItems];
+        selectedItems[0].carb = +((selectedItems[0].carb_percent * (selectedItems[0].quantity - 1)).toFixed(3));
+        selectedItems[0].protein = +((selectedItems[0].protein_percent * (selectedItems[0].quantity - 1)).toFixed(3));
+        selectedItems[0].fat = +((selectedItems[0].fat_percent * (selectedItems[0].quantity - 1)).toFixed(3));
         selectedItems[0].quantity = selectedItems[0].quantity - 1;
         this.setState({selectedItems: selectedItems});
         this.props.onQuantityChange(selectedItems[0], selectedItems[0].quantity);
+    }
+    onQuantityChange = (item, quantity) => {
+        let selectedItems = [...this.state.selectedItems];
+        let selected = selectedItems.filter(p => p.id === item.id)[0];
+        selected.carb = +((selected.carb_percent * (quantity)).toFixed(3));
+        selected.protein = +((selected.protein_percent * (quantity)).toFixed(3));
+        selected.fat = +((selected.fat_percent * (quantity)).toFixed(3));
+        selected.quantity = quantity;
+        this.setState({selectedItems: selectedItems});
+        this.props.onQuantityChange(item, quantity);
     }
     render () {
         var proteinToday = 0;
@@ -160,7 +176,7 @@ export default class MealComponent extends React.Component {
                         data={this.props.mealQuantities}
                         renderItem={({ item }) => <Item
                             onItemSelected={this.onItemSelected}
-                            onQuantityChange = {this.props.onQuantityChange}
+                            onQuantityChange = {this.onQuantityChange}
                             selected={this.state.selectedItems.filter(p=>p.id === item.id).length === 1}
                             item={item} />}
                         keyExtractor={item => item.id.toString()}

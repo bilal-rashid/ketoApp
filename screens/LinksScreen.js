@@ -23,7 +23,6 @@ export default class LinksScreen extends React.Component {
       mode: 'date',
       show: false,
       items: [],
-      ingredients: [],
       proteinTarget: 1.0,
       proteinToday: 0.0,
       fatTarget: 1.0,
@@ -45,7 +44,6 @@ export default class LinksScreen extends React.Component {
       // do something
       this.getUserPreferences();
       this.getDailyLogs();
-      this.getMealsFromDb();
     });
   }
   getUserPreferences = () => {
@@ -268,24 +266,6 @@ export default class LinksScreen extends React.Component {
       );
     });
   }
-  getMealsFromDb = () => {
-    var dataId = 9000;
-    const array = JSON.parse(new InitialData().getData());
-    array.forEach(item => {
-      item['id'] = dataId;
-      dataId++;
-    });
-    db.transaction(tx => {
-      tx.executeSql(
-          `select * from meals;`,
-          null,
-          (_, { rows: { _array } }) => {
-            _array = _array.reverse().concat(array)
-            this.setState({ingredients: _array});
-          }
-      );
-    });
-  }
   saveIngradientsAsMeal = (items) => {
     this.setState({meals: items});
     this.openMealNameDialog();
@@ -298,18 +278,19 @@ export default class LinksScreen extends React.Component {
   onSaveMealName = () => {
     if (this.state.mealName.length < 1)
       return;
-    let mealObject = {name: this.state.mealName, description: 'null', protein:0, fat:0, carb:0};
+    let mealObject = {name: this.state.mealName, description: 'null', protein:0, fat:0, carb:0,quantity:0};
     this.state.meals.forEach(meal => {
       mealObject.fat = mealObject.fat + meal.fat;
       mealObject.carb = mealObject.carb + meal.carb;
       mealObject.protein = mealObject.protein + meal.protein;
+      mealObject.quantity = mealObject.quantity + meal.quantity;
     });
     db.transaction(
         tx => {
-          tx.executeSql("insert into recipe (protein, fat, carb, name," +
+          tx.executeSql("insert into recipe (protein, fat, carb, quantity, name," +
               "description) values " +
-              "(" + mealObject.protein + "," + mealObject.fat + ",'" +
-              mealObject.carb + "', '" + mealObject.name + "'," + "'" +mealObject.description+ "'"  +");", null,
+              "(" + mealObject.protein + "," + mealObject.fat + "," +
+              mealObject.carb +"," + mealObject.quantity + ", '" + mealObject.name + "'," + "'" +mealObject.description+ "'"  +");", null,
               (_t,_r)=> {});
         },
         (_err)=>{console.warn('error',_err)},
@@ -319,7 +300,6 @@ export default class LinksScreen extends React.Component {
     );
   }
   showSuccessAndResetState  = () => {
-    console.warn('hogya');
     Alert.alert(
         "Success",
         "Meal added successfully",
@@ -341,12 +321,11 @@ export default class LinksScreen extends React.Component {
     this.setState({modalOpen: true});
   }
   onQuantityChange = (item, value) => {
-    let ingredientItem = {...this.state.ingredients.filter(p => p.id === item.meal_id)[0]};
-    ingredientItem.carb = +((ingredientItem.carb * value/100).toFixed(3));
-    ingredientItem.protein = +((ingredientItem.protein * value/100).toFixed(3));
-    ingredientItem.fat = +((ingredientItem.fat * value/100).toFixed(3));
+    let ingredientItem = {...item};
+    ingredientItem.carb = +((ingredientItem.carb_percent * value).toFixed(3));
+    ingredientItem.protein = +((ingredientItem.protein_percent * value).toFixed(3));
+    ingredientItem.fat = +((ingredientItem.fat_percent * value).toFixed(3));
     ingredientItem.quantity = value;
-    ingredientItem.meal_id = (item.meal_id);
     db.transaction(
         tx => {
           tx.executeSql("UPDATE mealquantity " +
@@ -381,7 +360,6 @@ export default class LinksScreen extends React.Component {
                 transparent={true}
                 visible={this.state.modalOpen}
                 onRequestClose={() => {
-                  console.warn('close');
                 }}>
               <View style={styles.centeredView}>
                 <View style={styles.modalView}>
