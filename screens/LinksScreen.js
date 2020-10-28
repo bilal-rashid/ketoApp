@@ -13,7 +13,7 @@ import * as SQLite from 'expo-sqlite';
 import * as SecureStore from "expo-secure-store";
 import InitialData from "../constants/InitialData";
 
-const db = SQLite.openDatabase("db1.db");
+const db = SQLite.openDatabase("keto_db.db");
 const months = ["01", "02", "03","04", "05", "06", "07", "08", "09", "10", "11", "12"];
 export default class LinksScreen extends React.Component {
   constructor () {
@@ -290,7 +290,8 @@ export default class LinksScreen extends React.Component {
           tx.executeSql("insert into recipe (protein, fat, carb, quantity, name," +
               "description) values " +
               "(" + mealObject.protein + "," + mealObject.fat + "," +
-              mealObject.carb +"," + mealObject.quantity + ", '" + mealObject.name + "'," + "'" +mealObject.description+ "'"  +");", null,
+              mealObject.carb +"," + mealObject.quantity + ", '" + mealObject.name + "'," + "'"
+              +JSON.stringify(this.state.meals)+ "'"  +");", null,
               (_t,_r)=> {});
         },
         (_err)=>{console.warn('error',_err)},

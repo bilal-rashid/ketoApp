@@ -6,7 +6,7 @@ import * as SQLite from 'expo-sqlite';
 import {Ionicons} from "@expo/vector-icons";
 import MealItem from "../components/MealItem";
 
-const db = SQLite.openDatabase("db1.db");
+const db = SQLite.openDatabase("keto_db.db");
 export default class Recipes extends React.Component {
     constructor () {
         super();
@@ -86,30 +86,26 @@ export default class Recipes extends React.Component {
     }
     setAmount = () => {
         if (this.state.selectedItems.length > 0) {
-            let resultMeals = [];
-            for (let i=0; i < this.state.selectedItems.length; i++) {
-                let meal = {...this.state.selectedItems[i]};
-                meal.protein_percent = meal.protein/meal.quantity;
-                meal.fat_percent = meal.fat/meal.quantity;
-                meal.carb_percent = meal.carb/meal.quantity;
-                meal.meal_id = -1;
-                resultMeals.push(meal);
-            }
-            resultMeals.forEach( meal => {
+            const ingredients = JSON.parse(this.state.selectedItems[0].description);
+            let count = 0;
+            ingredients.forEach( meal => {
                 db.transaction(
                     tx => {
                         tx.executeSql("insert into mealquantity (log_id, meal_type, meal_name, protein," +
                             "fat,carb,protein_percent,fat_percent,carb_percent,quantity,meal_id) values " +
                             "(" + this.props.route.params.logId + "," + this.props.route.params.mealType + ",'" +
-                            meal.name + "', " + meal.protein + "," + meal.fat
+                            meal.meal_name + "', " + meal.protein + "," + meal.fat
                             + "," + meal.carb + "," + meal.protein_percent + "," + meal.fat_percent + ","
                             + meal.carb_percent + "," + meal.quantity + ","+ meal.meal_id +");"
                             , null,
-                            (_t,_r)=> console.log('kkkk', _r.insertId));
+                            (_t,_r)=> console.log('Custom Meal Added', _r.insertId));
                     },
                     (_err)=>{console.warn('error',_err)},
                     () => {
-                        this.props.navigation.navigate('Root');
+                        count++;
+                        if (count === ingredients.length) {
+                            this.props.navigation.navigate('Root');
+                        }
                     }
                 );
             });
@@ -124,7 +120,7 @@ export default class Recipes extends React.Component {
     onItemSelected = (selected, item) => {
         if (selected) {
             this.setState({
-                selectedItems: [...this.state.selectedItems, item]
+                selectedItems: [...[], item]
             })
         } else {
             var temp = [...this.state.selectedItems];

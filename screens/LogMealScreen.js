@@ -6,7 +6,7 @@ import * as SQLite from 'expo-sqlite';
 import { Button } from 'react-native';
 import MealLogItem from "../components/MealLogItem";
 import {Ionicons} from "@expo/vector-icons";
-const db = SQLite.openDatabase("db1.db");
+const db = SQLite.openDatabase("keto_db.db");
 export default class LogMealScreen extends React.Component {
     constructor () {
         super();

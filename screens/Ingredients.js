@@ -9,7 +9,7 @@ import {Ionicons} from "@expo/vector-icons";
 import MealItem from "../components/MealItem";
 import InitialData from "../constants/InitialData";
 
-const db = SQLite.openDatabase("db1.db");
+const db = SQLite.openDatabase("keto_db.db");
 export default class Ingredients extends React.Component {
     constructor () {
         super();
@@ -123,6 +123,7 @@ export default class Ingredients extends React.Component {
                 meal.meal_id = meal.id;
                 resultMeals.push(meal);
             }
+            let count = 0;
             resultMeals.forEach( meal => {
                 db.transaction(
                     tx => {
@@ -136,7 +137,10 @@ export default class Ingredients extends React.Component {
                     },
                     (_err)=>{console.warn('error',_err)},
                     () => {
-                        this.props.navigation.navigate('Root');
+                        count++;
+                        if (count === resultMeals.length) {
+                            this.props.navigation.navigate('Root');
+                        }
                     }
                 );
             });
