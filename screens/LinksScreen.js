@@ -13,7 +13,7 @@ import * as SQLite from 'expo-sqlite';
 import * as SecureStore from "expo-secure-store";
 import InitialData from "../constants/InitialData";
 
-const db = SQLite.openDatabase("db.db");
+const db = SQLite.openDatabase("db1.db");
 const months = ["01", "02", "03","04", "05", "06", "07", "08", "09", "10", "11", "12"];
 export default class LinksScreen extends React.Component {
   constructor () {

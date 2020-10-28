@@ -6,7 +6,7 @@ import * as SQLite from 'expo-sqlite';
 import {Ionicons} from "@expo/vector-icons";
 import MealItem from "../components/MealItem";
 
-const db = SQLite.openDatabase("db.db");
+const db = SQLite.openDatabase("db1.db");
 export default class Recipes extends React.Component {
     constructor () {
         super();

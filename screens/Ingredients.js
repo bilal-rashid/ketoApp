@@ -9,7 +9,7 @@ import {Ionicons} from "@expo/vector-icons";
 import MealItem from "../components/MealItem";
 import InitialData from "../constants/InitialData";
 
-const db = SQLite.openDatabase("db.db");
+const db = SQLite.openDatabase("db1.db");
 export default class Ingredients extends React.Component {
     constructor () {
         super();

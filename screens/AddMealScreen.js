@@ -4,7 +4,7 @@ import {  Platform, StyleSheet, Text, View } from 'react-native';
 
 import * as SQLite from 'expo-sqlite';
 import { TextInput,Button,Alert,Picker,TouchableOpacity } from 'react-native';
-const db = SQLite.openDatabase("db.db");
+const db = SQLite.openDatabase("db1.db");
 export default class AddMealScreen extends React.Component {
     constructor () {
         super();

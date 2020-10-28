@@ -6,7 +6,7 @@ import * as SQLite from 'expo-sqlite';
 
 export default function useCachedResources() {
   const [isLoadingComplete, setLoadingComplete] = React.useState(false);
-  const db = SQLite.openDatabase("db.db",1.0);
+  const db = SQLite.openDatabase("db1.db",1.0);
 
   // Load any resources or data that we need prior to rendering the app
   React.useEffect(() => {
