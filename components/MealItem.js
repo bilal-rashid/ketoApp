@@ -24,14 +24,25 @@ export default class MealItem extends React.Component {
                         <Text style={styles.item}>{this.props.item.name}</Text>
                         {(this.props.item.group_name)?<Text style={styles.groupItem}>Group: {this.props.item.group_name}</Text>:
                             <Text style={styles.groupItem}>Quantity: {(this.props.item.quantity.toFixed(1))}g</Text>}
-                        <View style={styles.valuesContainer}>
-                            <Text style={[styles.valuesText,{marginLeft:10}]}>Kohlehydrate: </Text>
-                            <Text style={styles.valuesText}>{(this.props.item.carb)}g</Text>
-                            <Text style={styles.valuesText}>  Fett: </Text>
-                            <Text style={styles.valuesText}>{(this.props.item.fat)}g</Text>
-                            <Text style={styles.valuesText}>  Eiweiß: </Text>
-                            <Text style={styles.valuesText}>{(this.props.item.protein)}g</Text>
-                        </View>
+                        {
+                            (this.props.item.group_name)?
+                            <View style={styles.valuesContainer}>
+                                <Text style={[styles.valuesText,{marginLeft:10}]}>Kohlehydrate: </Text>
+                                <Text style={styles.valuesText}>{(this.props.item.carb)}g</Text>
+                                <Text style={styles.valuesText}>  Fett: </Text>
+                                <Text style={styles.valuesText}>{(this.props.item.fat)}g</Text>
+                                <Text style={styles.valuesText}>  Eiweiß: </Text>
+                                <Text style={styles.valuesText}>{(this.props.item.protein)}g</Text>
+                            </View>:
+                            <View style={styles.valuesContainer}>
+                                <Text style={[styles.valuesText,{marginLeft:10}]}>Kohlehydrate: </Text>
+                                <Text style={styles.valuesText}>{(this.props.item.carb.toFixed(2))}g</Text>
+                                <Text style={styles.valuesText}>  Fett: </Text>
+                                <Text style={styles.valuesText}>{(this.props.item.fat.toFixed(2))}g</Text>
+                                <Text style={styles.valuesText}>  Eiweiß: </Text>
+                                <Text style={styles.valuesText}>{(this.props.item.protein.toFixed(2))}g</Text>
+                            </View>
+                        }
                     </View>
                     <View style={{alignSelf:'center'}}>
                         {this.props.selected && (
