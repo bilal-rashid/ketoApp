@@ -12,6 +12,7 @@ import Enums from '../constants/Enums';
 import * as SQLite from 'expo-sqlite';
 import * as SecureStore from "expo-secure-store";
 import InitialData from "../constants/InitialData";
+import * as WebBrowser from "expo-web-browser";
 
 const db = SQLite.openDatabase("keto_db.db");
 const months = ["01", "02", "03","04", "05", "06", "07", "08", "09", "10", "11", "12"];
@@ -35,6 +36,7 @@ export default class LinksScreen extends React.Component {
       fat: 0,
       carb: 0,
       modalOpen: false,
+      legalModalOpen: false,
       mealName:'',
       meals:[],
     };
@@ -46,7 +48,19 @@ export default class LinksScreen extends React.Component {
       this.getDailyLogs();
     });
   }
+  goToWebAddress = () => {
+    WebBrowser.openBrowserAsync('http://glut1.de/');
+  }
+  onAcceptModal = () => {
+    this.setState({legalModalOpen: false});
+    SecureStore.setItemAsync('initialLaunch', 'true');
+  }
   getUserPreferences = () => {
+    SecureStore.getItemAsync('initialLaunch').then(result => {
+      if (!result) {
+        this.setState({legalModalOpen: true});
+      }
+    });
     var target_protein_in_gram = 1;
     var target_fat_in_gram = 1;
     var target_carb_in_gram = 1;
@@ -170,7 +184,7 @@ export default class LinksScreen extends React.Component {
     // );
   };
 
-  checkLogs = (meal) => {
+  checkLogs = (meal, isMeal) => {
     // this.props.navigation.navigate('Ingredients', {mealType:meal, date: this.state.date});
     const formatted_date = this.state.date.getDate() + "-" + months[this.state.date.getMonth()] + "-" + this.state.date.getFullYear();
     db.transaction(tx => {
@@ -179,23 +193,29 @@ export default class LinksScreen extends React.Component {
           [formatted_date],
           (_, { rows: { _array } }) => {
             if (_array.length > 0) {
-              this.gotoIngredients(meal, _array[0].id)
+              if (isMeal) {
+                this.gotoMeals(meal, _array[0].id)
+              } else {
+                this.gotoIngredients(meal, _array[0].id)
+              }
             } else {
-              this.insertLogAndNavigate(meal);
+              this.insertLogAndNavigate(meal, isMeal);
             }
           }
       );
     });
   };
-  insertLogAndNavigate = (meal) => {
+  insertLogAndNavigate = (meal, isMeal) => {
     const formatted_date = this.state.date.getDate() + "-" + months[this.state.date.getMonth()] + "-" + this.state.date.getFullYear();
     db.transaction(
         tx => {
           tx.executeSql("insert into dailylogs (date) values " +
-              "('" + formatted_date + "');", null,
-              (_t,_r)=> {
-                console.log('kkkk', _r.insertId);
-                this.gotoIngredients(meal,_r.insertId);
+              "('" + formatted_date + "');", null, (_t,_r)=> {
+                if (isMeal) {
+                  this.gotoMeals(meal,_r.insertId);
+                } else {
+                  this.gotoIngredients(meal,_r.insertId);
+                }
               });
         },
         (_err)=>{console.warn('error',_err)},
@@ -203,33 +223,19 @@ export default class LinksScreen extends React.Component {
         }
     );
   }
+  gotoMeals = (meal, logId) => {
+    this.props.navigation.navigate('Recipes', {mealType:meal, logId: logId,
+      proteinPercent: this.state.proteinToday,
+      fatPercent: this.state.fatToday,
+      carbPercent: this.state.carbToday,
+    });
+  }
   gotoIngredients = (meal, logId) => {
-    Alert.alert(
-        "Select",
-        "Meals or Ingredients",
-        [
-          {
-            text: "Meals",
-            onPress: () => {
-              this.props.navigation.navigate('Recipes', {mealType:meal, logId: logId,
-                proteinPercent: this.state.proteinToday,
-                fatPercent: this.state.fatToday,
-                carbPercent: this.state.carbToday,
-              });
-            },
-            style: "cancel"
-          },
-          { text: "Ingredients", onPress: () => {
-              this.props.navigation.navigate('Ingredients', {mealType:meal, logId: logId,
-                proteinPercent: this.state.proteinToday,
-                fatPercent: this.state.fatToday,
-                carbPercent: this.state.carbToday,
-              });
-            }
-          }
-        ],
-        { cancelable: false }
-    );
+    this.props.navigation.navigate('Ingredients', {mealType:meal, logId: logId,
+      proteinPercent: this.state.proteinToday,
+      fatPercent: this.state.fatToday,
+      carbPercent: this.state.carbToday,
+    });
   }
   clearData = (items) => {
     Alert.alert(
@@ -359,6 +365,32 @@ export default class LinksScreen extends React.Component {
             <Modal
                 animationType="slide"
                 transparent={true}
+                visible={this.state.legalModalOpen}
+                onRequestClose={() => {
+                }}>
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                  <Text style={styles.modalText2}>You have read the website information and aware of all risks
+                    and we will not be held responsible if the user is using it wrong and harming himself.</Text>
+                  <View style={{height:1, backgroundColor:'#aaaaaa'}}/>
+
+                  <TouchableOpacity onPress={this.goToWebAddress}>
+                    <Text style={{fontSize:14, color:'#0079FF',marginBottom:10}}>Terms and Privacy Policy</Text>
+                  </TouchableOpacity>
+                  <View style={{flexDirection:'row'}}>
+                    <TouchableHighlight
+                        style={{ ...styles.openButton, backgroundColor: '#2196F3',marginLeft: 5,marginTop:10 }}
+                        onPress={this.onAcceptModal}>
+                      <Text style={styles.textStyle}>Accept</Text>
+                    </TouchableHighlight>
+                  </View>
+
+                </View>
+              </View>
+            </Modal>
+            <Modal
+                animationType="slide"
+                transparent={true}
                 visible={this.state.modalOpen}
                 onRequestClose={() => {
                 }}>
@@ -441,7 +473,7 @@ export default class LinksScreen extends React.Component {
                   <Text style={styles.progressTextRight}>{parseFloat(this.state.proteinToday.toString()).toFixed(2)}/{this.state.proteinTarget}g</Text>
                 }
                 {((this.state.proteinToday/this.state.proteinTarget) > 1) &&
-                  <Text style={styles.progressTextRightDanger}>{parseFloat(this.state.proteinToday.toString()).toFixed(2)}/{this.state.proteinTarget}g</Text>
+                  <Text style={styles.progressTextRightOrange}>{parseFloat(this.state.proteinToday.toString()).toFixed(2)}/{this.state.proteinTarget}g</Text>
                 }
               </View>
 
@@ -456,7 +488,7 @@ export default class LinksScreen extends React.Component {
                   <Text style={styles.progressTextRight}>{parseFloat(this.state.fatToday.toString()).toFixed(2)}/{this.state.fatTarget}g</Text>
                 }
                 {((this.state.fatToday/this.state.fatTarget) > 1) &&
-                  <Text style={styles.progressTextRightDanger}>{parseFloat(this.state.fatToday.toString()).toFixed(2)}/{this.state.fatTarget}g</Text>
+                  <Text style={styles.progressTextRightGreen}>{parseFloat(this.state.fatToday.toString()).toFixed(2)}/{this.state.fatTarget}g</Text>
                 }
               </View>
             </View>
@@ -622,6 +654,14 @@ const styles = StyleSheet.create({
     fontSize:12,
     color:'#ee2c2c'
   },
+  progressTextRightOrange: {
+    fontSize:12,
+    color:'#f37f4a'
+  },
+  progressTextRightGreen: {
+    fontSize:12,
+    color:'#30ba4d'
+  },
   progressTextContainer: {
     flex: 1,
     flexDirection: 'row',
@@ -778,6 +818,10 @@ const styles = StyleSheet.create({
   },
   modalText: {
     marginBottom: 15,
+    textAlign: 'center',
+  },
+  modalText2: {
+    marginBottom: 5,
     textAlign: 'center',
   },
   openButton: {

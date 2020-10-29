@@ -4,6 +4,7 @@ import * as React from 'react';
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
+import AppInfo from '../screens/AppInfo';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
 const BottomTab = createBottomTabNavigator();
@@ -27,6 +28,11 @@ export default function BottomTabNavigator({ navigation, route }) {
                          component={LinksScreen}
                          options={{
                              title: 'Diet Plan'
+                         }} />
+          <Drawer.Screen name="Info"
+                         component={AppInfo}
+                         options={{
+                             title: 'App Info'
                          }} />
       </Drawer.Navigator>
     // <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
@@ -58,5 +64,7 @@ function getHeaderTitle(route) {
       return 'Profile';
     case 'Links':
       return 'Keto';
+    case 'Info':
+      return 'Info';
   }
 }
