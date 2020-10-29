@@ -12,7 +12,7 @@ function Item(props) {
     };
     let mealName = '';
     if (props.item.meal_name.length > 15) {
-        mealName = props.item.meal_name.substring(0,14) + '...';
+        mealName = props.item.meal_name.substring(0,14) + '..';
     } else {
         mealName = props.item.meal_name;
     }
@@ -21,7 +21,10 @@ function Item(props) {
         <TouchableOpacity style={{backgroundColor: backgroundColor}} onPress={select}>
             <View style={styles.listItemContainer}>
                 <View style={styles.listItemContainer3}>
-                    <Text style={{fontSize:16}}>{mealName}</Text>
+                    <View style={{flexDirection:'row'}}>
+                        <Text style={{fontSize:16}}>{mealName}</Text>
+                        <Text style={{fontSize:11,marginTop:4,color:'#04518d'}}>{' ('+props.item.quantity+'g)'}</Text>
+                    </View>
                     {(props.selected) && <TextInput keyboardType={'decimal-pad'} onChangeText={onQtyChange} value={props.item.quantity.toString()} style={{borderColor: 'gray',backgroundColor:'#fff', borderWidth: 1, borderRadius: 4,width:40,height:20}}/>}
                 </View>
                 {/*<View style={{flex:2, backgroundColor:'#a8a7a7'}}>*/}
@@ -164,7 +167,7 @@ export default class MealComponent extends React.Component {
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={{alignSelf: 'center'}}
-                        onPress={() => this.props.callBackAdd(this.props.mealType)}>
+                        onPress={() => this.props.callBackAdd(this.props.mealType, true)}>
                     <Text  style={styles.helpLinkText}>
                         Add
                     </Text>
@@ -232,7 +235,7 @@ export default class MealComponent extends React.Component {
                                 </TouchableOpacity>
                             }
                             <TouchableOpacity
-                                onPress={() => this.props.callBackAdd(this.props.mealType)}
+                                onPress={() => this.props.callBackAdd(this.props.mealType, false)}
                                 style={styles.controlButtonStyle}>
                                 <Image
                                     source={require('../assets/images/search.png')
