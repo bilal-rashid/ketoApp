@@ -54,7 +54,7 @@ function ListHeder(props) {
                     <Text style={{fontSize:11, alignSelf: 'center'}}>({((props.fatToday)).toFixed(1)})g</Text>
                 </View>
                 <View style={{flexDirection: 'row',marginLeft:5}}>
-                    <Text style={{fontWeight:'bold'}}>K </Text>
+                    <Text style={{fontWeight:'bold'}}>KH </Text>
                     <Text style={{fontSize:11, alignSelf: 'center'}}>({((props.carbToday)).toFixed(1)})g</Text>
                 </View>
             </View>
@@ -71,7 +71,7 @@ export default class MealComponent extends React.Component {
         };
     }
     toggleShow = () => {
-        this.setState({show:!this.state.show});
+        this.setState({show:!this.state.show,selectedItems: []});
     }
     onItemSelected = (selected, item) => {
         if (selected) {
@@ -138,22 +138,26 @@ export default class MealComponent extends React.Component {
         return (
             <View>
                 <View style={styles.container}>
-                    <TouchableOpacity
-                        onPress={this.toggleShow}>
-                    <Image
-                        source={this.props.imageSrc
-                        }
-                        style={styles.imageStyle}
-                    />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={{alignSelf: 'center'}}
-                        onPress={this.toggleShow}>
-                        {(this.props.mealText === 'Snack')?
-                            <Text  style={styles.mealTextSnack}>{this.props.mealText}</Text>:
-                            <Text  style={styles.mealText}>{this.props.mealText}</Text>
-                        }
-                    </TouchableOpacity>
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center',}}>
+                        <TouchableOpacity
+                            onPress={this.toggleShow}>
+                        <Image
+                            source={this.props.imageSrc
+                            }
+                            style={styles.imageStyle}
+                        />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{alignSelf: 'center',marginLeft:5}}
+                            onPress={this.toggleShow}>
+                            {(this.props.mealText === 'Snack')?
+                                <Text  style={styles.mealTextSnack}>{this.props.mealText}</Text>:
+                                <Text  style={styles.mealText}>{this.props.mealText}</Text>
+                            }
+                        </TouchableOpacity>
+                    </View>
                     <TouchableOpacity
                         style={{alignSelf: 'center'}}
                         onPress={this.toggleShow}>
@@ -165,13 +169,34 @@ export default class MealComponent extends React.Component {
                         {(ratio !== -1)?<Text  style={styles.ratioText}> Ratio: {ratio}</Text>:
                             <Text  style={styles.ratioText}> Ratio: 0.00</Text>}
                     </TouchableOpacity>
-                    <TouchableOpacity
-                        style={{alignSelf: 'center'}}
-                        onPress={() => this.props.callBackAdd(this.props.mealType, true)}>
-                    <Text  style={styles.helpLinkText}>
-                        Add
-                    </Text>
-                    </TouchableOpacity>
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center',}}>
+                    {
+                        (this.state.selectedItems.length > 0 && !this.mealExists()) &&
+                        <TouchableOpacity
+                            style={[styles.controlButtonStyleMeal]}
+                            onPress={() =>{
+                                this.props.callBackAddMeal(this.state.selectedItems);
+                                this.setState({selectedItems: []});
+                            }}>
+                            <Image
+                                source={require('../assets/images/uploadFile.png')
+                                }
+                                style={{width:20,height:20,resizeMode: 'contain'}}
+                            />
+                        </TouchableOpacity>
+                    }
+                        <TouchableOpacity
+                            style={[styles.controlButtonStyleMeal]}
+                            onPress={() => this.props.callBackAdd(this.props.mealType, true)}>
+                            <Image
+                                source={require('../assets/images/downloadFile.png')
+                                }
+                                style={{width:20,height:20,resizeMode: 'contain'}}
+                            />
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 { this.state.show &&
                 <View>
@@ -202,35 +227,30 @@ export default class MealComponent extends React.Component {
                         </View>
                     }
 
-                    <View style={{flexDirection:'row', flex:1, textAlign:'center', paddingLeft:5,marginTop:5, borderBottomWidth:1,
+                    <View style={{flexDirection:'row', flex:1, textAlign:'center', paddingLeft:5,paddingRight:5,marginTop:5, borderBottomWidth:1,
                     borderBottomColor:'#b1afaf',paddingBottom:3}}>
-                            {
-                                this.state.selectedItems.length === 1 &&
-                                <TouchableOpacity
-                                    onPress={this.onDecrement}
-                                    style={styles.controlButtonStyle}>
-                                    <Text style={{color: '#fff', fontSize: 19}}>-1</Text>
-                                </TouchableOpacity>
-                            }
                             {
                                 this.state.selectedItems.length === 1 &&
                                 <TouchableOpacity
                                     onPress={this.onIncrement}
                                     style={styles.controlButtonStyle}>
-                                    <Text style={{color: '#fff', fontSize: 19}}>+1</Text>
+                                    {/*<i className="fa fa-arrow-circle-up"/>*/}
+                                    <Image
+                                        source={require('../assets/images/up.png')
+                                        }
+                                        style={{width:20,height:20,resizeMode: 'contain'}}
+                                    />
                                 </TouchableOpacity>
                             }
-                            {this.state.selectedItems.length > 0 &&
+                            {
+                                this.state.selectedItems.length === 1 &&
                                 <TouchableOpacity
-                                    onPress={() =>{
-                                        this.props.callBackClear(this.state.selectedItems);
-                                        this.setState({selectedItems: []});
-                                    }}
+                                    onPress={this.onDecrement}
                                     style={styles.controlButtonStyle}>
                                     <Image
-                                        source={require('../assets/images/trash.png')
+                                        source={require('../assets/images/down.png')
                                         }
-                                        style={{width:25,height:25,resizeMode: 'contain'}}
+                                        style={{width:20,height:20,resizeMode: 'contain'}}
                                     />
                                 </TouchableOpacity>
                             }
@@ -243,15 +263,20 @@ export default class MealComponent extends React.Component {
                                     style={{width:25,height:25,resizeMode: 'contain'}}
                                 />
                             </TouchableOpacity>
-                            {(this.state.selectedItems.length > 0 && !this.mealExists()) &&
-                            <TouchableOpacity
-                                onPress={() =>{
-                                    this.props.callBackAddMeal(this.state.selectedItems);
-                                    this.setState({selectedItems: []});
-                                }}
-                                style={styles.controlTextButtonStyle}>
-                                <Text style={{color: '#fff', fontSize: 17}}>Create Meal</Text>
-                            </TouchableOpacity>}
+                        {this.state.selectedItems.length > 0 &&
+                        <TouchableOpacity
+                            onPress={() =>{
+                                this.props.callBackClear(this.state.selectedItems);
+                                this.setState({selectedItems: []});
+                            }}
+                            style={[styles.controlButtonStyle,{marginLeft:'auto'}]}>
+                            <Image
+                                source={require('../assets/images/trash.png')
+                                }
+                                style={{width:25,height:25,resizeMode: 'contain'}}
+                            />
+                        </TouchableOpacity>
+                        }
                         </View>
 
                 </View>
@@ -261,6 +286,12 @@ export default class MealComponent extends React.Component {
     }
 }
 const styles = StyleSheet.create({
+    controlButtonStyleMeal: {
+        marginLeft:5,
+        width:30,height:30, backgroundColor: '#4a83f1',
+        borderRadius: 4, justifyContent: 'center',
+        alignItems: 'center',alignSelf:'center'
+    },
     controlButtonStyle: {
         width:35,height:35, backgroundColor: '#4a83f1',
         borderRadius: 4,marginLeft: 5, justifyContent: 'center',

@@ -13,6 +13,7 @@ import * as SQLite from 'expo-sqlite';
 import * as SecureStore from "expo-secure-store";
 import InitialData from "../constants/InitialData";
 import * as WebBrowser from "expo-web-browser";
+import {  SafeAreaView } from 'react-native';
 
 const db = SQLite.openDatabase("keto_db.db");
 const months = ["01", "02", "03","04", "05", "06", "07", "08", "09", "10", "11", "12"];
@@ -360,7 +361,8 @@ export default class LinksScreen extends React.Component {
       ratio = (this.state.fatToday/(this.state.proteinToday + this.state.carbToday)).toFixed(2);
     }
     return (
-        <ScrollView style={(this.state.modalOpen)?styles.containerDark:styles.container} contentContainerStyle={styles.contentContainer}>
+        <SafeAreaView style={styles.container}>
+          <ScrollView style={(this.state.modalOpen)?styles.containerDark:styles.container} contentContainerStyle={styles.contentContainer}>
           <View style={styles.getStartedContainer}>
             <Modal
                 animationType="slide"
@@ -438,6 +440,7 @@ export default class LinksScreen extends React.Component {
             {(ratio!== -1)?<Text style={styles.ratioStyle}>{ratio}</Text>:null}
           </View>
           {this.state.show && (
+              <>
               <DateTimePicker
                   testID="dateTimePicker"
                   value={this.state.date}
@@ -445,6 +448,15 @@ export default class LinksScreen extends React.Component {
                   display="default"
                   onChange={this.onChange}
               />
+                <TouchableOpacity >
+                  <Image
+                      source={require('../assets/images/calendar.png')
+                      }
+                      style={styles.imageStyle}
+                  />
+                </TouchableOpacity>
+              </>
+
           )}
           <View style={styles.progressContainerWithBackground}>
             <View style={styles.progressBarContainer} >
@@ -588,6 +600,7 @@ export default class LinksScreen extends React.Component {
           {/*  isLastOption*/}
           {/*/>*/}
         </ScrollView>
+        </SafeAreaView>
     );
   }
 }
