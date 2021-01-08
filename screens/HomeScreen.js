@@ -61,23 +61,23 @@ export default class HomeScreen extends React.Component {
         });
       });
     });
-  }
+  };
   saveval = () => {
     SecureStore.setItemAsync('notFirstLaunch', 'bilal').then(value => {console.warn(value)})
-  }
+  };
   editProfile = () => {
     this.setState({editMode: true});
-  }
+  };
   setPercentMode = () => {
     this.setState({
       percentMode: true
     });
-  }
+  };
   setValueMode = () => {
     this.setState({
       percentMode: false
     });
-  }
+  };
   saveProfile = () => {
     const totalPercent = this.state.proteinPercent + this.state.fatPercent + this.state.carbPercent;
     if (totalPercent > 101) {
@@ -90,17 +90,17 @@ export default class HomeScreen extends React.Component {
       SecureStore.setItemAsync('user_carb', this.state.carbPercent.toString());
       this.setState({editMode: false, error: false});
     }
-  }
+  };
   onChangeName = (value) => {
     this.setState({
       name:value
     });
-  }
+  };
   onChangeCalories = (value) => {
     this.setState({
       calories:+value
     });
-  }
+  };
   onChangeProteinPercent = (value) => {
     let carbPercent = +(100 - this.state.fatPercent - (+value)).toFixed(2);
     if (carbPercent > -1) {
@@ -125,7 +125,7 @@ export default class HomeScreen extends React.Component {
         ratio: +((fat_in_gram/(protein_in_gram+carb_in_gram)).toFixed(2))
       });
     }
-  }
+  };
   onChangeProtein = (value) => {
     let proteinPercent = 0;
     let fatPercent = 0;
@@ -153,7 +153,7 @@ export default class HomeScreen extends React.Component {
         ratio: +((this.state.fat/((+value) + carb)).toFixed(2))
       });
     }
-  }
+  };
   onChangeFatPercent = (value) => {
     let carbPercent = +((100 - this.state.proteinPercent - (+value)).toFixed(2));
     if (carbPercent > -1) {
@@ -178,7 +178,7 @@ export default class HomeScreen extends React.Component {
         ratio: +((fat_in_gram/(protein_in_gram+carb_in_gram)).toFixed(2))
       });
     }
-  }
+  };
   onChangeFat = (value) => {
     let fatPercent = 0;
     let carbPercent = 0;
@@ -201,7 +201,7 @@ export default class HomeScreen extends React.Component {
         ratio: +(((+value)/(this.state.protein + carb)).toFixed(2))
       });
     }
-  }
+  };
   // signInWithGoogleAsync = async () => {
   // // "expo-google-app-auth": "^8.1.3",
   //   try {
@@ -651,22 +651,26 @@ const styles = StyleSheet.create({
     width: 110,
     height:30,
     marginLeft: 5,
+    fontSize:17,
     marginRight:10,
     justifyContent: 'center',
     borderColor: 'gray', borderWidth: 1, borderRadius: 4, margin: 5, padding: 4 },
   textViewStyle: {
     width: 90,
     height:35,
+    fontSize:17,
     marginLeft: 5,
     borderColor: 'gray', borderWidth: 1, borderRadius: 4, margin: 5, padding: 4 },
   textInputStyle: {
     width:200,
     flex: 1,
+    fontSize:17,
     marginRight:5,
     height: 35, borderColor: 'gray', borderWidth: 1, borderRadius: 4, margin: 5, padding: 4 },
   textInputStyleDisabled: {
     width:200,
     flex: 1,
+    fontSize:17,
     marginRight:5,
     backgroundColor:'#9c9a9a',
     height: 35, borderColor: 'gray', borderWidth: 1, borderRadius: 4, margin: 5, padding: 4 },
