@@ -349,22 +349,29 @@ export default class HomeScreen extends React.Component {
                 <View style={styles.getStartedContainer}>
                   <Text style={styles.getStartedText}>Verhältnis:</Text>
                 </View>
-                <View style = {{flexDirection:'row',alignContent:'center',justifyContent:'flex-end', backgroundColor:'#fff'}}>
-
-                  <View style={(this.state.percentMode)?styles.circle:styles.circleInvisible}>
+                <View style = {{flexDirection:'row' }}>
+                  <View
+                      style={[styles.hiddenView1]}
+                  />
+                  <View
+                      style={[styles.hiddenView2,{flexDirection:'row',alignItems: 'center',justifyContent:'center'}]}>
+                    <View style={(this.state.percentMode)?styles.circle:styles.circleInvisible}>
+                    </View>
+                    <TouchableOpacity
+                        style={(this.state.percentMode) ? styles.textViewStyleEnabled:styles.textViewStyleDisabled }
+                        onPress={this.setPercentMode} >
+                      <Text>   %Methode</Text>
+                    </TouchableOpacity>
                   </View>
-                  <TouchableOpacity
-                      style={(this.state.percentMode) ? styles.textViewStyleEnabled:styles.textViewStyleDisabled }
-                      onPress={this.setPercentMode} >
-                    <Text>   %Methode</Text>
-                  </TouchableOpacity>
-                  <View style={(!this.state.percentMode)? styles.circle:styles.circleInvisible}>
+                  <View
+                      style={[styles.hiddenView2,{flexDirection:'row',alignItems: 'center',justifyContent:'center'}]}>
+                    <View style={(!this.state.percentMode)? styles.circle:styles.circleInvisible}>
+                    </View>
+                    <TouchableOpacity style={ (this.state.percentMode) ? styles.textViewStyleDisabled: styles.textViewStyleEnabled}
+                                      onPress={this.setValueMode}>
+                      <Text>Grammbedarf</Text>
+                    </TouchableOpacity>
                   </View>
-                  <TouchableOpacity style={ (this.state.percentMode) ? styles.textViewStyleDisabled: styles.textViewStyleEnabled}
-                      onPress={this.setValueMode}>
-                    <Text>Grammbedarf</Text>
-                  </TouchableOpacity>
-
                 </View>
                 <View style = {{flexDirection:'row' }}>
                   <TextInput
@@ -517,6 +524,16 @@ function handleHelpPress() {
 }
 
 const styles = StyleSheet.create({
+  hiddenView1: {
+    width: 90,
+    height:35,
+    marginLeft: 5,
+    borderColor: 'transparent', borderWidth: 0, margin: 5, padding: 4 },
+  hiddenView2: {
+    width:200,
+    flex: 1,
+    marginRight:5,
+    height: 35,margin: 5, padding: 4 },
   container: {
     flex: 1,
     backgroundColor: '#fff',
