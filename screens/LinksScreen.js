@@ -51,11 +51,11 @@ export default class LinksScreen extends React.Component {
   }
   goToWebAddress = () => {
     WebBrowser.openBrowserAsync('http://glut1.de/');
-  }
+  };
   onAcceptModal = () => {
     this.setState({legalModalOpen: false});
     SecureStore.setItemAsync('initialLaunch', 'true');
-  }
+  };
   getUserPreferences = () => {
     SecureStore.getItemAsync('initialLaunch').then(result => {
       if (!result) {
@@ -93,7 +93,7 @@ export default class LinksScreen extends React.Component {
         });
       });
     });
-  }
+  };
   componentWillUnmount() {
     this._unsubscribe();
   }
@@ -129,7 +129,7 @@ export default class LinksScreen extends React.Component {
           }
       );
     });
-  }
+  };
   getDailyLogs = (date = this.state.date) => {
     var result;
     const formatted_date = date.getDate() + "-" + months[date.getMonth()] + "-" + date.getFullYear();
@@ -150,14 +150,25 @@ export default class LinksScreen extends React.Component {
           }
       );
     });
-  }
+  };
+  onDateSelect = () => {
+    this.setState({
+      show: false
+    });
+  };
   // private _closeDialog = (): void => {
   onChange = (event, selectedDate) => {
-    if(selectedDate) {
-      this.setState({
-        show: false,
-        date: selectedDate
-      });
+    if (selectedDate) {
+      if (Platform.OS === 'ios') {
+        this.setState({
+          date: selectedDate
+        });
+      } else {
+        this.setState({
+          date: selectedDate,
+          show: false
+        });
+      }
       this.getDailyLogs(selectedDate);
     }
   };
@@ -223,21 +234,21 @@ export default class LinksScreen extends React.Component {
         () => {
         }
     );
-  }
+  };
   gotoMeals = (meal, logId) => {
     this.props.navigation.navigate('Recipes', {mealType:meal, logId: logId,
       proteinPercent: this.state.proteinToday,
       fatPercent: this.state.fatToday,
       carbPercent: this.state.carbToday,
     });
-  }
+  };
   gotoIngredients = (meal, logId) => {
     this.props.navigation.navigate('Ingredients', {mealType:meal, logId: logId,
       proteinPercent: this.state.proteinToday,
       fatPercent: this.state.fatToday,
       carbPercent: this.state.carbToday,
     });
-  }
+  };
   clearData = (items) => {
     Alert.alert(
         "Clear Selected Items",
@@ -256,12 +267,12 @@ export default class LinksScreen extends React.Component {
         ],
         { cancelable: false }
     );
-  }
+  };
   deleteSection = (items) => {
     var idsString = '(';
     items.forEach(item => {
       idsString = idsString.concat(item.id+',');
-    })
+    });
     idsString = idsString.slice(0, -1)+')';
     db.transaction(tx => {
       tx.executeSql(
@@ -272,16 +283,16 @@ export default class LinksScreen extends React.Component {
           }
       );
     });
-  }
+  };
   saveIngradientsAsMeal = (items) => {
     this.setState({meals: items});
     this.openMealNameDialog();
-  }
+  };
   onChangeMealName = (value) => {
     this.setState({
       mealName:value
     });
-  }
+  };
   onSaveMealName = () => {
     if (this.state.mealName.length < 1)
       return;
@@ -306,7 +317,7 @@ export default class LinksScreen extends React.Component {
           this.showSuccessAndResetState();
         }
     );
-  }
+  };
   showSuccessAndResetState  = () => {
     Alert.alert(
         "Success",
@@ -321,13 +332,13 @@ export default class LinksScreen extends React.Component {
         ],
         { cancelable: false }
     );
-  }
+  };
   onCancelModal  = () => {
     this.setState({modalOpen:!this.state.modalOpen, meals:[], mealName:''});
-  }
+  };
   openMealNameDialog = () => {
     this.setState({modalOpen: true});
-  }
+  };
   onQuantityChange = (item, value) => {
     let ingredientItem = {...item};
     ingredientItem.carb = +((ingredientItem.carb_percent * value).toFixed(3));
@@ -354,7 +365,7 @@ export default class LinksScreen extends React.Component {
     let tempState = [...this.state.items];
     tempState.filter(p => p.id === item.id)[0].quantity = value;
     this.setState({items: tempState});
-  }
+  };
   render () {
     let ratio = -1;
     if (this.state.fatToday && this.state.proteinToday && this.state.carbToday) {
@@ -448,13 +459,17 @@ export default class LinksScreen extends React.Component {
                   display="default"
                   onChange={this.onChange}
               />
-                <TouchableOpacity >
-                  <Image
-                      source={require('../assets/images/calendar.png')
-                      }
-                      style={styles.imageStyle}
-                  />
-                </TouchableOpacity>
+                {Platform.OS === 'ios' && (
+                  <View style={{flexDirection:'row',justifyContent:'flex-end',marginRight: 20}}>
+                    <TouchableOpacity  onPress={this.onDateSelect}>
+                      <Image
+                          source={require('../assets/images/success.png')
+                          }
+                          style={styles.imageStyle}
+                      />
+                    </TouchableOpacity>
+                  </View>)
+                }
               </>
 
           )}
