@@ -64,7 +64,7 @@ export default class Ingredients extends React.Component {
 
     };
     addMeal = () => {
-        this.props.navigation.navigate('Add Meals');
+        this.props.navigation.navigate('Add Ingredients');
     };
     deleteMeal = () => {
         if (this.state.selectedItems[0].id > 8999) {

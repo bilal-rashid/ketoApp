@@ -31,33 +31,32 @@ export default class AddMealScreen extends React.Component {
     onChangeProtein = (value) => {
         this.setState({
             protein:+value
-        })
-    }
+        });
+    };
     onChangeFat = (value) => {
         this.setState({
             fat:+value
-        })
-    }
+        });
+    };
     onChangeCarb = (value) => {
         this.setState({
             carb:+value
-        })
-    }
+        });
+    };
     onChangeName = (value) => {
         this.setState({
             name:value
         })
-    }
+    };
     onSave = () => {
-        if (this.state.protein && this.state.fat && this.state.carb && this.state.name.length>1
-        && this.state.group.length>1) {
+        if (this.state.name.length > 1 && this.state.group.length>1) {
             this.setState({error: false});
             db.transaction(
                 tx => {
                     tx.executeSql("insert into meals (protein, fat, carb, name,group_name) values " +
                         "(" + this.state.protein + "," + this.state.fat + "," + this.state.carb + ", '" + this.state.name
                         + "','"+this.state.group+"');", null,
-                        (_t,_r)=> console.log('kkkk', _r.insertId));
+                        (_t,_r) => console.log('kkkk', _r.insertId));
                 },
                 (_err)=>{console.warn('error',_err)},
                 () => {
@@ -68,7 +67,7 @@ export default class AddMealScreen extends React.Component {
             this.setState({error: true});
 
         }
-    }
+    };
     componentDidMount() {
         this.props.navigation.setOptions({
             headerRight: () => (

@@ -27,7 +27,7 @@ export default function App(props) {
             <Stack.Screen name="Root" component={BottomTabNavigator} />
             <Stack.Screen name="Ingredients" component={Ingredients} />
             <Stack.Screen name="Recipes" component={Recipes} />
-            <Stack.Screen name="Add Meals" component={AddMealScreen} />
+            <Stack.Screen name="Add Ingredients" component={AddMealScreen} />
             <Stack.Screen name="Set Amount" component={LogMealScreen} />
           </Stack.Navigator>
         </NavigationContainer>

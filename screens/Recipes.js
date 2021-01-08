@@ -56,7 +56,7 @@ export default class Recipes extends React.Component {
 
     };
     addMeal = () => {
-        this.props.navigation.navigate('Add Meals');
+        this.props.navigation.navigate('Add Ingredients');
     };
     deleteMeal = () => {
         Alert.alert(
