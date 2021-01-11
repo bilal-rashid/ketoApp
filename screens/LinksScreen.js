@@ -310,7 +310,8 @@ export default class LinksScreen extends React.Component {
               "(" + mealObject.protein + "," + mealObject.fat + "," +
               mealObject.carb +"," + mealObject.quantity + ", '" + mealObject.name + "'," + "'"
               +JSON.stringify(this.state.meals)+ "'"  +");", null,
-              (_t,_r)=> {});
+              (_t,_r)=> {}); // this table needs the meals list as json because
+          // when user add meals you need to add all those recipes list instead of single meal.
         },
         (_err)=>{console.warn('error',_err)},
         () => {

@@ -43,14 +43,14 @@ export default class Ingredients extends React.Component {
                 `select * from meals;`,
                 null,
                 (_, { rows: { _array } }) => {
-                    _array = _array.reverse().concat(array)
+                    _array = _array.reverse().concat(array);
                     this.setState({items: _array,
                     filteredItems:_array,
                     selectedItems:[]});
                 }
             );
         });
-    }
+    };
 
     backPress = () => {
         // db.transaction(tx => {
@@ -107,7 +107,7 @@ export default class Ingredients extends React.Component {
                 { cancelable: false }
             );
         }
-    }
+    };
     setAmount = () => {
         if (this.state.selectedItems.length > 0) {
             let resultMeals = [];
@@ -162,12 +162,12 @@ export default class Ingredients extends React.Component {
             temp.splice(temp.indexOf(temp.find(p=>p.id===item.id)),1);
             this.setState({selectedItems: temp});
         }
-    }
+    };
     onChange = (value) => {
         var filteredItems = this.state.items.filter(p => p.name.toLowerCase().includes(value.toLowerCase()) ||
             p.group_name.toLowerCase().includes(value.toLowerCase()));
         this.setState({filteredItems:filteredItems, selectedItems:[]});
-    }
+    };
     render () {
         // console.warn(this.props.route.params.date.getDate());
         return (
