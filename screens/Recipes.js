@@ -45,15 +45,7 @@ export default class Recipes extends React.Component {
     }
 
     backPress = () => {
-        // db.transaction(tx => {
-        //     tx.executeSql(
-        //         `select * from meals;`,
-        //         null,
-        //         (_, { rows: { _array } }) => console.warn(JSON.stringify(_array))
-        //     );
-        // });
         this.props.navigation.goBack();
-
     };
     addMeal = () => {
         this.props.navigation.navigate('Add Ingredients');
@@ -109,12 +101,6 @@ export default class Recipes extends React.Component {
                     }
                 );
             });
-            // this.props.navigation.navigate('Set Amount', {selectedItems: this.state.selectedItems,
-            // logId:this.props.route.params.logId, mealType: this.props.route.params.mealType,
-            // proteinPercent: this.props.route.params.proteinPercent,
-            // fatPercent: this.props.route.params.fatPercent,
-            // carbPercent: this.props.route.params.carbPercent,
-            // });
         }
     };
     onItemSelected = (selected, item) => {
@@ -127,20 +113,15 @@ export default class Recipes extends React.Component {
             temp.splice(temp.indexOf(temp.find(p=>p.id===item.id)),1);
             this.setState({selectedItems: temp});
         }
-    }
+    };
     onChange = (value) => {
         var filteredItems = this.state.items.filter(p => p.name.toLowerCase().includes(value.toLowerCase()));
         this.setState({filteredItems:filteredItems, selectedItems:[]});
-    }
+    };
     render () {
-        // console.warn(this.props.route.params.date.getDate());
         return (
             <View style={styles.container}>
                 <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-                    {/*<TouchableOpacity onPress={this.addMeal} style={{flexDirection: 'row'}}>*/}
-                    {/*    <Ionicons name="md-add-circle" size={32} color="#007AFF" />*/}
-                    {/*    <MonoText style={{color:'#007AFF',marginLeft: 10, alignSelf:'center'}}>Add Meal</MonoText>*/}
-                    {/*</TouchableOpacity>*/}
                     {this.state.selectedItems.length === 1 &&
                     <TouchableOpacity onPress={this.deleteMeal} style={{flexDirection: 'row', marginRight: 5}}>
                         <Ionicons name="md-trash" size={32} color="red"/>
@@ -181,21 +162,6 @@ export default class Recipes extends React.Component {
                         <Text style={styles.buttonTextStyle}>Save</Text>
                     </TouchableOpacity>
                 }
-
-
-                {/*<View style={styles.helpContainer}>*/}
-                {/*  <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>*/}
-                {/*    <Text style={styles.helpLinkText}>Help, it didn’t automatically reload!</Text>*/}
-                {/*  </TouchableOpacity>*/}
-                {/*</View>*/}
-
-                {/*<View style={styles.tabBarInfoContainer}>*/}
-                {/*  <Text style={styles.tabBarInfoText}>This is a tab bar. You can edit it in:</Text>*/}
-
-                {/*  <View style={[styles.codeHighlightContainer, styles.navigationFilename]}>*/}
-                {/*    <MonoText style={styles.codeHighlightText}>navigation/BottomTabNavigator.js</MonoText>*/}
-                {/*  </View>*/}
-                {/*</View>*/}
             </View>
         );
     }

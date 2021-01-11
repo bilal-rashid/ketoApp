@@ -1,11 +1,6 @@
 import * as React from 'react';
 import {Image, Platform, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
-import * as FileSystem from 'expo-file-system';
-import * as Permissions from 'expo-permissions';
-import * as MediaLibrary from 'expo-media-library';
-import * as DocumentPicker from 'expo-document-picker';
-import * as Sharing from "expo-sharing";
 export default class AppInfo extends React.Component {
     constructor () {
         super();
@@ -19,13 +14,6 @@ export default class AppInfo extends React.Component {
 
 
     backPress = () => {
-        // db.transaction(tx => {
-        //     tx.executeSql(
-        //         `select * from meals;`,
-        //         null,
-        //         (_, { rows: { _array } }) => console.warn(JSON.stringify(_array))
-        //     );
-        // });
         this.props.navigation.goBack();
 
     };
@@ -38,46 +26,7 @@ export default class AppInfo extends React.Component {
     goToSpende = () => {
         WebBrowser.openBrowserAsync('https://glut1.de/so-helfen-sie-uns/spendenkonto/');
     };
-    goToWebAddress = () => {
-        WebBrowser.openBrowserAsync('http://glut1.de/');
-    };
-    test = async () => {
-        const perm = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-        if (perm.status !== 'granted') {
-            return;
-        }
-
-        await DocumentPicker.getDocumentAsync({type:'*/*'}).then(doc=>{
-            FileSystem.readAsStringAsync(doc.uri).then(str=>{console.warn(str)});
-        });
-        // const { status } = await Permissions.askAsync(Permissions.CAMERA);
-        let fileUri = FileSystem.documentDirectory + "bilal.json";
-        // await FileSystem.writeAsStringAsync(fileUri, "Hello World new");
-
-        // await Sharing.shareAsync(fileUri);
-        // await FileSystem.writeAsStringAsync(fileUri, "Hello World new");
-        // FileSystem.readAsStringAsync(fileUri).then(str=>{console.warn(str)});
-        // try {
-        //     const asset = await MediaLibrary.createAssetAsync(fileUri);
-        //     const album = await MediaLibrary.getAlbumAsync('Download');
-        //     console.warn('check1');
-        //     if (album == null) {
-        //         console.warn('album null');
-        //         await MediaLibrary.createAlbumAsync('Download', asset, false);
-        //     } else {
-        //         console.warn('album not null');
-        //         await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
-        //     }
-        // } catch (e) {
-        //     console.warn('error', e);
-        // }
-        // console.warn(fileUri);
-        // await FileSystem.writeAsStringAsync(fileUri, "Hello World", {encoding: FileSystem.EncodingType.UTF8});
-        // FileSystem.readAsStringAsync(fileUri, {encoding: FileSystem.EncodingType.UTF8}).then(str=>{console.warn(str)});
-        // console.warn('Hogya');
-    };
     render () {
-        // console.warn(this.props.route.params.date.getDate());
         return (
             <SafeAreaView style={styles.container}>
                 <View style={styles.container}>
@@ -93,15 +42,6 @@ export default class AppInfo extends React.Component {
                         />
                     </View>
                     <View style={{height:1, backgroundColor:'#aaaaaa', marginTop:-10}}/>
-                    {/*<TouchableOpacity>*/}
-                    {/*    <Text style={{margin:10, fontSize:19, color:'#0079FF'}}>FAQ</Text>*/}
-                    {/*</TouchableOpacity>*/}
-                    {/*<View style={{height:1, backgroundColor:'#aaaaaa', marginTop:0}}/>*/}
-
-                    {/*<TouchableOpacity>*/}
-                    {/*    <Text style={{margin:10, fontSize:19, color:'#0079FF'}}>Contact Us</Text>*/}
-                    {/*</TouchableOpacity>*/}
-                    {/*<View style={{height:1, backgroundColor:'#aaaaaa', marginTop:0}}/>*/}
 
                     <TouchableOpacity onPress={this.goToDisclaimer}>
                         <Text style={{margin:10, fontSize:19, color:'#0079FF'}}>Disclaimer</Text>
@@ -118,10 +58,6 @@ export default class AppInfo extends React.Component {
                     </TouchableOpacity>
                     <View style={{height:1, backgroundColor:'#aaaaaa', marginTop:0}}/>
 
-                    {/*<TouchableOpacity>*/}
-                    {/*    <Text style={{margin:10, fontSize:19, color:'#0079FF'}}>Licenses</Text>*/}
-                    {/*</TouchableOpacity>*/}
-                    {/*<View style={{height:1, backgroundColor:'#aaaaaa', marginTop:0}}/>*/}
 
                     <TouchableOpacity onPress={()=>{
                         this.props.navigation.navigate('Links');

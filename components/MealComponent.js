@@ -72,7 +72,7 @@ export default class MealComponent extends React.Component {
     }
     toggleShow = () => {
         this.setState({show:!this.state.show,selectedItems: []});
-    }
+    };
     onItemSelected = (selected, item) => {
         if (selected) {
             this.setState({
@@ -83,7 +83,7 @@ export default class MealComponent extends React.Component {
             temp.splice(temp.indexOf(temp.find(p=>p.id===item.id)),1);
             this.setState({selectedItems: temp});
         }
-    }
+    };
     onIncrement = () => {
         let selectedItems = [...this.state.selectedItems];
         selectedItems[0].carb = +((selectedItems[0].carb_percent * (selectedItems[0].quantity + 1)).toFixed(3));
@@ -92,7 +92,7 @@ export default class MealComponent extends React.Component {
         selectedItems[0].quantity = selectedItems[0].quantity + 1;
         this.setState({selectedItems: selectedItems});
         this.props.onQuantityChange(selectedItems[0], selectedItems[0].quantity);
-    }
+    };
     mealExists = () => {
         let result = false;
         this.state.selectedItems.forEach(item => {
@@ -101,7 +101,7 @@ export default class MealComponent extends React.Component {
             }
         });
         return result;
-    }
+    };
     onDecrement = () => {
         let selectedItems = [...this.state.selectedItems];
         selectedItems[0].carb = +((selectedItems[0].carb_percent * (selectedItems[0].quantity - 1)).toFixed(3));
@@ -110,7 +110,7 @@ export default class MealComponent extends React.Component {
         selectedItems[0].quantity = selectedItems[0].quantity - 1;
         this.setState({selectedItems: selectedItems});
         this.props.onQuantityChange(selectedItems[0], selectedItems[0].quantity);
-    }
+    };
     onQuantityChange = (item, quantity) => {
         let selectedItems = [...this.state.selectedItems];
         let selected = selectedItems.filter(p => p.id === item.id)[0];
@@ -120,7 +120,7 @@ export default class MealComponent extends React.Component {
         selected.quantity = quantity;
         this.setState({selectedItems: selectedItems});
         this.props.onQuantityChange(item, quantity);
-    }
+    };
     render () {
         var proteinToday = 0;
         var fatToday = 0;

@@ -4,7 +4,7 @@ import { StyleSheet, Text,View,TextInput} from 'react-native';
 export default class MealLogItem extends React.Component {
     onChange = (value) => {
         this.props.onValueChange(+value, this.props.item.id);
-    }
+    };
 
     render () {
         return (

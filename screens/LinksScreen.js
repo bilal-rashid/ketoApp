@@ -5,13 +5,11 @@ import { Button, Platform} from 'react-native';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Modal, TouchableHighlight } from 'react-native';
-// import * as Progress from 'react-native-progress';
 import * as Progress from 'react-native-progress';
 import MealComponent from "../components/MealComponent";
 import Enums from '../constants/Enums';
 import * as SQLite from 'expo-sqlite';
 import * as SecureStore from "expo-secure-store";
-import InitialData from "../constants/InitialData";
 import * as WebBrowser from "expo-web-browser";
 import {  SafeAreaView } from 'react-native';
 
@@ -156,7 +154,6 @@ export default class LinksScreen extends React.Component {
       show: false
     });
   };
-  // private _closeDialog = (): void => {
   onChange = (event, selectedDate) => {
     if (selectedDate) {
       if (Platform.OS === 'ios') {
@@ -181,23 +178,9 @@ export default class LinksScreen extends React.Component {
 
   showDatepicker = () => {
     this.showMode('date');
-    // db.transaction(tx => {
-    //   tx.executeSql(
-    //       `select * from mealquantity;`,
-    //       null,
-    //       (_, { rows: { _array } }) => console.warn(_array)
-    //   );
-    // });
-    // db.transaction(
-    //     tx => {
-    //       tx.executeSql("insert into meals (protein, fat,carb,name) values (12.4,21,5.5, 'channay')", null);
-    //       // tx.executeSql("insert into meals (protein, fat,carb,name) values (12,11,5, 'channay2')", null);
-    //     }
-    // );
   };
 
   checkLogs = (meal, isMeal) => {
-    // this.props.navigation.navigate('Ingredients', {mealType:meal, date: this.state.date});
     const formatted_date = this.state.date.getDate() + "-" + months[this.state.date.getMonth()] + "-" + this.state.date.getFullYear();
     db.transaction(tx => {
       tx.executeSql(

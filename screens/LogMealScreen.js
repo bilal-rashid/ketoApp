@@ -3,7 +3,6 @@ import * as React from 'react';
 import {FlatList, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import * as SQLite from 'expo-sqlite';
-import { Button } from 'react-native';
 import MealLogItem from "../components/MealLogItem";
 import {Ionicons} from "@expo/vector-icons";
 const db = SQLite.openDatabase("keto_db.db");
@@ -32,36 +31,28 @@ export default class LogMealScreen extends React.Component {
     }
 
     backPress = () => {
-        // db.transaction(tx => {
-        //     tx.executeSql(
-        //         `select * from meals;`,
-        //         null,
-        //         (_, { rows: { _array } }) => console.warn(JSON.stringify(_array))
-        //     );
-        // });
         this.props.navigation.goBack();
-
     };
     onChangeProtein = (value) => {
         this.setState({
             protein:+value
         })
-    }
+    };
     onChangeFat = (value) => {
         this.setState({
             fat:+value
         })
-    }
+    };
     onChangeCarb = (value) => {
         this.setState({
             carb:+value
         })
-    }
+    };
     onChangeName = (value) => {
         this.setState({
             name:value
         })
-    }
+    };
     validate = () =>  {
         const keys = Object.keys(this.state.values);
         for (let i=0; i < keys.length; i++) {
@@ -70,7 +61,7 @@ export default class LogMealScreen extends React.Component {
             }
         }
         return true;
-    }
+    };
     onSave = () => {
         if (this.validate()) {
             let resultMeals = [];
@@ -106,33 +97,14 @@ export default class LogMealScreen extends React.Component {
         } else {
             this.setState({error:true});
         }
-        // this.props.navigation.navigate('Root');
-        // if (this.state.protein && this.state.fat && this.state.name && this.state.carb) {
-        //     this.setState({error: false});
-        //     db.transaction(
-        //         tx => {
-        //             tx.executeSql("insert into meals (protein, fat,carb,name) values " +
-        //                 "(" + this.state.protein + "," + this.state.fat + "," + this.state.carb + ", '" + this.state.name + "')", null);
-        //         },
-        //         null,
-        //         () => {
-        //             this.backPress();
-        //         }
-        //     );
-        // } else {
-        //     this.setState({error: true});
-        //
-        // }
-    }
+    };
     onChangeValue = (value, id) => {
         console.log(value,id);
         let temp = {...this.state.values};
         temp[id+''] = value;
         this.setState({values: temp});
-    }
+    };
     render () {
-        // console.log(this.state);
-        // console.log('hhhhha',this.props.route.params);
         return (
             <View style={styles.container}>
                 <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
@@ -167,59 +139,11 @@ export default class LogMealScreen extends React.Component {
                 { this.state.error && (
                     <Text style={styles.codeHighlightText}>Some values are missing. Please fill them out and try to save again</Text>)
                 }
-                {/*<View style={{marginLeft:100, marginRight:100,marginTop:20,marginBottom:20}}>*/}
-                {/*    <Button title="Save" onPress={this.onSave} />*/}
-                {/*</View>*/}
-                {/*<View style={styles.helpContainer}>*/}
-                {/*  <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>*/}
-                {/*    <Text style={styles.helpLinkText}>Help, it didn’t automatically reload!</Text>*/}
-                {/*  </TouchableOpacity>*/}
-                {/*</View>*/}
-
-                {/*<View style={styles.tabBarInfoContainer}>*/}
-                {/*  <Text style={styles.tabBarInfoText}>This is a tab bar. You can edit it in:</Text>*/}
-
-                {/*  <View style={[styles.codeHighlightContainer, styles.navigationFilename]}>*/}
-                {/*    <MonoText style={styles.codeHighlightText}>navigation/BottomTabNavigator.js</MonoText>*/}
-                {/*  </View>*/}
-                {/*</View>*/}
             </View>
         );
     }
 }
 
-function DevelopmentModeNotice() {
-    if (__DEV__) {
-        const learnMoreButton = (
-            <Text onPress={handleLearnMorePress} style={styles.helpLinkText}>
-                Learn more
-            </Text>
-        );
-
-        return (
-            <Text style={styles.developmentModeText}>
-                Development mode is enabled: your app will be slower but you can use useful development
-                tools. {learnMoreButton}
-            </Text>
-        );
-    } else {
-        return (
-            <Text style={styles.developmentModeText}>
-                You are not in development mode: your app will run at full speed.
-            </Text>
-        );
-    }
-}
-
-function handleLearnMorePress() {
-    WebBrowser.openBrowserAsync('https://docs.expo.io/versions/latest/workflow/development-mode/');
-}
-
-function handleHelpPress() {
-    WebBrowser.openBrowserAsync(
-        'https://docs.expo.io/versions/latest/get-started/create-a-new-app/#making-your-first-change'
-    );
-}
 function Separator() {
     return <View style={styles.separator} />;
 }

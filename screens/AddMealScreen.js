@@ -18,13 +18,6 @@ export default class AddMealScreen extends React.Component {
         };
     }
     backPress = () => {
-        // db.transaction(tx => {
-        //     tx.executeSql(
-        //         `select * from meals;`,
-        //         null,
-        //         (_, { rows: { _array } }) => console.warn(JSON.stringify(_array))
-        //     );
-        // });
         this.props.navigation.goBack();
 
     };
@@ -136,27 +129,10 @@ export default class AddMealScreen extends React.Component {
                     keyboardType={'decimal-pad'}
 
                 />
-
-                {/*<View style={{marginLeft:100, marginRight:100,marginTop:20,marginBottom:20}}>*/}
-                {/*    <Button title="Add" onPress={this.onSave} />*/}
-                {/*</View>*/}
                 <Separator />
                 { this.state.error && (
                 <Text style={styles.codeHighlightText}>Some valuesk are missing. Please fill them out and try to save again</Text>)
                 }
-                {/*<View style={styles.helpContainer}>*/}
-                {/*  <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>*/}
-                {/*    <Text style={styles.helpLinkText}>Help, it didn’t automatically reload!</Text>*/}
-                {/*  </TouchableOpacity>*/}
-                {/*</View>*/}
-
-                {/*<View style={styles.tabBarInfoContainer}>*/}
-                {/*  <Text style={styles.tabBarInfoText}>This is a tab bar. You can edit it in:</Text>*/}
-
-                {/*  <View style={[styles.codeHighlightContainer, styles.navigationFilename]}>*/}
-                {/*    <MonoText style={styles.codeHighlightText}>navigation/BottomTabNavigator.js</MonoText>*/}
-                {/*  </View>*/}
-                {/*</View>*/}
             </View>
         );
     }

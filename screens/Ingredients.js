@@ -53,13 +53,6 @@ export default class Ingredients extends React.Component {
     };
 
     backPress = () => {
-        // db.transaction(tx => {
-        //     tx.executeSql(
-        //         `select * from meals;`,
-        //         null,
-        //         (_, { rows: { _array } }) => console.warn(JSON.stringify(_array))
-        //     );
-        // });
         this.props.navigation.goBack();
 
     };
@@ -144,12 +137,6 @@ export default class Ingredients extends React.Component {
                     }
                 );
             });
-            // this.props.navigation.navigate('Set Amount', {selectedItems: this.state.selectedItems,
-            // logId:this.props.route.params.logId, mealType: this.props.route.params.mealType,
-            // proteinPercent: this.props.route.params.proteinPercent,
-            // fatPercent: this.props.route.params.fatPercent,
-            // carbPercent: this.props.route.params.carbPercent,
-            // });
         }
     };
     onItemSelected = (selected, item) => {
@@ -169,7 +156,6 @@ export default class Ingredients extends React.Component {
         this.setState({filteredItems:filteredItems, selectedItems:[]});
     };
     render () {
-        // console.warn(this.props.route.params.date.getDate());
         return (
             <View style={styles.container}>
                 <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
@@ -202,20 +188,6 @@ export default class Ingredients extends React.Component {
                     <TouchableOpacity onPress={this.setAmount} style={styles.buttonStyle}>
                         <Text style={styles.buttonTextStyle}>Save</Text>
                     </TouchableOpacity>
-
-                    {/*<View style={styles.helpContainer}>*/}
-                    {/*  <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>*/}
-                    {/*    <Text style={styles.helpLinkText}>Help, it didn’t automatically reload!</Text>*/}
-                    {/*  </TouchableOpacity>*/}
-                    {/*</View>*/}
-
-                {/*<View style={styles.tabBarInfoContainer}>*/}
-                {/*  <Text style={styles.tabBarInfoText}>This is a tab bar. You can edit it in:</Text>*/}
-
-                {/*  <View style={[styles.codeHighlightContainer, styles.navigationFilename]}>*/}
-                {/*    <MonoText style={styles.codeHighlightText}>navigation/BottomTabNavigator.js</MonoText>*/}
-                {/*  </View>*/}
-                {/*</View>*/}
             </View>
         );
     }
@@ -232,39 +204,6 @@ function OptionButton({ icon, label, onPress, isLastOption }) {
                 </View>
             </View>
         </RectButton>
-    );
-}
-
-function DevelopmentModeNotice() {
-    if (__DEV__) {
-        const learnMoreButton = (
-            <Text onPress={handleLearnMorePress} style={styles.helpLinkText}>
-                Learn more
-            </Text>
-        );
-
-        return (
-            <Text style={styles.developmentModeText}>
-                Development mode is enabled: your app will be slower but you can use useful development
-                tools. {learnMoreButton}
-            </Text>
-        );
-    } else {
-        return (
-            <Text style={styles.developmentModeText}>
-                You are not in development mode: your app will run at full speed.
-            </Text>
-        );
-    }
-}
-
-function handleLearnMorePress() {
-    WebBrowser.openBrowserAsync('https://docs.expo.io/versions/latest/workflow/development-mode/');
-}
-
-function handleHelpPress() {
-    WebBrowser.openBrowserAsync(
-        'https://docs.expo.io/versions/latest/get-started/create-a-new-app/#making-your-first-change'
     );
 }
 
