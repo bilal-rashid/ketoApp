@@ -79,7 +79,28 @@ export default class AddMealScreen extends React.Component {
                     onValueChange={(itemValue, itemIndex) => this.setState({ group: itemValue })}>
                     <Picker.Item label="Select" value='n' />
                     <Picker.Item label="Gemüse" value="Gemüse" />
+                    <Picker.Item label="Aufstriche & Pesti & Antipasti" value="Aufstriche & Pesti & Antipasti" />
+                    <Picker.Item label="Backmischungen" value="Backmischungen" />
                     <Picker.Item label="Früchte" value="Früchte" />
+                    <Picker.Item label="Verschiedenes" value="Verschiedenes" />
+                    <Picker.Item label="Süssung und Süsses" value="Süssung und Süsses" />
+                    <Picker.Item label="Spezialprodukte" value="Spezialprodukte" />
+                    <Picker.Item label="Snacks" value="Snacks" />
+                    <Picker.Item label="PILZE" value="PILZE" />
+                    <Picker.Item label="Kartoffeln" value="Kartoffeln" />
+                    <Picker.Item label="Frühstücksmischungen & Müsli" value="Frühstücksmischungen & Müsli" />
+                    <Picker.Item label="99.7e und Öle" value="99.7e und Öle" />
+                    <Picker.Item label="82.5e und Öle" value="82.5e und Öle" />
+                    <Picker.Item label="78.9e und Öle" value="78.9e und Öle" />
+                    <Picker.Item label="52e und Öle" value="52e und Öle" />
+                    <Picker.Item label="73e und Öle" value="73e und Öle" />
+                    <Picker.Item label="62e und Öle" value="62e und Öle" />
+                    <Picker.Item label="95e und Öle" value="95e und Öle" />
+                    <Picker.Item label="99.3e und Öle" value="99.3e und Öle" />
+                    <Picker.Item label="100e und Öle" value="100e und Öle" />
+                    <Picker.Item label="80e und Öle" value="80e und Öle" />
+                    <Picker.Item label="99.5e und Öle" value="99.5e und Öle" />
+                    <Picker.Item label="83.2e und Öle" value="83.2e und Öle" />
                     <Picker.Item label="Ei" value="Ei" />
                     <Picker.Item label="Fette" value="Fette" />
                     <Picker.Item label="Fleisch/ Wurst" value="Fleisch/ Wurst" />
