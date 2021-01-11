@@ -6,6 +6,7 @@ import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
 import AppInfo from '../screens/AppInfo';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import DataSyncScreen from "../screens/DataSyncScreen";
 
 const BottomTab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -28,6 +29,11 @@ export default function BottomTabNavigator({ navigation, route }) {
                          component={LinksScreen}
                          options={{
                              title: 'Diet Plan'
+                         }} />
+          <Drawer.Screen name="Sync"
+                         component={DataSyncScreen}
+                         options={{
+                             title: 'Import/Export Data'
                          }} />
           <Drawer.Screen name="Info"
                          component={AppInfo}
@@ -66,5 +72,7 @@ function getHeaderTitle(route) {
       return 'Keto';
     case 'Info':
       return 'Info';
+    case 'Sync':
+        return 'Data Sync';
   }
 }
