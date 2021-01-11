@@ -110,7 +110,6 @@ const styles = StyleSheet.create({
         height: 300,
         resizeMode: 'contain',
         marginTop: 3,
-        marginLeft: 30,
     },
     item: {
         padding: 10,
