@@ -1,7 +1,11 @@
 import * as React from 'react';
-import {Image, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, Platform, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
-
+import * as FileSystem from 'expo-file-system';
+import * as Permissions from 'expo-permissions';
+import * as MediaLibrary from 'expo-media-library';
+import * as DocumentPicker from 'expo-document-picker';
+import * as Sharing from "expo-sharing";
 export default class AppInfo extends React.Component {
     constructor () {
         super();
@@ -25,67 +29,123 @@ export default class AppInfo extends React.Component {
         this.props.navigation.goBack();
 
     };
+    goToDisclaimer = () => {
+        WebBrowser.openBrowserAsync('http://danrit.net/KetoAppDisclaimer.htm');
+    };
+    goToErste = () => {
+        WebBrowser.openBrowserAsync('http://danrit.net/KetoAppErsteSchritte.htm');
+    };
+    goToSpende = () => {
+        WebBrowser.openBrowserAsync('https://glut1.de/so-helfen-sie-uns/spendenkonto/');
+    };
     goToWebAddress = () => {
         WebBrowser.openBrowserAsync('http://glut1.de/');
-    }
+    };
+    test = async () => {
+        const perm = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+        if (perm.status !== 'granted') {
+            return;
+        }
+
+        await DocumentPicker.getDocumentAsync({type:'*/*'}).then(doc=>{
+            FileSystem.readAsStringAsync(doc.uri).then(str=>{console.warn(str)});
+        });
+        // const { status } = await Permissions.askAsync(Permissions.CAMERA);
+        let fileUri = FileSystem.documentDirectory + "bilal.json";
+        // await FileSystem.writeAsStringAsync(fileUri, "Hello World new");
+
+        // await Sharing.shareAsync(fileUri);
+        // await FileSystem.writeAsStringAsync(fileUri, "Hello World new");
+        // FileSystem.readAsStringAsync(fileUri).then(str=>{console.warn(str)});
+        // try {
+        //     const asset = await MediaLibrary.createAssetAsync(fileUri);
+        //     const album = await MediaLibrary.getAlbumAsync('Download');
+        //     console.warn('check1');
+        //     if (album == null) {
+        //         console.warn('album null');
+        //         await MediaLibrary.createAlbumAsync('Download', asset, false);
+        //     } else {
+        //         console.warn('album not null');
+        //         await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+        //     }
+        // } catch (e) {
+        //     console.warn('error', e);
+        // }
+        // console.warn(fileUri);
+        // await FileSystem.writeAsStringAsync(fileUri, "Hello World", {encoding: FileSystem.EncodingType.UTF8});
+        // FileSystem.readAsStringAsync(fileUri, {encoding: FileSystem.EncodingType.UTF8}).then(str=>{console.warn(str)});
+        // console.warn('Hogya');
+    };
     render () {
         // console.warn(this.props.route.params.date.getDate());
         return (
-            <View style={styles.container}>
-                <View style={styles.welcomeContainer}>
-                    <Image
+            <SafeAreaView style={styles.container}>
+                <View style={styles.container}>
+                    <View style={styles.welcomeContainer}>
+                        <Image
 
-                        source={
-                            __DEV__
-                                ? require('../assets/images/splash.png')
-                                : require('../assets/images/splash.png')
-                        }
-                        style={styles.welcomeImage}
-                    />
+                            source={
+                                __DEV__
+                                    ? require('../assets/images/appLogo.png')
+                                    : require('../assets/images/appLogo.png')
+                            }
+                            style={styles.welcomeImage}
+                        />
+                    </View>
+                    <View style={{height:1, backgroundColor:'#aaaaaa', marginTop:-10}}/>
+                    {/*<TouchableOpacity>*/}
+                    {/*    <Text style={{margin:10, fontSize:19, color:'#0079FF'}}>FAQ</Text>*/}
+                    {/*</TouchableOpacity>*/}
+                    {/*<View style={{height:1, backgroundColor:'#aaaaaa', marginTop:0}}/>*/}
+
+                    {/*<TouchableOpacity>*/}
+                    {/*    <Text style={{margin:10, fontSize:19, color:'#0079FF'}}>Contact Us</Text>*/}
+                    {/*</TouchableOpacity>*/}
+                    {/*<View style={{height:1, backgroundColor:'#aaaaaa', marginTop:0}}/>*/}
+
+                    <TouchableOpacity onPress={this.goToDisclaimer}>
+                        <Text style={{margin:10, fontSize:19, color:'#0079FF'}}>Disclaimer</Text>
+                    </TouchableOpacity>
+                    <View style={{height:1, backgroundColor:'#aaaaaa', marginTop:0}}/>
+
+                    <TouchableOpacity onPress={this.goToErste}>
+                        <Text style={{margin:10, fontSize:19, color:'#0079FF'}}>Erste Schritte</Text>
+                    </TouchableOpacity>
+                    <View style={{height:1, backgroundColor:'#aaaaaa', marginTop:0}}/>
+
+                    <TouchableOpacity onPress={this.goToSpende}>
+                        <Text style={{margin:10, fontSize:19, color:'#0079FF'}}>Spende</Text>
+                    </TouchableOpacity>
+                    <View style={{height:1, backgroundColor:'#aaaaaa', marginTop:0}}/>
+
+                    {/*<TouchableOpacity>*/}
+                    {/*    <Text style={{margin:10, fontSize:19, color:'#0079FF'}}>Licenses</Text>*/}
+                    {/*</TouchableOpacity>*/}
+                    {/*<View style={{height:1, backgroundColor:'#aaaaaa', marginTop:0}}/>*/}
+
+                    <TouchableOpacity onPress={()=>{
+                        this.props.navigation.navigate('Links');
+                    }
+                    }>
+                        <Text style={{margin:10, fontSize:19, color:'#0079FF'}}>Home</Text>
+                    </TouchableOpacity>
+                    <View style={{height:1, backgroundColor:'#aaaaaa', marginTop:0}}/>
+
+                    {/*bottom views below*/}
+                    <View style={{position: 'absolute', bottom: 20,
+                        width:'100%',
+                        flex:1,alignItems: 'center'}}>
+                        <Text style={{fontSize:13, color: '#7d7c7c',marginRight:20, flex:1}}>Keto</Text>
+                    </View>
+                    <View style={{position: 'absolute', bottom: 0,
+                        width:'100%',
+                        flex:1,alignItems: 'center'}}>
+                        <Text style={{fontSize:13, color: '#7d7c7c',marginRight:20, flex:1}}>Version 1.0.0</Text>
+                    </View>
+
+
                 </View>
-                <View style={{height:1, backgroundColor:'#aaaaaa', marginTop:-10}}/>
-                {/*<TouchableOpacity>*/}
-                {/*    <Text style={{margin:10, fontSize:19, color:'#0079FF'}}>FAQ</Text>*/}
-                {/*</TouchableOpacity>*/}
-                {/*<View style={{height:1, backgroundColor:'#aaaaaa', marginTop:0}}/>*/}
-
-                {/*<TouchableOpacity>*/}
-                {/*    <Text style={{margin:10, fontSize:19, color:'#0079FF'}}>Contact Us</Text>*/}
-                {/*</TouchableOpacity>*/}
-                {/*<View style={{height:1, backgroundColor:'#aaaaaa', marginTop:0}}/>*/}
-
-                <TouchableOpacity onPress={this.goToWebAddress}>
-                    <Text style={{margin:10, fontSize:19, color:'#0079FF'}}>Terms and Privacy Policy</Text>
-                </TouchableOpacity>
-                <View style={{height:1, backgroundColor:'#aaaaaa', marginTop:0}}/>
-
-                {/*<TouchableOpacity>*/}
-                {/*    <Text style={{margin:10, fontSize:19, color:'#0079FF'}}>Licenses</Text>*/}
-                {/*</TouchableOpacity>*/}
-                {/*<View style={{height:1, backgroundColor:'#aaaaaa', marginTop:0}}/>*/}
-
-                <TouchableOpacity onPress={()=>{
-                    this.props.navigation.navigate('Links');
-                }
-                }>
-                    <Text style={{margin:10, fontSize:19, color:'#0079FF'}}>Home</Text>
-                </TouchableOpacity>
-                <View style={{height:1, backgroundColor:'#aaaaaa', marginTop:0}}/>
-
-                {/*bottom views below*/}
-                <View style={{position: 'absolute', bottom: 30,
-                    width:'100%',
-                    flex:1,alignItems: 'center'}}>
-                    <Text style={{fontSize:13, color: '#7d7c7c',marginRight:20, flex:1}}>Keto</Text>
-                </View>
-                <View style={{position: 'absolute', bottom: 10,
-                    width:'100%',
-                    flex:1,alignItems: 'center'}}>
-                    <Text style={{fontSize:13, color: '#7d7c7c',marginRight:20, flex:1}}>Version 1.0.0</Text>
-                </View>
-
-
-            </View>
+            </SafeAreaView>
         );
     }
 }

@@ -83,7 +83,7 @@ export default class Recipes extends React.Component {
             ],
             { cancelable: false }
         );
-    }
+    };
     setAmount = () => {
         if (this.state.selectedItems.length > 0) {
             const ingredients = JSON.parse(this.state.selectedItems[0].description);
