@@ -103,13 +103,6 @@ export default class DataSyncScreen extends React.Component {
 
 
     backPress = () => {
-        // db.transaction(tx => {
-        //     tx.executeSql(
-        //         `select * from meals;`,
-        //         null,
-        //         (_, { rows: { _array } }) => console.warn(JSON.stringify(_array))
-        //     );
-        // });
         this.props.navigation.goBack();
 
     };
@@ -125,11 +118,174 @@ export default class DataSyncScreen extends React.Component {
                     style: "cancel"
                 },
                 { text: "OK", onPress: () => {
-
+                        this.openDocumentPicker();
                     } }
             ],
             { cancelable: false }
         );
+    };
+    deleteAllData = (table) => {
+        db.transaction(tx => {
+            tx.executeSql(
+                "delete from "+table+";",
+                null,
+                () => {}
+            );
+        });
+    };
+    restoreData = (data) => {
+        // restore profile
+        SecureStore.setItemAsync('user_name', data.profile.name);
+        SecureStore.setItemAsync('user_calories', data.profile.calories.toString());
+        SecureStore.setItemAsync('user_protein', data.profile.proteinPercent.toString());
+        SecureStore.setItemAsync('user_fat', data.profile.fatPercent.toString());
+        SecureStore.setItemAsync('user_carb', data.profile.carbPercent.toString());
+        // restore meals
+        data.meals.forEach(ingredient => {
+            console.warn('ingredient',ingredient);
+            db.transaction(
+                tx => {
+                    tx.executeSql("insert into meals (protein, fat, carb, name,group_name) values " +
+                        "(" + ingredient.protein + "," + ingredient.fat + "," + ingredient.carb + ", '" + ingredient.name
+                        + "','"+ingredient.group_name+"');", null,
+                        (_t,_r) => console.log('kkkk', _r.insertId));
+                },
+                (_err)=>{console.warn('error',_err)},
+                () => {
+                }
+            );
+        });
+
+        //restore recipe
+        data.recipe.forEach(meal => {
+            db.transaction(
+                tx => {
+                    tx.executeSql("insert into recipe (protein, fat, carb, quantity, name," +
+                        "description) values " +
+                        "(" + meal.protein + "," + meal.fat + "," +
+                        meal.carb + "," + meal.quantity + ", '" + meal.name + "'," + "'"
+                        + meal.description + "'"  +");", null,
+                        (_t,_r)=> {});
+                },
+                (_err)=>{console.warn('error',_err)},
+                () => {
+                }
+            );
+        });
+
+        //restore daily logs
+        data.dailylogs.forEach(log => {
+            db.transaction(
+                tx => {
+                    tx.executeSql("insert into dailylogs (id,date) values " +
+                        "('" +log.id+"'"+ ",'"+ log.date + "');", null, (_t,_r)=> {
+                    });
+                },
+                (_err)=>{console.warn('error',_err)},
+                () => {
+                }
+            );
+        });
+
+        //restore mealquantity
+        data.mealquantity.forEach(mealqty => {
+            db.transaction(
+                tx => {
+                    tx.executeSql("insert into mealquantity (log_id, meal_type, meal_name, protein," +
+                        "fat,carb,protein_percent,fat_percent,carb_percent,quantity,meal_id) values " +
+                        "(" + mealqty.log_id + "," + mealqty.meal_type + ",'" +
+                        mealqty.meal_name + "', " + mealqty.protein + "," + mealqty.fat
+                        + "," + mealqty.carb + "," + mealqty.protein_percent + "," + mealqty.fat_percent + "," + mealqty.carb_percent
+                        + "," + mealqty.quantity + ","+ mealqty.meal_id +");", null,
+                        (_t,_r)=> console.log('kkkk', _r.insertId));
+                },
+                (_err)=>{console.warn('error',_err)},
+                () => {
+                }
+            );
+        });
+
+        Alert.alert(
+            "Data imported successfully",
+            null,
+            [
+                {
+                    text: "Ok",
+                    onPress: () => {
+                    }}
+            ],
+            { cancelable: true }
+        );
+
+    };
+    openDocumentPicker = async () => {
+        const perm = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+        if (perm.status !== 'granted') {
+            return;
+        }
+        await DocumentPicker.getDocumentAsync({type:'*/*'}).then( doc => {
+            if (doc.type === 'success') {
+                var re = /(?:\.([^.]+))?$/;
+                if (doc.name) {
+                    if (re.exec(doc.name)[1] === 'json') {
+                        FileSystem.readAsStringAsync(doc.uri).then(json => {
+                            const data = JSON.parse(json);
+                            if (data.dailylogs && data.mealquantity && data.meals && data.recipe && data.profile) {
+                                this.deleteAllData('recipe');
+                                this.deleteAllData('mealquantity');
+                                this.deleteAllData('dailylogs');
+                                this.deleteAllData('meals');
+                                this.restoreData(data);
+                            } else {
+                                Alert.alert(
+                                    "Data format not supported!",
+                                    null,
+                                    [
+                                        {
+                                            text: "Ok",
+                                            onPress: () => {
+                                            },
+                                            style: "cancel"
+                                        }
+                                    ],
+                                    { cancelable: true }
+                                );
+                            }
+                        });
+                    } else {
+                        Alert.alert(
+                            "File not supported!",
+                            null,
+                            [
+                                {
+                                    text: "Ok",
+                                    onPress: () => {
+                                    },
+                                    style: "cancel"
+                                }
+                            ],
+                            { cancelable: true }
+                        );
+                    }
+                } else {
+                    Alert.alert(
+                        "File not supported!",
+                        null,
+                        [
+                            {
+                                text: "Ok",
+                                onPress: () => {
+                                },
+                                style: "cancel"
+                            }
+                        ],
+                        { cancelable: true }
+                    );
+                }
+            }
+        }).catch(error => {
+            console.warn('error', error);
+        });
     };
     export = () => {
         this.resetContent();
