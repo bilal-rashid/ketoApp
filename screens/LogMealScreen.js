@@ -5,7 +5,7 @@ import {FlatList, Platform, StyleSheet, Text, TouchableOpacity, View} from 'reac
 import * as SQLite from 'expo-sqlite';
 import MealLogItem from "../components/MealLogItem";
 import {Ionicons} from "@expo/vector-icons";
-const db = SQLite.openDatabase("keto_db.db");
+var db = null;
 export default class LogMealScreen extends React.Component {
     constructor () {
         super();
@@ -15,6 +15,9 @@ export default class LogMealScreen extends React.Component {
         };
     }
     componentDidMount() {
+        SQLite.openDatabase("keto_db.db","1.0",undefined,undefined,(database)=>{
+            db = database;
+        });
         const items = this.props.route.params.selectedItems;
         let tempObj = {};
         for (let i=0; i < items.length; i++) {
@@ -84,7 +87,7 @@ export default class LogMealScreen extends React.Component {
                             "(" + this.props.route.params.logId + "," + this.props.route.params.mealType + ",'" +
                             meal.name + "', " + meal.protein + "," + meal.fat
                             + "," + meal.carb + "," + meal.quantity + ","+ meal.meal_id +");", null,
-                            (_t,_r)=> console.log('kkkk', _r.insertId));
+                            (_t,_r)=> {});
                     },
                     (_err)=>{console.warn('error',_err)},
                     () => {

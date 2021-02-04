@@ -9,7 +9,7 @@ import {Ionicons} from "@expo/vector-icons";
 import MealItem from "../components/MealItem";
 import InitialData from "../constants/InitialData";
 
-const db = SQLite.openDatabase("keto_db.db");
+var db = null;
 export default class Ingredients extends React.Component {
     constructor () {
         super();
@@ -27,7 +27,10 @@ export default class Ingredients extends React.Component {
     componentDidMount() {
         this._unsubscribe = this.props.navigation.addListener('focus', () => {
             // do something
-            this.getMealsFromDb();
+            SQLite.openDatabase("keto_db.db","1.0",undefined,undefined,(database)=>{
+                db = database;
+                this.getMealsFromDb();
+            });
         });
     }
 

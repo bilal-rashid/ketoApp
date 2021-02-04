@@ -8,9 +8,16 @@ import * as DocumentPicker from 'expo-document-picker';
 import * as Sharing from "expo-sharing";
 import * as SecureStore from "expo-secure-store";
 import * as SQLite from "expo-sqlite";
-const db = SQLite.openDatabase("keto_db.db");
+var db = null;
 export default class DataSyncScreen extends React.Component {
     content;
+
+    componentDidMount() {
+        SQLite.openDatabase("keto_db.db","1.0",undefined,undefined,(database)=>{
+            db = database;
+        });
+    }
+
     constructor () {
         super();
         this.state = {
@@ -220,6 +227,7 @@ export default class DataSyncScreen extends React.Component {
     };
     openDocumentPicker = async () => {
         const perm = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+        console.warn(perm.status);
         if (perm.status !== 'granted') {
             return;
         }

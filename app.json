@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "Keto",
-    "slug": "Keto",
+    "name": "EpiCook",
+    "slug": "EpiCook",
     "platforms": [
       "ios",
       "android",
       "web"
     ],
-    "version": "1.1.0",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/appLogo.png",
     "scheme": "myapp",
@@ -23,15 +23,18 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.forderverein.epicook",
+      "buildNumber": "1.0.0",
       "supportsTablet": true,
       "usesIcloudStorage": true
+    },
+    "android": {
+      "package": "com.forderverein.epicook",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
     },
-    "description": "",
-    "android": {
-      "package": "com.keto.company"
-    }
+    "description": ""
   }
 }

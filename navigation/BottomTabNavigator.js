@@ -69,7 +69,7 @@ function getHeaderTitle(route) {
     case 'Home':
       return 'Profile';
     case 'Links':
-      return 'Keto';
+      return 'EpiCook';
     case 'Info':
       return 'Info';
     case 'Sync':

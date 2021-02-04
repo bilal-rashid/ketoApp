@@ -169,34 +169,6 @@ export default class MealComponent extends React.Component {
                         {(ratio !== -1)?<Text  style={styles.ratioText}> Ratio: {ratio}</Text>:
                             <Text  style={styles.ratioText}> Ratio: 0.00</Text>}
                     </TouchableOpacity>
-                    <View style={{
-                        flexDirection: 'row',
-                        justifyContent: 'center',}}>
-                    {
-                        (this.state.selectedItems.length > 0 && !this.mealExists()) &&
-                        <TouchableOpacity
-                            style={[styles.controlButtonStyleMeal]}
-                            onPress={() =>{
-                                this.props.callBackAddMeal(this.state.selectedItems);
-                                this.setState({selectedItems: []});
-                            }}>
-                            <Image
-                                source={require('../assets/images/uploadFile.png')
-                                }
-                                style={{width:20,height:20,resizeMode: 'contain'}}
-                            />
-                        </TouchableOpacity>
-                    }
-                        <TouchableOpacity
-                            style={[styles.controlButtonStyleMeal]}
-                            onPress={() => this.props.callBackAdd(this.props.mealType, true)}>
-                            <Image
-                                source={require('../assets/images/downloadFile.png')
-                                }
-                                style={{width:20,height:20,resizeMode: 'contain'}}
-                            />
-                        </TouchableOpacity>
-                    </View>
                 </View>
                 { this.state.show &&
                 <View>
@@ -263,6 +235,30 @@ export default class MealComponent extends React.Component {
                                     style={{width:25,height:25,resizeMode: 'contain'}}
                                 />
                             </TouchableOpacity>
+                            {
+                                (this.state.selectedItems.length > 0 && !this.mealExists()) &&
+                                <TouchableOpacity
+                                    style={[styles.controlButtonStyle]}
+                                    onPress={() =>{
+                                        this.props.callBackAddMeal(this.state.selectedItems);
+                                        this.setState({selectedItems: []});
+                                    }}>
+                                    <Image
+                                        source={require('../assets/images/uploadFile.png')
+                                        }
+                                        style={{width:22,height:22,resizeMode: 'contain'}}
+                                    />
+                                </TouchableOpacity>
+                            }
+                        <TouchableOpacity
+                            style={[styles.controlButtonStyle]}
+                            onPress={() => this.props.callBackAdd(this.props.mealType, true)}>
+                            <Image
+                                source={require('../assets/images/downloadFile.png')
+                                }
+                                style={{width:22,height:22,resizeMode: 'contain'}}
+                            />
+                        </TouchableOpacity>
                         {this.state.selectedItems.length > 0 &&
                         <TouchableOpacity
                             onPress={() =>{

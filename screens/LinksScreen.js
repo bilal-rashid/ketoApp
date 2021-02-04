@@ -13,7 +13,7 @@ import * as SecureStore from "expo-secure-store";
 import * as WebBrowser from "expo-web-browser";
 import {  SafeAreaView } from 'react-native';
 
-const db = SQLite.openDatabase("keto_db.db");
+var db = null;
 const months = ["01", "02", "03","04", "05", "06", "07", "08", "09", "10", "11", "12"];
 export default class LinksScreen extends React.Component {
   constructor () {
@@ -43,8 +43,11 @@ export default class LinksScreen extends React.Component {
   componentDidMount() {
     this._unsubscribe = this.props.navigation.addListener('focus', () => {
       // do something
-      this.getUserPreferences();
-      this.getDailyLogs();
+      SQLite.openDatabase("keto_db.db","1.0",undefined,undefined,(database)=>{
+        db = database;
+        this.getUserPreferences();
+        this.getDailyLogs();
+      });
     });
   }
   goToWebAddress = () => {

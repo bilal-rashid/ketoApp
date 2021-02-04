@@ -4,7 +4,7 @@ import {  Platform, StyleSheet, Text, View } from 'react-native';
 
 import * as SQLite from 'expo-sqlite';
 import { TextInput,Button,Alert,Picker,TouchableOpacity } from 'react-native';
-const db = SQLite.openDatabase("keto_db.db");
+var db = null;
 export default class AddMealScreen extends React.Component {
     constructor () {
         super();
@@ -68,6 +68,9 @@ export default class AddMealScreen extends React.Component {
                     <Text style={{color:'#007AFF', fontSize:17, marginRight:15}}>Add</Text>
                 </TouchableOpacity>
             ),
+        });
+        SQLite.openDatabase("keto_db.db","1.0",undefined,undefined,(database)=>{
+            db = database;
         });
     }
 

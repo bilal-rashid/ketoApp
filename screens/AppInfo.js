@@ -71,7 +71,7 @@ export default class AppInfo extends React.Component {
                     <View style={{position: 'absolute', bottom: 20,
                         width:'100%',
                         flex:1,alignItems: 'center'}}>
-                        <Text style={{fontSize:13, color: '#7d7c7c',marginRight:20, flex:1}}>Keto</Text>
+                        <Text style={{fontSize:13, color: '#7d7c7c',marginRight:20, flex:1}}>EpiCook</Text>
                     </View>
                     <View style={{position: 'absolute', bottom: 0,
                         width:'100%',
