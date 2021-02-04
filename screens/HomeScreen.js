@@ -94,10 +94,27 @@ export default class HomeScreen extends React.Component {
     });
   };
   onChangeCalories = (value) => {
-    this.setState({
-      calories:+value
-    });
-  };
+    console.log(value);
+      let protein_in_gram = 0;
+      let fat_in_gram = 0;
+      let carb_in_gram = 0;
+      if ((+value) > 0 && (this.state.proteinPercent) > 0) {
+        protein_in_gram = +((((value * (this.state.proteinPercent) / 100) / 4.1)).toFixed(2));
+      }
+      if ((+value) > 0 && this.state.fatPercent > 0) {
+        fat_in_gram = +((((value * this.state.fatPercent / 100) / 9.3)).toFixed(2));
+      }
+      if ((+value) > 0 && this.state.carbPercent > 0) {
+        carb_in_gram = +((((value * this.state.carbPercent / 100) / 4.1)).toFixed(2));
+      }
+      this.setState({
+        calories:+value,
+        fat: fat_in_gram,
+        protein: protein_in_gram,
+        carb: carb_in_gram,
+        ratio: +((fat_in_gram/(protein_in_gram+carb_in_gram)).toFixed(2))
+      });
+    };
   onChangeProteinPercent = (value) => {
     let carbPercent = +(100 - this.state.fatPercent - (+value)).toFixed(2);
     if (carbPercent > -1) {

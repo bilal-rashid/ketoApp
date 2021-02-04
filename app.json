@@ -7,7 +7,7 @@
       "android",
       "web"
     ],
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/appLogo.png",
     "scheme": "myapp",
@@ -24,7 +24,7 @@
     ],
     "ios": {
       "bundleIdentifier": "com.forderverein.epicook",
-      "buildNumber": "1.0.0",
+      "buildNumber": "1.0.1",
       "supportsTablet": true,
       "usesIcloudStorage": true
     },
