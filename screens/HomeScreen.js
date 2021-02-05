@@ -94,7 +94,6 @@ export default class HomeScreen extends React.Component {
     });
   };
   onChangeCalories = (value) => {
-    console.log(value);
       let protein_in_gram = 0;
       let fat_in_gram = 0;
       let carb_in_gram = 0;
@@ -142,7 +141,6 @@ export default class HomeScreen extends React.Component {
   };
   onChangeProtein = (value) => {
     let proteinPercent = 0;
-    let fatPercent = 0;
     let carbPercent = 0;
     let carb = 0;
     if (this.state.calories > 0 && (+value) > 0) {
@@ -151,18 +149,14 @@ export default class HomeScreen extends React.Component {
     if (this.state.calories > 0 && (+value) > 0) {
       proteinPercent = +(((((+value) * 4.1)/this.state.calories)*100).toFixed(2));
     }
-    if (this.state.calories > 0 && this.state.fat > 0) {
-      fatPercent = +((((this.state.fat * 4.1)/this.state.calories)*100).toFixed(2));
-    }
     if (this.state.calories > 0 && carb > 0) {
-      carbPercent = +((100 - proteinPercent - fatPercent).toFixed(2));
+      carbPercent = +((100 - proteinPercent - this.state.fatPercent).toFixed(2));
     }
     if (carb > -0.01) {
       this.setState({
         protein: +value,
         carb: carb,
         proteinPercent: proteinPercent,
-        fatPercent: fatPercent,
         carbPercent: carbPercent,
         ratio: +((this.state.fat/((+value) + carb)).toFixed(2))
       });
