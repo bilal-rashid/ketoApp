@@ -29,7 +29,7 @@
       "usesIcloudStorage": true
     },
     "android": {
-      "package": "com.forderverein.epicook",
+      "package": "com.forderverein.keto.epicook",
       "versionCode": 1
     },
     "web": {
